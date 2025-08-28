@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "木钵",
+  "disableScroll": true,
+  "usingComponents": {
+    "aifunction": "/components/aifunction/aifunction",
+    "xr-start": "/wxcomponents/xr-start"
+  }
+}

@@ -1,0 +1,25 @@
+<xr-scene render-system="alpha:true" bind:ready="handleReady">
+    <xr-assets>
+        <xr-asset-load type="gltf" asset-id="gltf-model" src="{{url}}" options="ignoreError:-1"/>
+    </xr-assets>
+    <xr-node>
+        <xr-gltf node-id="gltf-model" bind:gltf-loaded="handleGLTFLoaded" model="gltf-model"
+          scale="{{scale}}" position="{{position}}"
+          material='color: 0 0 0; metallic: 0.8; roughness: 01; transmission: 0.1;'
+          uniforms="u_baseColorFactor:0.2 0.4 0.6 1,u_metallicRoughnessValues: 1 1"
+        ></xr-gltf>
+    </xr-node>
+      <!-- 添加环境光 
+      color: 0.2 0.1 0.1; // 深色底漆
+                  metallic: 0.8, // 高金属度以增加反光
+                  roughness: 0.05, // 低粗糙度以使表面更平滑
+                  transmission: 0.1, // 稍微透明，以模拟漆面的光泽-->
+    <xr-light type="ambient" color="1 1 1" intensity="2" />
+    <!-- 添加平行光-->
+    <xr-light type="directional" rotation="40 70 0" color="1 1 1" intensity="2" cast-shadow />
+    
+    <!-- 添加点光源 -->
+    <xr-light type="point" color="1 1 1" intensity="1" position="1 2 3" range="10" cast-shadow />
+
+    <xr-camera id="camera" clear-color="0 0 0 0" position="1 1 2" target="gltf-model" camera-orbit-control/>
+</xr-scene>

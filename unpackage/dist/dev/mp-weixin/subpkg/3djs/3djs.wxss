@@ -1,0 +1,60 @@
+
+.navigator-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 10rpx;
+  /* 添加一些内边距 */
+}
+.navigator-item {
+  flex: 0 1 calc(50% - 20rpx);
+  /* 每个navigator占一半宽度减去一些间距 */
+  margin: 10rpx;
+  /* 增加外边距 */
+  height: 300rpx;
+  /* 设置固定高度 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  /* 添加阴影效果 */
+  transition: -webkit-transform 0.3s ease;
+  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, -webkit-transform 0.3s ease;
+  /* 添加过渡效果 */
+}
+.navigator-item:hover {
+  -webkit-transform: translateY(-5rpx);
+          transform: translateY(-5rpx);
+  /* 鼠标悬停时向下移动 */
+}
+.navigator-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  /* 添加半透明背景 */
+  border-radius: 10rpx;
+  /* 添加圆角 */
+}
+.navigator-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 10rpx;
+  /* 添加圆角 */
+  object-fit: cover;
+  /* 保持图片比例并填充容器 */
+}
+.navigator-text {
+  margin-top: 10rpx;
+  text-align: center;
+  font-size: 28rpx;
+  /* 调整字体大小 */
+  color: #333;
+  /* 调整字体颜色 */
+  font-weight: bold;
+  /* 加粗字体 */
+}
+

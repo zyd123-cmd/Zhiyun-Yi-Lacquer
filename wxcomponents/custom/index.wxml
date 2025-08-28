@@ -1,0 +1,21 @@
+<xr-demo-viewer
+  title="{{title}}"
+  intro="彝族漆器AR平面识别，点击加载漆器模型,为获最佳体验，请在开放、光线充足的场所操作。"
+  code="{{xmlCode}}"
+>
+  <xr-ar-basic
+    disable-scroll
+    id="main-frame"
+    width="{{renderWidth}}"
+    height="{{renderHeight}}"
+    style="width:{{width}}px;height:{{height}}px;top:{{top}}px;left:{{left}}px;display:block;"
+    bind:arTrackerState="handleARTrackerState"
+    url="{{url}}" 
+    scale="{{scale}}"
+  />
+
+<!--  <view wx:if="{{arTrackerShow}}" style="text-align: center;padding: 12px;">
+    <view>Tracker识别状态：{{arTrackerState}}</view>
+    <view>错误信息：{{arTrackerError}}</view>
+  </view> -->
+</xr-demo-viewer>

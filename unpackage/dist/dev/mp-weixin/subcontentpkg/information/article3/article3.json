@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "智美彝漆",
+  "usingComponents": {
+    "aifunction": "/components/aifunction/aifunction",
+    "uni-fav": "/uni_modules/uni-fav/components/uni-fav/uni-fav",
+    "uni-icons": "/uni_modules/uni-icons/components/uni-icons/uni-icons"
+  }
+}

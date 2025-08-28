@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "漆器展示",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "aifunction": "/components/aifunction/aifunction"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "description": "项目配置文件",
+  "packOptions": {
+    "ignore": []
+  },
+  "setting": {},
+  "compileType": "miniprogram",
+  "projectType": 0,
+  "appid": "fc2421399154543493",
+  "projectname": "FinClip-Miniprogram1",
+  "isGameTourist": false,
+  "isFulljs": false,
+  "buildOption": {
+    "compilerSource": "wx"
+  }
+}

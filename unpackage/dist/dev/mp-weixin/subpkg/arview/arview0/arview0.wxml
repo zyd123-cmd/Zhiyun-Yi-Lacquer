@@ -1,0 +1,1 @@
+<view style="display:flex;flex-direction:column;"><custom class="custon" vue-id="b6f86616-1" title="{{title}}" url="{{url}}" scale="4 4 4" data-com-type="wx" bind:__l="__l"></custom></view>

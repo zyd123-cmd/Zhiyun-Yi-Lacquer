@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "三足漆盘",
+  "disableScroll": true,
+  "usingComponents": {
+    "custom": "/wxcomponents/custom/index"
+  }
+}

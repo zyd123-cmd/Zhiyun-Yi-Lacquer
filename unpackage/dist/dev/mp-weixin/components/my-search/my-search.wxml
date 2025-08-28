@@ -1,0 +1,1 @@
+<view data-event-opts="{{[['tap',[['searchBoxHandler',['$event']]]]]}}" class="my-search-container" style="{{'background-color:'+(bgcolor)+';'}}" bindtap="__e"><view class="my-search-box" style="{{'border-radius:'+(radius+'px')+';'}}"><image class="nav-item-image" src="/static/导航图/搜索.png"></image><text class="placeholder">搜索</text></view></view>

@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "智韵彝漆",
+  "onReachBottomDistance": 150,
+  "usingComponents": {
+    "aifunction": "/components/aifunction/aifunction",
+    "my-search": "/components/my-search/my-search"
+  }
+}

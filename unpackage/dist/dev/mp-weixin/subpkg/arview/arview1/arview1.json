@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "手镯",
+  "disableScroll": true,
+  "usingComponents": {
+    "custom": "/wxcomponents/custom/index"
+  }
+}

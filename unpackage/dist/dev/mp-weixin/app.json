@@ -1,0 +1,80 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/my/my",
+    "pages/homepage/homepage",
+    "pages/TTest/TTest",
+    "pages/logintest/logintest",
+    "pages/test/test"
+  ],
+  "subPackages": [
+    {
+      "root": "subpkg",
+      "pages": [
+        "3djs/3djs",
+        "arsum/arsum",
+        "3dview/3dview0/3dview0",
+        "3dview/3dview1/3dview1",
+        "3dview/3dview2/3dview2",
+        "3dview/3dview3/3dview3",
+        "3dview/3dview4/3dview4",
+        "3dview/3dview5/3dview5",
+        "3dview/3dview6/3dview6",
+        "3dview/3dview7/3dview7",
+        "arview/arview0/arview0",
+        "arview/arview1/arview1",
+        "arview/arview2/arview2",
+        "arview/arview3/arview3",
+        "arview/arview4/arview4",
+        "arview/arview5/arview5",
+        "arview/arview6/arview6",
+        "arview/arview7/arview7"
+      ]
+    },
+    {
+      "root": "subcontentpkg",
+      "pages": [
+        "hottopic/article1/article1",
+        "hottopic/article0/article0",
+        "hottopic/article2/article2",
+        "hottopic/article3/article3",
+        "information/article0/article0",
+        "information/article1/article1",
+        "information/article2/article2",
+        "information/article3/article3",
+        "information/rarticle0/rarticle0",
+        "information/rarticle1/rarticle1",
+        "information/rarticle2/rarticle2",
+        "search/search",
+        "sumcontent/sumcontent",
+        "collection/collection",
+        "officle/officle"
+      ]
+    }
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#e60527",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "selectedColor": "#e60527",
+    "list": [
+      {
+        "iconPath": "static/tabar图标/shouye/首页.png",
+        "selectedIconPath": "static/tabar图标/shouye/首页 (选中).png",
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "iconPath": "static/tabar图标/my/_我的 .png",
+        "selectedIconPath": "static/tabar图标/my/_我的(选中).png",
+        "pagePath": "pages/my/my",
+        "text": "我的"
+      }
+    ]
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {}
+}

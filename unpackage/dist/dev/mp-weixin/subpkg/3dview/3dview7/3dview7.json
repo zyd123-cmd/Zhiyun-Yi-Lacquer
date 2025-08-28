@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "餐桌",
+  "disableScroll": true,
+  "usingComponents": {
+    "aifunction": "/components/aifunction/aifunction",
+    "xr-start": "/wxcomponents/xr-start"
+  }
+}

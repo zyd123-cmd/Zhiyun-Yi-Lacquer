@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "AR平面识别",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "aifunction": "/components/aifunction/aifunction"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "花瓶",
+  "disableScroll": true,
+  "usingComponents": {
+    "custom": "/wxcomponents/custom/index"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "",
+  "usingComponents": {
+    "aifunction": "/components/aifunction/aifunction",
+    "my-search": "/components/my-search/my-search"
+  }
+}

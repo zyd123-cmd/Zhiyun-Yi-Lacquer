@@ -1,0 +1,8 @@
+
+page {
+  background-color: #303030;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-image: url("https://mmbiz.qpic.cn/mmbiz_jpg/DWsjgNA1bNhdC11VLBgx2BWNTPV9IpOibepzbDy76xTme7ByunTCCPnafo2Y4I6hWz1PMlQxaSib6pmXu8C0IO5A/640?wx_fmt=jpeg&from=appmsg");
+}
+

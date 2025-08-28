@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "耳饰",
+  "disableScroll": true,
+  "usingComponents": {
+    "custom": "/wxcomponents/custom/index"
+  }
+}

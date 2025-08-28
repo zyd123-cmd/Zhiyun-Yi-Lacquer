@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "智美彝漆",
+  "usingComponents": {
+    "my-search": "/components/my-search/my-search"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "碗",
+  "disableScroll": true,
+  "usingComponents": {
+    "custom": "/wxcomponents/custom/index"
+  }
+}

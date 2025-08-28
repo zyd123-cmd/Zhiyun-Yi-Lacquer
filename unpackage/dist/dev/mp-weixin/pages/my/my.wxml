@@ -1,0 +1,1 @@
+<view><block wx:if="{{userInfo_tank}}"><my-userinfo vue-id="704e9d00-1" bind:__l="__l"></my-userinfo></block><block wx:else><my-login vue-id="704e9d00-2" bind:__l="__l"></my-login></block></view>

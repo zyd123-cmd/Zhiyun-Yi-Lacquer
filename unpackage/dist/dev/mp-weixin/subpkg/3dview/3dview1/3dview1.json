@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "手镯",
+  "enablePullDownRefresh": false,
+  "disableScroll": true,
+  "usingComponents": {
+    "aifunction": "/components/aifunction/aifunction",
+    "xr-start": "/wxcomponents/xr-start"
+  }
+}

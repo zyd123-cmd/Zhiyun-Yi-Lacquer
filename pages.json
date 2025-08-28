@@ -1,0 +1,439 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+    
+      "style": {
+        "navigationBarTitleText": "智美彝漆"
+      }
+    },
+    {
+      "path": "pages/my/my",
+
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+
+    {
+      "path": "pages/homepage/homepage",
+      "style": {
+        "navigationBarTitleText": "智美彝漆"
+      }
+    },
+    {
+      "path": "pages/TTest/TTest",
+      "style": {
+        "navigationBarTitleText": "测试",
+       // #ifdef APP-PLUS || H5 || MP-WEIXIN || MP-QQ
+       			"usingComponents": {
+       				"custom": "/wxcomponents/custom/index"
+       			},
+       			// #endif
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/logintest/logintest",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    // {
+    //   "path": "pages/community/community",
+    //   "style": {
+    //     "navigationBarTitleText": "彝圈",
+    //     "enablePullDownRefresh": true
+    //   }
+    // },
+    {
+      "path" : "pages/test/test",
+      "style" : 
+      {
+        "navigationBarTitleText" : ""
+      },
+	  "usingComponents": {
+	  }
+    }
+
+
+  ],
+  "subPackages": [{
+      "root": "subpkg",
+      "pages": [{
+          "path": "3djs/3djs",
+          "style": {
+            "navigationBarTitleText": "漆器展示",
+            "enablePullDownRefresh": false
+           
+      
+          }
+        },
+        {
+            "path": "arsum/arsum",
+            "style": {
+              "navigationBarTitleText": "AR平面识别",
+              "enablePullDownRefresh": false
+              
+         
+            }
+          },
+        {
+          "path": "3dview/3dview0/3dview0",
+          "style": {
+            "navigationBarTitleText": "三足漆盘",
+            "enablePullDownRefresh": false,
+            "usingComponents": {
+              "xr-start": "/wxcomponents/xr-start"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "3dview/3dview1/3dview1",
+          "style": {
+            "navigationBarTitleText": "手镯",
+            "enablePullDownRefresh": false,
+            "usingComponents": {
+              "xr-start": "/wxcomponents/xr-start"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "3dview/3dview2/3dview2",
+          "style": {
+            "navigationBarTitleText": "木钵",
+            "usingComponents": {
+              "xr-start": "/wxcomponents/xr-start"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "3dview/3dview3/3dview3",
+          "style": {
+            "navigationBarTitleText": "耳饰",
+            "usingComponents": {
+              "xr-start": "/wxcomponents/xr-start"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "3dview/3dview4/3dview4",
+          "style": {
+            "navigationBarTitleText": "皮碗",
+            "usingComponents": {
+              "xr-start": "/wxcomponents/xr-start"
+            },
+            "disableScroll": true
+          }
+        },    
+        {
+          "path": "3dview/3dview5/3dview5",
+          "style": {
+            "navigationBarTitleText": "碗",
+            "usingComponents": {
+              "xr-start": "/wxcomponents/xr-start"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "3dview/3dview6/3dview6",
+          "style": {
+            "navigationBarTitleText": "花瓶",
+            "usingComponents": {
+              "xr-start": "/wxcomponents/xr-start"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "3dview/3dview7/3dview7",
+          "style": {
+            "navigationBarTitleText": "餐桌",
+            "usingComponents": {
+              "xr-start": "/wxcomponents/xr-start"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "arview/arview0/arview0",
+          "style": {
+            "navigationBarTitleText": "三足漆盘",
+            "usingComponents": {
+            	"custom": "/wxcomponents/custom/index"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "arview/arview1/arview1",
+          "style": {
+            "navigationBarTitleText": "手镯",
+            "usingComponents": {
+            	"custom": "/wxcomponents/custom/index"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "arview/arview2/arview2",
+          "style": {
+            "navigationBarTitleText": "木钵",
+            "usingComponents": {
+            	"custom": "/wxcomponents/custom/index"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "arview/arview3/arview3",
+          "style": {
+            "navigationBarTitleText": "耳饰",
+            "usingComponents": {
+            	"custom": "/wxcomponents/custom/index"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "arview/arview4/arview4",
+          "style": {
+            "navigationBarTitleText": "皮碗",
+            "usingComponents": {
+            	"custom": "/wxcomponents/custom/index"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "arview/arview5/arview5",
+          "style": {
+            "navigationBarTitleText": "碗",
+            "usingComponents": {
+            	"custom": "/wxcomponents/custom/index"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "arview/arview6/arview6",
+          "style": {
+            "navigationBarTitleText": "花瓶",
+            "usingComponents": {
+            	"custom": "/wxcomponents/custom/index"
+            },
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "arview/arview7/arview7",
+          "style": {
+            "navigationBarTitleText": "餐桌",
+            "usingComponents": {
+            	"custom": "/wxcomponents/custom/index"
+            },
+            "disableScroll": true
+          }
+        }
+        // 如果还有更多页面，继续添加到这里
+      ]
+    },
+    {
+      "root": "subcontentpkg",
+      "pages": [{
+          "path": "hottopic/article1/article1",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "hottopic/article0/article0",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "hottopic/article2/article2",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "hottopic/article3/article3",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "information/article0/article0",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "information/article1/article1",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "information/article2/article2",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "information/article3/article3",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "information/rarticle0/rarticle0",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "information/rarticle1/rarticle1",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "information/rarticle2/rarticle2",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "search/search",
+          "style": {
+            "navigationBarTitleText": "智美彝漆"
+          }
+        },
+        {
+          "path": "sumcontent/sumcontent",
+          "style": {
+            "navigationBarTitleText": "智韵彝漆",
+            "onReachBottomDistance": 150
+          }
+        },
+        {
+          "path": "collection/collection",
+          "style": {
+            "navigationBarTitleText": ""
+          }
+        },
+        {
+          "path": "officle/officle",
+          "style": {
+            "navigationBarTitleText": ""
+          }
+        }
+      ]
+    }
+    // {
+    //   "root": "storypkg",
+    //   "pages": [{
+    //       "path": "sumstory/sumstory",
+    //       "style": {
+    //         "navigationBarTitleText": "漆器讲解专题"
+    //       }
+    //     },
+    //     {
+    //         "path": "collection/collection",
+    //         "style": {
+    //           "navigationBarTitleText": "收藏的视频"
+    //         }
+    //       },
+    //     {
+    //       "path": "story/story0/story0",
+    //       "style": {
+    //         "navigationBarTitleText": "大漆不朽"
+    //       }
+    //     },
+    //     {
+    //       "path": "story/story1/story1",
+    //       "style": {
+    //         "navigationBarTitleText": "千年彝漆神韵"
+    //       }
+    //     },
+    //     {
+    //       "path": "story/story2/story2",
+    //       "style": {
+    //         "navigationBarTitleText": "凉山彝迹"
+    //       }
+    //     },
+    //     {
+    //       "path": "story/story3/story3",
+    //       "style": {
+    //         "navigationBarTitleText": ""
+    //       }
+    //     },
+    //     {
+    //       "path": "story/story4/story4",
+    //       "style": {
+    //         "navigationBarTitleText": ""
+    //       }
+    //     }
+     
+
+
+    //   ]
+    // },
+    // {
+    //   "root": "communities",
+    //   "pages": [
+
+    //     {
+    //       "path": "pushcommunity/pushcommunity",
+    //       "style": {
+    //         "navigationBarTitleText": "彝圈"
+    //       }
+    //     },
+    //     {
+    //       "path": "mycommunity/mycommunity",
+    //       "style": {
+    //         "navigationBarTitleText": "我的彝圈"
+    //       }
+    //     }
+    //   ]
+    // }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#e60527",
+    "backgroundColor": "#F8F8F8"
+  },
+  "uniIdRouter": {},
+  "tabBar": {
+    "selectedColor": "#e60527",
+    "list": [
+      {
+          "iconPath": "static/tabar图标/shouye/首页.png",
+          "selectedIconPath": "static/tabar图标/shouye/首页 (选中).png",
+          "pagePath": "pages/index/index",
+          "text": "首页"
+        },
+      // {
+      //   "iconPath": "static/tabar图标/yiquan/论坛 .png",
+      //   "selectedIconPath": "static/tabar图标/yiquan/论坛(选中).png",
+      //   "pagePath": "pages/community/community",
+      //   "text": "彝圈"
+      // },
+      {
+        "iconPath": "static/tabar图标/my/_我的 .png",
+        "selectedIconPath": "static/tabar图标/my/_我的(选中).png",
+        "pagePath": "pages/my/my",
+        "text": "我的"
+      }
+    ]
+  }
+}
