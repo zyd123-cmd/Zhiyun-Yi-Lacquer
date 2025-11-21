@@ -1,5 +1,6 @@
 <template>
 	<view class="mainview">
+    <text>just test Draft</text>
 		<aifunction></aifunction>
 	</view>
 </template>
