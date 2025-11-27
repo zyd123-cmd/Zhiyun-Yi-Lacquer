@@ -27,7 +27,7 @@
           <view class="tab-icon-text">
             <text class="tabtext">{{ item }}</text>
             <image
-              src="https://7a68-zhiyunyiqi-6gubyp7bd3a2e4ff-1327529386.tcb.qcloud.la/%E6%BB%91%E5%8A%A8%E6%A0%8F/%E6%BB%91%E5%8A%A8%E6%9D%A1.png?sign=c177ec65501e3b696fbe9cc22164d8e1&t=1721637168"
+              src="/static/导航图/滑动条.png"
               class="tab-icon" v-show="index === activeTab"></image>
           </view>
         </view>
@@ -40,8 +40,8 @@
         <!-- 热点话题 -->
         <view v-if="index === 0">
           <!-- 热点话题 -->
-          <navigator class="content-item" v-for="(item,index) in hottopic" :key="index" :url="item.pagesrc">
-            <image class="content-image" :src="item.imagesrc" mode="aspectFill">
+          <navigator class="content-item" v-for="(item,index) in hottopic" :key="index" :url="getArticleUrl(item)">
+            <image class="content-image" :src="item.imagesrc[0]" mode="aspectFill">
             </image>
             <text class="content-text">{{item.title}}</text>
           </navigator>
@@ -51,8 +51,8 @@
         </view>
         <view v-if="index === 1">
           <!-- 最新资讯 1-->
-          <navigator class="content-item" v-for="(item,index) in information" :key="index" :url="item.pagesrc">
-            <image class="content-image" :src="item.imagesrc" mode="aspectFill">
+          <navigator class="content-item" v-for="(item,index) in information" :key="index" :url="getArticleUrl(item)">
+            <image class="content-image" :src="item.imagesrc[0]" mode="aspectFill">
             </image>
             <text class="content-text">{{item.title}}</text>
           </navigator>
@@ -61,8 +61,8 @@
           </navigator>
         </view>
         <view v-if="index === 2">    <!-- 精品推荐1-->
-          <navigator class="content-item" v-for="(item,index) in recommend" :key="index" :url="item.pagesrc">
-            <image class="content-image" :src="item.imagesrc" mode="aspectFill">
+          <navigator class="content-item" v-for="(item,index) in recommend" :key="index" :url="getArticleUrl(item)">
+            <image class="content-image" :src="item.imagesrc[0]" mode="aspectFill">
             </image>
             <text class="content-text">{{item.title}}</text>
           </navigator>
@@ -70,9 +70,9 @@
             <text class="more">查看更多</text>
           </navigator></view>
         <view v-if="index === 3">
-          <!-- 活动公共 -->
-<navigator class="content-item" v-for="(item,index) in announcement" :key="index" :url="item.pagesrc">
-            <image class="content-image" :src="item.imagesrc" mode="aspectFill">
+          <!-- 活动公告 -->
+          <navigator class="content-item" v-for="(item,index) in announcement" :key="index" :url="getArticleUrl(item)">
+            <image class="content-image" :src="item.imagesrc[0]" mode="aspectFill">
             </image>
             <text class="content-text">{{item.title}}</text>
           </navigator>
@@ -137,17 +137,7 @@
           },
         ],
         isDataLoaded: false,
-        announcement:[{
-          imagesrc:"/static/导航图/3D展示.png",
-          title:"彝族漆器3D模型在线展示功能上线。",
-          pagesrc:"/subpkg/3djs/3djs"
-        },
-        {
-          imagesrc:"/static/导航图/AR识别.png",
-          title:"彝族漆器3D模型AR平面识别功能上线，为获最佳体验，请在开放、光线充足的场所操作。",
-          pagesrc:"/subpkg/arsum/arsum"
-        },
-        ]
+        announcement:[]
       }
     },
 
@@ -174,12 +164,15 @@
         })
       },
       clickTab(index) {
-        this.activeTab = index; // 更新当前激活的标签
+        this.activeTab = index; // 更新当前激活的标签索引
       },
       gotoSearch() {
         uni.navigateTo({
           url: '/subcontentpkg/search/search'
         })
+      },
+      getArticleUrl(item) {
+        return '/subcontentpkg/hottopic/article0/article0?id=' + item._id
       },
     async getSwiper() {
         const db = wx.cloud.database();
@@ -248,6 +241,24 @@
         this.recommend = res.data;
         console.log("最新资讯获取成功");
       },
+      async getAnnouncement() {
+        const db = wx.cloud.database();
+        const res = await db.collection('model')
+          .field({
+            _id: true,
+            title: true,
+            imagesrc: true,
+            pagesrc: true
+          })
+          .where({
+            type: 'index4'
+          })
+          .orderBy('_id', 'asc')
+          .limit(3)
+          .get();
+        this.announcement = res.data;
+        console.log("活动公告获取成功");
+      },
       async getData() {
         uni.showLoading({
           title: "加载中",
@@ -258,7 +269,8 @@
             this.getSwiper(),
             this.getHottopic(),
             this.getInformation(),
-            this.getrecommend()
+            this.getrecommend(),
+            this.getAnnouncement()
           ]);
           // 所有数据加载完成后隐藏加载提示
           uni.hideLoading();

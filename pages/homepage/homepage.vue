@@ -30,7 +30,7 @@
 					<view class="tab-icon-text">
 						<text class="tabtext">{{ item }}</text>
 						<image
-							src="https://7a68-zhiyunyiqi-6gubyp7bd3a2e4ff-1327529386.tcb.qcloud.la/%E6%BB%91%E5%8A%A8%E6%A0%8F/%E6%BB%91%E5%8A%A8%E6%9D%A1.png?sign=c177ec65501e3b696fbe9cc22164d8e1&t=1721637168"
+							src="/static/导航图/滑动条.png"
 							class="tab-icon" v-show="index === activeTab"></image>
 					</view>
 				</view>

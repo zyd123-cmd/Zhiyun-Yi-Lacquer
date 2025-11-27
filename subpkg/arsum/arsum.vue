@@ -5,7 +5,7 @@
 			<image style="width: 100%;" mode="widthFix" :src="titleimage"> </image>
 		</view>
 		<view class="navigator-container">
-			<navigator class="navigator-item" v-for="(item, index) in items" :key="index" :url="item.arpagesrc">
+			<navigator class="navigator-item" v-for="(item, index) in items" :key="index" :url="getArUrl(item)">
 				<view class="navigator-content">
 					<image class="navigator-image" :src="item.image"></image>
 					<text class="navigator-text">{{ item.name }}</text>
@@ -21,7 +21,7 @@
 
 		data() {
 			return {
-				titleimage: "cloud://zhiyunyiqi-6gubyp7bd3a2e4ff.7a68-zhiyunyiqi-6gubyp7bd3a2e4ff-1327529386/首页轮播图/轮播图4.jpg",
+				titleimage: "cloud://cloud1-1gr3ry1bac666189.636c-cloud1-1gr3ry1bac666189-1327529386/backimage/2.webp",
 				// 假设有一个items数组，每个对象包含navigator的url、图片地址和文本
 				items: [],
 				isload: false,
@@ -44,6 +44,10 @@
 					uni.hideLoading();
 					this.isload = true;
 				})
+			},
+			getArUrl(item) {
+				const base = item.arpagesrc || '/subpkg/arview/arview0/arview0';
+				return base + '?id=' + item._id;
 			},
 		},
 	}

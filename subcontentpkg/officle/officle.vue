@@ -6,7 +6,8 @@
     <!-- 使用自定义的搜索组件 -->
     <my-search :radius="15" :bgcolor="'#e60527'" @click="gotoSearch"></my-search>
     <!-- 内容 -->
-    <navigator class="content-item" v-for="(item,index) in announcement" :key="index" :url="item.pagesrc">
+    <navigator class="content-item" v-for="(item,index) in announcement" :key="index" :url="getArticleUrl(item)">
+
       <image class="content-image" :src="item.imagesrc" mode="aspectFill">
       </image>
       <text class="content-text">{{item.title}}</text>
@@ -21,20 +22,41 @@
 
     data() {
       return {
-        announcement: [{
-            imagesrc: "/static/导航图/3D展示.png",
-            title: "彝族漆器3D模型在线展示功能上线。",
-            pagesrc: "/subpkg/3djs/3djs"
-          },
-          {
-            imagesrc: "/static/导航图/AR识别.png",
-            title: "彝族漆器3D模型AR平面识别功能上线，为获最佳体验，请在开放、光线充足的场所操作。",
-            pagesrc: "/subpkg/arsum/arsum"
-          },
-        ]
+        announcement: []
       }
     },
 
+    onLoad() {
+      this.getAnnouncement();
+    },
+
+    methods: {
+      gotoSearch() {
+        uni.navigateTo({
+          url: '/subcontentpkg/search/search'
+        })
+      },
+      getArticleUrl(item) {
+        return '/subcontentpkg/hottopic/article0/article0?id=' + item._id
+      },
+      async getAnnouncement() {
+        const db = wx.cloud.database();
+        const res = await db.collection('model')
+          .field({
+            _id: true,
+            title: true,
+            imagesrc: true,
+            pagesrc: true
+          })
+          .where({
+            type: 'index4'
+          })
+          .orderBy('_id', 'asc')
+          .get();
+        this.announcement = res.data;
+        console.log('官方动态获取成功', this.announcement);
+      }
+    }
 
   }
 </script>

@@ -81,79 +81,8 @@
         {
           "path": "3dview/3dview0/3dview0",
           "style": {
-            "navigationBarTitleText": "三足漆盘",
+            "navigationBarTitleText": "3D展示",
             "enablePullDownRefresh": false,
-            "usingComponents": {
-              "xr-start": "/wxcomponents/xr-start"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "3dview/3dview1/3dview1",
-          "style": {
-            "navigationBarTitleText": "手镯",
-            "enablePullDownRefresh": false,
-            "usingComponents": {
-              "xr-start": "/wxcomponents/xr-start"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "3dview/3dview2/3dview2",
-          "style": {
-            "navigationBarTitleText": "木钵",
-            "usingComponents": {
-              "xr-start": "/wxcomponents/xr-start"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "3dview/3dview3/3dview3",
-          "style": {
-            "navigationBarTitleText": "耳饰",
-            "usingComponents": {
-              "xr-start": "/wxcomponents/xr-start"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "3dview/3dview4/3dview4",
-          "style": {
-            "navigationBarTitleText": "皮碗",
-            "usingComponents": {
-              "xr-start": "/wxcomponents/xr-start"
-            },
-            "disableScroll": true
-          }
-        },    
-        {
-          "path": "3dview/3dview5/3dview5",
-          "style": {
-            "navigationBarTitleText": "碗",
-            "usingComponents": {
-              "xr-start": "/wxcomponents/xr-start"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "3dview/3dview6/3dview6",
-          "style": {
-            "navigationBarTitleText": "花瓶",
-            "usingComponents": {
-              "xr-start": "/wxcomponents/xr-start"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "3dview/3dview7/3dview7",
-          "style": {
-            "navigationBarTitleText": "餐桌",
             "usingComponents": {
               "xr-start": "/wxcomponents/xr-start"
             },
@@ -163,77 +92,7 @@
         {
           "path": "arview/arview0/arview0",
           "style": {
-            "navigationBarTitleText": "三足漆盘",
-            "usingComponents": {
-            	"custom": "/wxcomponents/custom/index"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "arview/arview1/arview1",
-          "style": {
-            "navigationBarTitleText": "手镯",
-            "usingComponents": {
-            	"custom": "/wxcomponents/custom/index"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "arview/arview2/arview2",
-          "style": {
-            "navigationBarTitleText": "木钵",
-            "usingComponents": {
-            	"custom": "/wxcomponents/custom/index"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "arview/arview3/arview3",
-          "style": {
-            "navigationBarTitleText": "耳饰",
-            "usingComponents": {
-            	"custom": "/wxcomponents/custom/index"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "arview/arview4/arview4",
-          "style": {
-            "navigationBarTitleText": "皮碗",
-            "usingComponents": {
-            	"custom": "/wxcomponents/custom/index"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "arview/arview5/arview5",
-          "style": {
-            "navigationBarTitleText": "碗",
-            "usingComponents": {
-            	"custom": "/wxcomponents/custom/index"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "arview/arview6/arview6",
-          "style": {
-            "navigationBarTitleText": "花瓶",
-            "usingComponents": {
-            	"custom": "/wxcomponents/custom/index"
-            },
-            "disableScroll": true
-          }
-        },
-        {
-          "path": "arview/arview7/arview7",
-          "style": {
-            "navigationBarTitleText": "餐桌",
+            "navigationBarTitleText": "AR识别",
             "usingComponents": {
             	"custom": "/wxcomponents/custom/index"
             },
@@ -245,68 +104,9 @@
     },
     {
       "root": "subcontentpkg",
-      "pages": [{
-          "path": "hottopic/article1/article1",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
+      "pages": [
         {
           "path": "hottopic/article0/article0",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
-        {
-          "path": "hottopic/article2/article2",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
-        {
-          "path": "hottopic/article3/article3",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
-        {
-          "path": "information/article0/article0",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
-        {
-          "path": "information/article1/article1",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
-        {
-          "path": "information/article2/article2",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
-        {
-          "path": "information/article3/article3",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
-        {
-          "path": "information/rarticle0/rarticle0",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
-        {
-          "path": "information/rarticle1/rarticle1",
-          "style": {
-            "navigationBarTitleText": "智美彝漆"
-          }
-        },
-        {
-          "path": "information/rarticle2/rarticle2",
           "style": {
             "navigationBarTitleText": "智美彝漆"
           }

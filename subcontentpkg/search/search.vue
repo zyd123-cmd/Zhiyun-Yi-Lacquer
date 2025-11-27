@@ -133,15 +133,14 @@
         });
       },
      // 跳转函数
-// 跳转函数
 gotoDetail(item) {
-  if (item && typeof item === 'object' && item.pagesrc) {
+  if (item && typeof item === 'object' && item._id) {
     uni.navigateTo({
-      // 指定详情页面的 URL 地址，
-      url: item.pagesrc
+      // 指定详情页面的 URL 地址
+      url: '/subcontentpkg/hottopic/article0/article0?id=' + item._id
     });
   } else {
-    console.error('Invalid item or item.pagesrc is missing:', item);
+    console.error('Invalid item or item._id is missing:', item);
   }
 },
 // 保存搜索关键词为历史记录

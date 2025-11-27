@@ -20,14 +20,15 @@ exports.main = async (event, context) => {
       data: {
         avatarUrl: event.avatarUrl,
         nickName: event.nickName,
-        imagelist:event.imagelist,
+        backimage: event.backimage || '',
+        imagelist: event.imagelist || [],
       }
     });
 
     // 返回操作结果
     return {
       success: true,
-      data: res,
+      data: { _id: res._id },
       message: '云函数用户数据上传成功'
     };
   } catch (err) {

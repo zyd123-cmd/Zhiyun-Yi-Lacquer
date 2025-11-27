@@ -3,7 +3,7 @@
     
 		onLaunch: function() {
       wx.cloud.init({
-      				env:'zhiyunyiqi-6gubyp7bd3a2e4ff',
+      				env:'cloud1-1gr3ry1bac666189',
       				traceUser:true
       			})
       			

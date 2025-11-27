@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "餐桌",
-  "disableScroll": true,
-  "usingComponents": {
-    "custom": "/wxcomponents/custom/index"
-  }
-}

@@ -118,11 +118,13 @@
             }
           });
           console.log('云函数调用成功了哦，返回的数据是', res);
-          
-          this.updateUserid(res.result.data._id);
-
-          this.updateTank(true);
-          return res; // 返回调用结果，以便后续操作
+          if (res.result && res.result.success && res.result.data && res.result.data._id) {
+            this.updateUserid(res.result.data._id);
+            this.updateTank(true);
+            return res; // 返回调用结果，以便后续操作
+          } else {
+            throw new Error(res.result && res.result.message || '注册失败');
+          }
         } catch (err) {
           console.error('注册失败', err);
           throw err; // 将错误向外抛出，以便可以被 .catch() 捕获

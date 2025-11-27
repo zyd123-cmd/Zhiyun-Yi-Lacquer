@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "三足漆盘",
+  "navigationBarTitleText": "AR识别",
   "disableScroll": true,
   "usingComponents": {
     "custom": "/wxcomponents/custom/index"

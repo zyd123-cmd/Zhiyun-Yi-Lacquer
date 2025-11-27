@@ -81,9 +81,11 @@
         handupcolor: "", //控制点赞按钮的状态
         displayHandup: 0, // 初始化显示的点赞数
         isDataLoaded: false, // 数据加载完成，允许显示内容
+        id: "",
       }
     },
-    onLoad() {
+    onLoad(options) {
+      this.id = options && options.id ? options.id : "";
       this.getData();
     },
     methods: {
@@ -120,7 +122,7 @@
         wx.cloud.callFunction({
           name: "getimage",
           data: {
-            id: "9bf3df13672399f411bde19c25ab217f"
+            id: this.id
           }
         }).then(res => {
           this.hottopic = res.result.data;

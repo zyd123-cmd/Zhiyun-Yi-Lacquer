@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "木钵",
-  "disableScroll": true,
-  "usingComponents": {
-    "custom": "/wxcomponents/custom/index"
-  }
-}

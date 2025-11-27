@@ -6,7 +6,7 @@
     <my-search :radius="15" :bgcolor="'#e60527'" @click="gotoSearch"></my-search>
     <!-- 内容 -->
     
-    <navigator class="content-item" v-for="(item,index) in cart" :key="index" :url="item.pagesrc">
+    <navigator class="content-item" v-for="(item,index) in cart" :key="index" :url="getArticleUrl(item)">
       <image class="content-image" :src="item.imagesrc" mode="aspectFill">
       </image>
       <text class="content-text">{{item.title}}</text>
@@ -34,6 +34,9 @@
        url: '/subcontentpkg/search/search'
      })
    },
+   getArticleUrl(item) {
+    return '/subcontentpkg/hottopic/article0/article0?id=' + item.id
+  },
  }
   
  }
