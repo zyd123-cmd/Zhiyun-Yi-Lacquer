@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const { createParser } = require('eventsource-parser');
 
 const API_URL = process.env.ARK_API_URL || 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
-const API_KEY = process.env.ARK_API_KEY || 'cccc8f6a-a96b-454a-858e-c0c559fe2ccd';
+const API_KEY = process.env.ARK_API_KEY || '';
 const DEFAULT_MODEL = 'doubao-seed-1-6-250615';
 const MODEL = process.env.ARK_MODEL || process.env.ARK_ENDPOINT_ID || DEFAULT_MODEL;
 const PORT = process.env.WS_PORT || 3001;
