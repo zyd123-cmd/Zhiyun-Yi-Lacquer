@@ -1,6 +1,7 @@
 {
   "appid": "wxac6a3d169f78299e",
   "compileType": "miniprogram",
+  "miniprogramRoot": "unpackage/dist/dev/mp-weixin/",
   "libVersion": "3.8.9",
   "packOptions": {
     "ignore": [],
@@ -18,11 +19,24 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    }
+    },
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "simulatorPluginLibVersion": {}
 }

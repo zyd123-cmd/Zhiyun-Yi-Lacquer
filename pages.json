@@ -4,7 +4,7 @@
       "path": "pages/index/index",
     
       "style": {
-        "navigationBarTitleText": "智美彝漆"
+        "navigationBarTitleText": "智韵彝漆"
       }
     },
     {
@@ -18,7 +18,7 @@
     {
       "path": "pages/homepage/homepage",
       "style": {
-        "navigationBarTitleText": "智美彝漆"
+        "navigationBarTitleText": "智韵彝漆"
       }
     },
     {
@@ -108,13 +108,13 @@
         {
           "path": "hottopic/article0/article0",
           "style": {
-            "navigationBarTitleText": "智美彝漆"
+            "navigationBarTitleText": "智韵彝漆"
           }
         },
         {
           "path": "search/search",
           "style": {
-            "navigationBarTitleText": "智美彝漆"
+            "navigationBarTitleText": "智韵彝漆"
           }
         },
         {
@@ -210,7 +210,25 @@
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "uni-app",
     "navigationBarBackgroundColor": "#e60527",
-    "backgroundColor": "#F8F8F8"
+    "backgroundColor": "#F8F8F8",
+    "usingComponents": {
+      "van-button": "/wxcomponents/vant/button/index",
+      "van-cell": "/wxcomponents/vant/cell/index",
+      "van-cell-group": "/wxcomponents/vant/cell-group/index",
+      "van-icon": "/wxcomponents/vant/icon/index",
+      "van-image": "/wxcomponents/vant/image/index",
+      "van-loading": "/wxcomponents/vant/loading/index",
+      "van-popup": "/wxcomponents/vant/popup/index",
+      "van-field": "/wxcomponents/vant/field/index",
+      "van-search": "/wxcomponents/vant/search/index",
+      "van-tab": "/wxcomponents/vant/tab/index",
+      "van-tabs": "/wxcomponents/vant/tabs/index",
+      "van-tag": "/wxcomponents/vant/tag/index",
+      "van-notice-bar": "/wxcomponents/vant/notice-bar/index",
+      "van-swipe-cell": "/wxcomponents/vant/swipe-cell/index",
+      "van-grid": "/wxcomponents/vant/grid/index",
+      "van-grid-item": "/wxcomponents/vant/grid-item/index"
+    }
   },
   "uniIdRouter": {},
   "tabBar": {

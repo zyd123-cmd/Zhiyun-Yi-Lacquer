@@ -1,6 +1,6 @@
 <template>
   <view v-if="isload" >
-	  <!-- ai组件 -->
+	  <!-- ai组件 -->   
 	 <aifunction></aifunction>
     <view style="width: 100%;">
       <image style="width: 100%;" mode="widthFix" :src="titleimage" > </image>
@@ -21,7 +21,7 @@
 
     data() {
       return {
-        titleimage: "cloud://cloud1-1gr3ry1bac666189.636c-cloud1-1gr3ry1bac666189-1327529386/backimage/青花瓷1.jpg",
+        titleimage: "cloud://cloud1-5gprp4v6c761393f.636c-cloud1-5gprp4v6c761393f-1327529386/swiper/1.jpeg",
         // 假设有一个items数组，每个对象包含navigator的url、图片地址和文本
         items: [],
         isload:false,

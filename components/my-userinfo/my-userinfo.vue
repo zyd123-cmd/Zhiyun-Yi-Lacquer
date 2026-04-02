@@ -15,7 +15,7 @@
        
 <view class="panel-item" style="display: flex; align-items: center; justify-content: center;">
   <view style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <text style="font-size: 30rpx;  font-weight: 300; letter-spacing: 5rpx; color: #5a5a5a;">感谢您使用智美彝漆。</text>
+    <text style="font-size: 30rpx;  font-weight: 300; letter-spacing: 5rpx; color: #5a5a5a;">感谢您使用智韵彝漆。</text>
   </view>
   <view style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 10rpx;">
     <text style="font-size: 30rpx; font-weight: 300; letter-spacing: 5rpx; color: #5a5a5a;">更多精彩功能匠心研发中。</text>

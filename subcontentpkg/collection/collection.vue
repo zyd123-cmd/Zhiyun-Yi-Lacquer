@@ -7,7 +7,7 @@
     <!-- 内容 -->
     
     <navigator class="content-item" v-for="(item,index) in cart" :key="index" :url="getArticleUrl(item)">
-      <image class="content-image" :src="item.imagesrc" mode="aspectFill">
+      <image class="content-image" :src="Array.isArray(item.imagesrc) ? item.imagesrc[0] : item.imagesrc" mode="aspectFill">
       </image>
       <text class="content-text">{{item.title}}</text>
     </navigator>

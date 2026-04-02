@@ -1,0 +1,17 @@
+{
+  "name": "sse-ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sse-ai.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eventsource-parser": "^3.0.6",
+    "node-fetch": "^2.7.0",
+    "ws": "^8.18.3"
+  }
+}
