@@ -1,136 +1,183 @@
 <template>
   <view class="mainview">
-	  <!-- ai组件 -->
-	 <aifunction></aifunction>
-    <!-- 使用自定义的搜索组件 -->
-    <my-search :radius="15" :bgcolor="'#e60527'" @click="gotoSearch"></my-search>
-    <!-- 内容 -->
-    <navigator class="content-item" v-for="(item,index) in sumcontent" :key="index" :url="getArticleUrl(item)">
-      <image class="content-image" :src="item.imagesrc[0]" mode="aspectFill">
-      </image>
-      <text class="content-text">{{item.title}}</text>
+    <ai-assistant />
+    <app-search-bar :radius="15" background-color="#e60527" @click="goToSearch" />
+
+    <navigator
+      v-for="article in articles"
+      :key="article._id"
+      class="content-item"
+      :url="getArticleUrl(article)"
+    >
+      <image class="content-image" :src="getCoverImage(article)" mode="aspectFill" />
+      <text class="content-text">{{ article.title }}</text>
     </navigator>
 
+    <view v-if="!articles.length && !isLoading" class="empty-state">暂无文章内容</view>
   </view>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        // 是否正在请求数据
-        isloading: false,
-        sumcontent: [],
-      }
-    },
+import AiAssistant from '@/components/ai-assistant/ai-assistant.vue'
+import AppSearchBar from '@/components/app-search-bar/app-search-bar.vue'
+import {
+  COLLECTIONS,
+  COLLECTION_FALLBACKS,
+  CLOUD_FUNCTIONS,
+  callCloudFunctionWithFallback,
+  extractResultData,
+  runCollectionWithFallback,
+} from '@/utils/cloud'
 
-    onLoad() {
-      // 调用getcontent方法，而不是在这里定义它
-      this.getcontent();
-    },
-    // 触底的事件
-    onReachBottom() {
-      if (this.isloading) {
-        this.getcontent();
-      console.log('触底事件触发，获取新数据');
-      }
-      else{
-        console.log('正在请求数据，请勿重复请求');
-      }
-    },
-    methods: {
-      gotoSearch() {
-        uni.navigateTo({
-          url: '/subcontentpkg/search/search'
-        })
-      },
-      getArticleUrl(item) {
-        return '/subcontentpkg/hottopic/article0/article0?id=' + item._id
-      },
-      getcontent(){
-        uni.showLoading({
-          title: "加载中",
-          mask: false,
-        })
-        wx.cloud.callFunction({
-          name: "getmaincontent",
-          data: {
-            listlength: this.sumcontent.length,
-          }
-        }).then(res => {
-          if (res.result.data.length > 0) {
-            this.sumcontent = this.sumcontent.concat(res.result.data); // 将新获取的数据添加到list的末尾
-            this.isloading = true;
-            uni.hideLoading();
-            console.log("getmaincontent加载完毕", this.sumcontent);
-          } else {
-            uni.hideLoading();
-            uni.showToast({
-              title: "到底啦！",
-              duration: 500,
-            })
-           this.isloading = true;
-            console.log("getfrienduser所有数据加载完成");
-          }
-          console.log('获取的动态信息是', res);
-        });
-      }, 
-
-
+export default {
+  components: {
+    AiAssistant,
+    AppSearchBar,
+  },
+  data() {
+    return {
+      isLoading: false,
+      hasMore: true,
+      pageSize: 7,
+      articles: [],
     }
-  }
+  },
+  onLoad() {
+    this.loadMoreArticles()
+  },
+  onReachBottom() {
+    if (this.isLoading || !this.hasMore) {
+      return
+    }
+
+    this.loadMoreArticles()
+  },
+  methods: {
+    goToSearch() {
+      uni.navigateTo({
+        url: '/subcontentpkg/search/search',
+      })
+    },
+    getArticleUrl(article) {
+      return `/subcontentpkg/hottopic/article0/article0?id=${article._id}`
+    },
+    getCoverImage(article) {
+      if (Array.isArray(article.imagesrc) && article.imagesrc.length > 0) {
+        return article.imagesrc[0]
+      }
+
+      return article.imagesrc || '/static/导航图标/图像.png'
+    },
+    async loadMoreArticles() {
+      this.isLoading = true
+      uni.showLoading({
+        title: '加载中',
+        mask: false,
+      })
+
+      try {
+        let nextArticles = []
+
+        try {
+          const res = await callCloudFunctionWithFallback(
+            [CLOUD_FUNCTIONS.GET_ARTICLE_LIST],
+            {
+              offset: this.articles.length,
+              pageSize: this.pageSize,
+            },
+            {
+              fallbackWhenEmpty: true,
+            }
+          )
+
+          nextArticles = extractResultData(res) || []
+        } catch (cloudError) {
+          const db = wx.cloud.database()
+          const res = await runCollectionWithFallback(
+            [COLLECTIONS.ARTICLES, ...COLLECTION_FALLBACKS.ARTICLES],
+            (collectionName) =>
+              db
+                .collection(collectionName)
+                .field({
+                  _id: true,
+                  title: true,
+                  author: true,
+                  imagesrc: true,
+                  pagesrc: true,
+                  type: true,
+                  handup: true,
+                })
+                .orderBy('_id', 'asc')
+                .skip(this.articles.length)
+                .limit(this.pageSize)
+                .get()
+          )
+
+          nextArticles = res.data || []
+          console.warn('文章列表云函数不可用，已回退数据库直连:', cloudError)
+        }
+
+        this.articles = [...this.articles, ...nextArticles]
+        this.hasMore = nextArticles.length === this.pageSize
+
+        if (!nextArticles.length) {
+          uni.showToast({
+            title: '已经到底了',
+            icon: 'none',
+          })
+        }
+      } catch (error) {
+        console.error('文章列表加载失败:', error)
+        uni.showToast({
+          title: '加载失败',
+          icon: 'none',
+        })
+      } finally {
+        this.isLoading = false
+        uni.hideLoading()
+      }
+    },
+  },
+}
 </script>
 
 <style>
-  /* 内容样式 */
-  .content {
-    padding: 20rpx;
-    border: 2px solid ghostwhite;
-    /* 添加黑色边框 */
+.content {
+  padding: 20rpx;
+  border: 2px solid ghostwhite;
+}
 
-  }
+.content-image {
+  width: 200rpx;
+  height: 200rpx;
+  min-width: 200rpx;
+  min-height: 200rpx;
+  margin-right: 10rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
 
-  .content-item {
-    margin-bottom: 2rpx;
-  }
+.content-item {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 2rpx;
+  padding: 10rpx;
+  border: 1px solid ghostwhite;
+  border-radius: 5rpx;
+}
 
-  .content-image {
-    width: 200rpx;
-    height: 200rpx;
-    border-radius: 20rpx;
-    margin-right: 10rpx;
-    /* 添加图片和文字之间的间距 */
-    /* 新增以下样式确保图片不会被挤压变形 */
-    min-width: 200rpx;
-    min-height: 200rpx;
-    flex-shrink: 0;
-    /* 防止图片在flex容器缩放时被挤压 */
-  }
+.content-text {
+  margin-top: 0rpx;
+  margin-left: 0rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  flex: 1;
+}
 
-  .content-item {
-    display: flex;
-    /* 使用 Flexbox 布局 */
-    align-items: flex-start;
-    /* 将align-items设置为flex-start，防止文字挤压图片 */
-    border: 1px solid ghostwhite;
-    /* 添加灰色边框 */
-    padding: 10rpx;
-    /* 添加一些内边距 */
-    border-radius: 5rpx;
-    /* 如果需要，添加圆角 */
-    /* 可以考虑设置flex-wrap: wrap; 来处理文字过多的情况 */
-    flex-wrap: wrap;
-  }
-
-  /* 确保.content-text在flex容器中可以灵活布局 */
-  .content-text {
-    font-weight: 500;
-    /* 加粗文字 */
-    font-size: 30rpx;
-    margin-top: 0rpx;
-    margin-left: 0rpx;
-    /* 调整左边距 */
-    flex: 1;
-    /* 允许text扩展以填满可用空间 */
-  }
+.empty-state {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #888;
+}
 </style>

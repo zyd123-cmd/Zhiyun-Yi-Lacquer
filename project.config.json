@@ -2,6 +2,7 @@
   "appid": "wxac6a3d169f78299e",
   "compileType": "miniprogram",
   "miniprogramRoot": "unpackage/dist/dev/mp-weixin/",
+  "cloudfunctionRoot": "cloudfunctions/",
   "libVersion": "3.8.9",
   "packOptions": {
     "ignore": [],

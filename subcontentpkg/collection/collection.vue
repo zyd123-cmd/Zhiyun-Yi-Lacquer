@@ -1,98 +1,92 @@
 <template>
   <view class="mainview">
-	  <!-- ai组件 -->
-	 <aifunction></aifunction>
-    <!-- 使用自定义的搜索组件 -->
-    <my-search :radius="15" :bgcolor="'#e60527'" @click="gotoSearch"></my-search>
-    <!-- 内容 -->
-    
-    <navigator class="content-item" v-for="(item,index) in cart" :key="index" :url="getArticleUrl(item)">
-      <image class="content-image" :src="Array.isArray(item.imagesrc) ? item.imagesrc[0] : item.imagesrc" mode="aspectFill">
-      </image>
-      <text class="content-text">{{item.title}}</text>
+    <ai-assistant />
+    <app-search-bar :radius="15" background-color="#e60527" @click="goToSearch" />
+
+    <navigator
+      v-for="article in favoriteArticles"
+      :key="article.id"
+      class="content-item"
+      :url="getArticleUrl(article)"
+    >
+      <image class="content-image" :src="getCoverImage(article)" mode="aspectFill" />
+      <text class="content-text">{{ article.title }}</text>
     </navigator>
 
+    <view v-if="!favoriteArticles.length" class="empty-state">还没有收藏的文章</view>
   </view>
 </template>
 
 <script>
-   import { mapState } from 'vuex'
- export default {
-   computed: {
-       // 调用 mapState 方法，把 m_cart 模块中的 cart 数组映射到当前页面中，作为计算属性来使用
-       // ...mapState('模块的名称', ['要映射的数据名称1', '要映射的数据名称2'])
-       ...mapState('m_cart', ['cart']),
-     },
-   data() {
-     return {
-    
-     }
-   },
- methods:{
-   gotoSearch() {
-     uni.navigateTo({
-       url: '/subcontentpkg/search/search'
-     })
-   },
-   getArticleUrl(item) {
-    return '/subcontentpkg/hottopic/article0/article0?id=' + item.id
-  },
- }
-  
- }
+import { mapState } from 'vuex'
+import AiAssistant from '@/components/ai-assistant/ai-assistant.vue'
+import AppSearchBar from '@/components/app-search-bar/app-search-bar.vue'
 
+export default {
+  components: {
+    AiAssistant,
+    AppSearchBar,
+  },
+  computed: {
+    ...mapState('m_article', ['favoriteArticles']),
+  },
+  methods: {
+    goToSearch() {
+      uni.navigateTo({
+        url: '/subcontentpkg/search/search',
+      })
+    },
+    getArticleUrl(article) {
+      return `/subcontentpkg/hottopic/article0/article0?id=${article.id}`
+    },
+    getCoverImage(article) {
+      if (Array.isArray(article.imagesrc) && article.imagesrc.length > 0) {
+        return article.imagesrc[0]
+      }
+
+      return article.imagesrc || '/static/导航图/图像.png'
+    },
+  },
+}
 </script>
 
 <style>
-  /* 内容样式 */
-  .content {
-    padding: 20rpx;
-    border: 2px solid ghostwhite;
-    /* 添加黑色边框 */
+.content {
+  padding: 20rpx;
+  border: 2px solid ghostwhite;
+}
 
-  }
+.content-image {
+  width: 200rpx;
+  height: 200rpx;
+  min-width: 200rpx;
+  min-height: 200rpx;
+  margin-right: 10rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
 
-  .content-item {
-    margin-bottom: 2rpx;
-  }
+.content-item {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 2rpx;
+  padding: 10rpx;
+  border: 1px solid ghostwhite;
+  border-radius: 5rpx;
+}
 
-  .content-image {
-    width: 200rpx;
-    height: 200rpx;
-    border-radius: 20rpx;
-    margin-right: 10rpx;
-    /* 添加图片和文字之间的间距 */
-    /* 新增以下样式确保图片不会被挤压变形 */
-    min-width: 200rpx;
-    min-height: 200rpx;
-    flex-shrink: 0;
-    /* 防止图片在flex容器缩放时被挤压 */
-  }
+.content-text {
+  margin-top: 0rpx;
+  margin-left: 0rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  flex: 1;
+}
 
-  .content-item {
-    display: flex;
-    /* 使用 Flexbox 布局 */
-    align-items: flex-start;
-    /* 将align-items设置为flex-start，防止文字挤压图片 */
-    border: 1px solid ghostwhite;
-    /* 添加灰色边框 */
-    padding: 10rpx;
-    /* 添加一些内边距 */
-    border-radius: 5rpx;
-    /* 如果需要，添加圆角 */
-    /* 可以考虑设置flex-wrap: wrap; 来处理文字过多的情况 */
-    flex-wrap: wrap;
-  }
-
-  /* 确保.content-text在flex容器中可以灵活布局 */
-  .content-text {
-    font-weight: 500;
-    /* 加粗文字 */
-    font-size: 30rpx;
-    margin-top: 0rpx;
-    margin-left: 0rpx;
-    /* 调整左边距 */
-    flex: 1;
-    /* 允许text扩展以填满可用空间 */
-  }
+.empty-state {
+  padding: 80rpx 0;
+  text-align: center;
+  color: #888;
+}
 </style>

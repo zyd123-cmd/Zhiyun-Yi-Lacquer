@@ -1,7 +1,7 @@
 {
-  "navigationBarTitleText": "",
+  "navigationBarTitleText": "我的收藏",
   "usingComponents": {
-    "aifunction": "/components/aifunction/aifunction",
-    "my-search": "/components/my-search/my-search"
+    "ai-assistant": "/components/ai-assistant/ai-assistant",
+    "app-search-bar": "/components/app-search-bar/app-search-bar"
   }
 }

@@ -1,203 +1,27 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 搜索栏 */
 .search-box {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 999;
 }
-/* 搜索数据 */
 .sugg-list {
   padding: 0 5px;
 }
 .sugg-item {
-  font-size: 12px;
-  padding: 13px 0;
-  border-bottom: 1px solid #efefef;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 13px 0;
+  font-size: 12px;
+  border-bottom: 1px solid #efefef;
 }
 .goods-name {
-  /* 文字不允许换行（单行文本） */
   white-space: nowrap;
-  /* 溢出部分隐藏 */
   overflow: hidden;
-  /* 文本溢出后，使用 ... 代替 */
   text-overflow: ellipsis;
   margin-right: 3px;
 }
-/* 搜索历史 */
 .history-box {
   padding: 0 5px;
 }
@@ -212,6 +36,8 @@
 .history-list {
   display: flex;
   flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 10rpx;
 }
 .uni-tag {
   margin-top: 5px;

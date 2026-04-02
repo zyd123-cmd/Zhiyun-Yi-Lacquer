@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "AR识别",
+  "navigationBarTitleText": "AR 识别",
   "disableScroll": true,
   "usingComponents": {
     "custom": "/wxcomponents/custom/index"

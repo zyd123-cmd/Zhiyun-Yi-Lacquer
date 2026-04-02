@@ -1,8 +1,8 @@
 {
-  "navigationBarTitleText": "智韵彝漆",
+  "navigationBarTitleText": "文章内容",
   "onReachBottomDistance": 150,
   "usingComponents": {
-    "aifunction": "/components/aifunction/aifunction",
-    "my-search": "/components/my-search/my-search"
+    "ai-assistant": "/components/ai-assistant/ai-assistant",
+    "app-search-bar": "/components/app-search-bar/app-search-bar"
   }
 }

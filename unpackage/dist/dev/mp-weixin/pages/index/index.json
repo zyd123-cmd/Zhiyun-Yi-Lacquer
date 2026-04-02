@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "智韵彝漆",
   "usingComponents": {
-    "my-search": "/components/my-search/my-search"
+    "app-search-bar": "/components/app-search-bar/app-search-bar"
   }
 }

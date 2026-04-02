@@ -1,303 +1,373 @@
 <template>
-  <view class="article-container" v-if="isDataLoaded">
-	  <!-- ai组件 -->
-	 <aifunction></aifunction>
+  <view v-if="isReady" class="article-container">
+    <ai-assistant />
+
     <view class="article-header">
-      <text class="article-title">{{hottopic.title}}</text>
-      <text class="article-source">{{hottopic.author}}</text>
+      <text class="article-title">{{ article.title }}</text>
+      <text class="article-source">{{ article.author }}</text>
     </view>
+
     <view class="article-content">
       <view v-for="(item, index) in alternatedContent" :key="index">
-        <text class="article-content-text" v-if="item.type === 'text'">{{ item.content }}</text>
-        <view class="article-imageview" v-else>
-          <image :src="item.imageSrc" class="article-image" mode="widthFix" @click="dealimage" :data-index="index">
-          </image>
+        <text v-if="item.type === 'text'" class="article-content-text">{{ item.content }}</text>
+        <view v-else class="article-imageview">
+          <image
+            :src="item.imageSrc"
+            class="article-image"
+            mode="widthFix"
+            @click="openImageActions(item.imageSrc)"
+          />
         </view>
       </view>
     </view>
-    <!-- 依次添加其他段落 -->
-    <view class="example-body"
-      style="display: flex; align-items: center; justify-content: flex-end; margin-right: 20rpx;margin-top: 20rpx;margin-bottom: 20rpx;">
-      <view class="fav-btn-container" style="margin: 0 20rpx;">
-        <uni-fav :checked="collection" style="size: 100rpx;" class="favBtn" @click="oncontent"
-          bg-color-checked="#dd524d" />
+
+    <view class="article-actions">
+      <view class="fav-btn-container">
+        <uni-fav :checked="isFavorite" bg-color-checked="#dd524d" @click="toggleFavorite" />
       </view>
-      <view class="handup-container" @click="onhand">
-        <uni-icons type="hand-up-filled" size="30rpx" :color="handupcolor" />
-        <text style="font-size: 24rpx; margin-left: 10rpx; color: #666666; text-align: center;">
-          点赞{{displayHandup}}
-        </text>
+
+      <view class="handup-container" @click="toggleLike">
+        <uni-icons type="hand-up-filled" size="30rpx" :color="likeIconColor" />
+        <text class="handup-text">点赞 {{ likeCount }}</text>
       </view>
     </view>
   </view>
-
 </template>
 
 <script>
-  import {
-    mapState,
-    mapMutations
-  } from 'vuex';
+import { mapMutations, mapState } from 'vuex'
+import AiAssistant from '@/components/ai-assistant/ai-assistant.vue'
+import {
+  COLLECTIONS,
+  COLLECTION_FALLBACKS,
+  CLOUD_FUNCTIONS,
+  CLOUD_FUNCTION_FALLBACKS,
+  callCloudFunctionWithFallback,
+  extractResultData,
+  runCollectionWithFallback,
+} from '@/utils/cloud'
 
-  export default {
-    computed: {
-      // 调用 mapState 方法，把 m_cart 模块中的 cart 数组映射到当前页面中，作为计算属性来使用
-      // ...mapState('模块的名称', ['要映射的数据名称1', '要映射的数据名称2'])
-      ...mapState('m_cart', ['cart', 'handup']),
-      ...mapState('m_user', ['Tank']),
-      alternatedContent() {
-        const result = [];
-        // 获取两个数组的长度
-        const contentLength = this.content.length;
-        const imageSrcLength = this.imagesrc.length;
+export default {
+  components: {
+    AiAssistant,
+  },
+  data() {
+    return {
+      articleId: '',
+      article: {},
+      contentList: [],
+      imageList: [],
+      isFavorite: false,
+      isLiked: false,
+      likeCount: 0,
+      isReady: false,
+    }
+  },
+  computed: {
+    ...mapState('m_article', ['favoriteArticles', 'likedArticles']),
+    ...mapState('m_user', ['isLoggedIn']),
+    alternatedContent() {
+      const mixedContent = []
+      const maxLength = Math.max(this.contentList.length, this.imageList.length)
 
-        // 遍历较长的数组，确保所有元素都被添加
-        const maxLength = Math.max(contentLength, imageSrcLength);
-        for (let i = 0; i < maxLength; i++) {
-          // 如果当前索引在 content 范围内，则添加文本
-          if (i < contentLength) {
-            result.push({
-              type: 'text',
-              content: this.content[i]
-            });
-          }
-          // 如果当前索引在 imagesrc 范围内，则添加图片
-          if (i < imageSrcLength) {
-            result.push({
-              type: 'image',
-              imageSrc: this.imagesrc[i]
-            });
-          }
+      for (let index = 0; index < maxLength; index += 1) {
+        if (index < this.contentList.length) {
+          mixedContent.push({
+            type: 'text',
+            content: this.contentList[index],
+          })
         }
-        return result;
+
+        if (index < this.imageList.length) {
+          mixedContent.push({
+            type: 'image',
+            imageSrc: this.imageList[index],
+          })
+        }
       }
+
+      return mixedContent
     },
-    data() {
-      return {
-        hottopic: [],
-        content: [],
-        imagesrc: [],
-        collection: false, //控制收藏按钮的状态
-        handupcolor: "", //控制点赞按钮的状态
-        displayHandup: 0, // 初始化显示的点赞数
-        isDataLoaded: false, // 数据加载完成，允许显示内容
-        id: "",
-      }
+    likeIconColor() {
+      return this.isLiked ? '#dd524d' : '#666666'
     },
-    onLoad(options) {
-      this.id = options && options.id ? options.id : "";
-      this.getData();
-    },
-    methods: {
-      // 把 m_cart 模块中的 addToCart 方法映射到当前页面使用
-      ...mapMutations('m_cart', ['addToCart', 'addToHandup']),
-      // 查看图片
-      scanimage(e) {
-        const imagelist = this.hottopic.imagesrc;
-        const index = e.currentTarget.dataset.index;
-        console.log(e.currentTarget.dataset.index);
-        uni.previewImage({
-          urls: imagelist,
-          current: imagelist[index]
-        })
+  },
+  watch: {
+    favoriteArticles: {
+      handler() {
+        this.syncFavoriteState()
       },
-      // 图片查看或者删除
-      dealimage(e) {
-        wx.showActionSheet({
-            itemList: ['查看图片'],
-            success: (res) => {
-              console.log(res.tapIndex);
-              if (res.tapIndex === 0) {
-                console.log("查看图片");
-                this.scanimage(e)
-              }
-          }
-        })
+      deep: true,
     },
-    // 云函数获取数据
-    getData() {
-      uni.showLoading({
-          title: "加载中",
-        }),
-        wx.cloud.callFunction({
-          name: "getimage",
-          data: {
-            id: this.id
-          }
-        }).then(res => {
-          this.hottopic = res.result.data;
-          this.content = res.result.data.content;
-          this.imagesrc = res.result.data.imagesrc;
-          console.log(res);
-          this.displayHandup = this.hottopic.handup;
-          this.onhandcolor();
-          this.setFavButtonState();
-          this.isDataLoaded = true;
-          uni.hideLoading();
-        })
+    likedArticles: {
+      handler() {
+        this.syncLikeState()
+      },
+      deep: true,
     },
-    pushhandcolor(color) {
-      wx.cloud.callFunction({
-        name: "addHandup",
-        data: {
-          id: this.hottopic._id,
-          handupcolor: color,
-        }
-      }).then(res => {
-        console.log("点赞后的数据为")
-        console.log(res)
+  },
+  onLoad(options) {
+    this.articleId = options && options.id ? options.id : ''
+
+    if (this.articleId) {
+      this.loadArticle()
+    }
+  },
+  methods: {
+    ...mapMutations('m_article', ['toggleFavoriteArticle', 'toggleLikedArticle']),
+    getArticleCollectionNames() {
+      return [COLLECTIONS.ARTICLES, ...COLLECTION_FALLBACKS.ARTICLES]
+    },
+    getFavoritePayload() {
+      return {
+        id: this.article._id,
+        imagesrc: this.article.imagesrc,
+        title: this.article.title,
+        pagesrc: this.article.pagesrc || `/subcontentpkg/hottopic/article0/article0?id=${this.article._id}`,
+      }
+    },
+    syncFavoriteState() {
+      if (!this.article || !this.article._id) {
+        this.isFavorite = false
+        return
+      }
+
+      this.isFavorite = this.favoriteArticles.some((item) => item.id === this.article._id)
+    },
+    syncLikeState() {
+      if (!this.article || !this.article._id) {
+        this.isLiked = false
+        return
+      }
+
+      this.isLiked = this.likedArticles.some((item) => item.id === this.article._id)
+    },
+    previewImage(currentImage) {
+      uni.previewImage({
+        urls: this.imageList,
+        current: currentImage,
       })
-      this.isDataLoaded = true; // 数据加载完成，允许显示内容
     },
-    isItemInCart(hottopicId) {
-      // 使用 some 方法来检查数组中是否至少有一个元素的 id 字段与 hottopicId 相等
-      return this.cart.some(item => item.id === hottopicId);
-    },
-    isItemInHandup(hottopicId) {
-      // 使用 some 方法来检查数组中是否至少有一个元素的 id 字段与 hottopicId 相等
-      return this.handup.some(item => item.id === hottopicId);
-    },
-    // 调用此方法来检查当前热门话题的 id 是否在购物车中
-    checkIfHotTopicInCart() {
-      // 直接使用 this.hottopic._id 作为参数调用修改后的 isItemInCart 方法
-      return this.isItemInCart(this.hottopic._id);
-    },
-    checkIfHotTopicInHandup() {
-      // 直接使用 this.hottopic._id 作为参数调用修改后的 isItemInCart 方法
-      return this.isItemInHandup(this.hottopic._id);
-    },
-    favClick() {
-      this.collection = !this.collection;
-      console.log(this.collection);
-      this.$forceUpdate()
-    },
-    setFavButtonState() {
-      if (this.checkIfHotTopicInCart()) {
-        this.favClick();
-      }
-    },
-    //收藏提交即按钮变色
-    oncontent(e) {
-      if (this.Tank) {
-        // 定义content
-        const content = {
-          'id': this.hottopic._id, // 商品的Id
-          'imagesrc': this.hottopic.imagesrc, // 商品的名称
-          'title': this.hottopic.title, // 商品的价格
-          'pagesrc': this.hottopic.pagesrc // 商品的数量
-        };
-        console.log(content);
-        // 3. 通过 this 调用映射过来的 addToCart 方法，把商品信息对象存储到购物车中
-        this.favClick();
-        this.addToCart(content);
-      } else {
-        // 显示提示框
-        uni.showModal({
-          title: '提示',
-          content: '请先登录',
-          success: function(res) {
-            if (res.confirm) {
-              // 用户点击了确定
-              console.log('用户点击确定');
-              uni.reLaunch({
-                url: '/pages/my/my'
-              });
-            } else if (res.cancel) {
-              // 用户点击了取消
-              uni.showToast({
-                title: '您取消了登录',
-                icon: 'none',
-                duration: 500 // 持续时间，单位毫秒
-              });
-              console.log('用户点击取消');
-            }
+    openImageActions(currentImage) {
+      wx.showActionSheet({
+        itemList: ['查看图片'],
+        success: ({ tapIndex }) => {
+          if (tapIndex === 0) {
+            this.previewImage(currentImage)
           }
-        });
-
-      }
+        },
+      })
     },
-    onhand() {
-      if (this.Tank) {
-        console.log(this.hottopic._id);
-        const handid = {
-          'id': this.hottopic._id,
-        };
-        this.addToHandup(handid);
-        this.handupcolor = this.handupcolor === "#666666" ? "#dd524d" : "#666666";
-        if (this.handupcolor === "#666666") {
-          this.displayHandup--;
-        } else if (this.handupcolor === "#dd524d") {
-          this.displayHandup++;
+    async loadArticleFromDatabase() {
+      const db = wx.cloud.database()
+      const res = await runCollectionWithFallback(
+        this.getArticleCollectionNames(),
+        (collectionName) => db.collection(collectionName).doc(this.articleId).get(),
+        {
+          fallbackWhenEmpty: true,
         }
-        this.pushhandcolor(this.handupcolor);
-      } else {
-        // 显示提示框
-        uni.showModal({
-          title: '提示',
-          content: '请先登录',
-          success: function(res) {
-            if (res.confirm) {
-              // 用户点击了确定
-              console.log('用户点击确定');
-              uni.reLaunch({
-                url: '/pages/my/my'
-              });
-            } else if (res.cancel) {
-              // 用户点击了取消
-              uni.showToast({
-                title: '您取消了登录',
-                icon: 'none',
-                duration: 500 // 持续时间，单位毫秒
-              });
-              console.log('用户点击取消');
+      )
+
+      return res.data || {}
+    },
+    applyArticleData(articleData) {
+      const normalizedArticle =
+        articleData && articleData._id
+          ? articleData
+          : {
+              ...articleData,
+              _id: this.articleId,
             }
-          }
-        });
+
+      this.article = normalizedArticle
+      this.contentList = Array.isArray(normalizedArticle.content) ? normalizedArticle.content : []
+      this.imageList = Array.isArray(normalizedArticle.imagesrc) ? normalizedArticle.imagesrc : []
+      this.likeCount = Number(normalizedArticle.handup || 0)
+      this.syncFavoriteState()
+      this.syncLikeState()
+      this.isReady = true
+    },
+    async loadArticle() {
+      uni.showLoading({
+        title: '加载中',
+        mask: true,
+      })
+
+      try {
+        let articleData = null
+
+        try {
+          const res = await callCloudFunctionWithFallback(
+            [CLOUD_FUNCTIONS.GET_ARTICLE_DETAIL, ...CLOUD_FUNCTION_FALLBACKS.GET_ARTICLE_DETAIL],
+            {
+              id: this.articleId,
+            },
+            {
+              fallbackWhenEmpty: true,
+            }
+          )
+
+          articleData = extractResultData(res) || {}
+        } catch (error) {
+          console.warn('文章详情云函数不可用，已回退数据库直连:', error)
+          articleData = await this.loadArticleFromDatabase()
+        }
+
+        this.applyArticleData(articleData || {})
+      } catch (error) {
+        console.error('文章详情加载失败:', error)
+        uni.showToast({
+          title: '内容加载失败',
+          icon: 'none',
+        })
+      } finally {
+        uni.hideLoading()
       }
     },
-    //页面加在查看原先是否点赞过
-    onhandcolor() {
-      if (this.checkIfHotTopicInHandup()) {
-        this.handupcolor = "#dd524d";
-      } else {
-        this.handupcolor = "#666666";
+    async ensureLoggedIn() {
+      if (this.isLoggedIn) {
+        return true
+      }
+
+      const { confirm } = await uni.showModal({
+        title: '提示',
+        content: '请先登录后再继续操作',
+      })
+
+      if (confirm) {
+        uni.reLaunch({
+          url: '/pages/my/my',
+        })
+      }
+
+      return false
+    },
+    async toggleFavorite() {
+      if (!(await this.ensureLoggedIn())) {
+        return
+      }
+
+      this.toggleFavoriteArticle(this.getFavoritePayload())
+      this.syncFavoriteState()
+    },
+    async persistLikeChange(delta) {
+      const functionNames = [
+        CLOUD_FUNCTIONS.UPDATE_ARTICLE_LIKES,
+        ...CLOUD_FUNCTION_FALLBACKS.UPDATE_ARTICLE_LIKES,
+      ]
+
+      try {
+        await callCloudFunctionWithFallback(functionNames, {
+          id: this.article._id,
+          delta,
+          handupcolor: delta > 0 ? '#dd524d' : '#666666',
+        })
+        return
+      } catch (error) {
+        console.warn('点赞云函数不可用，尝试直连数据库更新:', error)
+      }
+
+      const db = wx.cloud.database()
+      const command = db.command
+
+      await runCollectionWithFallback(this.getArticleCollectionNames(), (collectionName) =>
+        db.collection(collectionName).doc(this.article._id).update({
+          data: {
+            handup: command.inc(delta),
+          },
+        })
+      )
+    },
+    async toggleLike() {
+      if (!(await this.ensureLoggedIn())) {
+        return
+      }
+
+      const delta = this.isLiked ? -1 : 1
+      this.toggleLikedArticle({ id: this.article._id })
+      this.syncLikeState()
+      this.likeCount = Math.max(0, this.likeCount + delta)
+
+      try {
+        await this.persistLikeChange(delta)
+      } catch (error) {
+        console.error('更新点赞状态失败:', error)
+        this.toggleLikedArticle({ id: this.article._id })
+        this.syncLikeState()
+        this.likeCount = Math.max(0, this.likeCount - delta)
+        uni.showToast({
+          title: '点赞失败',
+          icon: 'none',
+        })
       }
     },
-  }
-  //点赞提交即按钮变色
-  }
+  },
+}
 </script>
+
 <style>
-  /* index.wxss */
-  .article-container {
-    padding: 20rpx;
-  }
+.article-container {
+  padding: 20rpx;
+}
 
-  .article-header {
-    text-align: center;
-    margin-bottom: 20rpx;
-    display: grid;
-  }
+.article-header {
+  margin-bottom: 20rpx;
+  text-align: center;
+  display: grid;
+}
 
-  .article-title {
-    font-size: 36rpx;
-    font-weight: bold;
-  }
+.article-title {
+  font-size: 36rpx;
+  font-weight: bold;
+}
 
-  .article-source {
-    font-size: 24rpx;
-    color: #666;
-  }
+.article-source {
+  font-size: 24rpx;
+  color: #666;
+}
 
-  .article-content {
-    font-size: 28rpx;
-    line-height: 1.6;
-  }
+.article-content {
+  font-size: 28rpx;
+  line-height: 1.6;
+}
 
-  .article-imageview {
-    margin-top: 20rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.article-content-text {
+  display: block;
+  margin-top: 20rpx;
+  color: #333;
+}
+
+.article-imageview {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.article-image {
+  width: 100%;
+  border-radius: 16rpx;
+}
+
+.article-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 30rpx 20rpx 20rpx 0;
+}
+
+.fav-btn-container {
+  margin-right: 20rpx;
+}
+
+.handup-container {
+  display: flex;
+  align-items: center;
+}
+
+.handup-text {
+  margin-left: 10rpx;
+  font-size: 24rpx;
+  color: #666666;
+}
 </style>

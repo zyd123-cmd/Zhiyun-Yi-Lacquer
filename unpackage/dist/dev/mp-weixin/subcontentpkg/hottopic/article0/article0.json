@@ -1,7 +1,7 @@
 {
   "navigationBarTitleText": "智韵彝漆",
   "usingComponents": {
-    "aifunction": "/components/aifunction/aifunction",
+    "ai-assistant": "/components/ai-assistant/ai-assistant",
     "uni-fav": "/uni_modules/uni-fav/components/uni-fav/uni-fav",
     "uni-icons": "/uni_modules/uni-icons/components/uni-icons/uni-icons"
   }

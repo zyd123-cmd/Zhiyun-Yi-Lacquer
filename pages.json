@@ -2,86 +2,39 @@
   "pages": [
     {
       "path": "pages/index/index",
-    
       "style": {
         "navigationBarTitleText": "智韵彝漆"
       }
     },
     {
       "path": "pages/my/my",
-
       "style": {
         "navigationBarTitleText": "我的"
       }
-    },
-
-    {
-      "path": "pages/homepage/homepage",
-      "style": {
-        "navigationBarTitleText": "智韵彝漆"
-      }
-    },
-    {
-      "path": "pages/TTest/TTest",
-      "style": {
-        "navigationBarTitleText": "测试",
-       // #ifdef APP-PLUS || H5 || MP-WEIXIN || MP-QQ
-       			"usingComponents": {
-       				"custom": "/wxcomponents/custom/index"
-       			},
-       			// #endif
-        "disableScroll": true
-      }
-    },
-    {
-      "path": "pages/logintest/logintest",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    // {
-    //   "path": "pages/community/community",
-    //   "style": {
-    //     "navigationBarTitleText": "彝圈",
-    //     "enablePullDownRefresh": true
-    //   }
-    // },
-    {
-      "path" : "pages/test/test",
-      "style" : 
-      {
-        "navigationBarTitleText" : ""
-      },
-	  "usingComponents": {
-	  }
     }
-
-
   ],
-  "subPackages": [{
+  "subPackages": [
+    {
       "root": "subpkg",
-      "pages": [{
+      "pages": [
+        {
           "path": "3djs/3djs",
           "style": {
             "navigationBarTitleText": "漆器展示",
             "enablePullDownRefresh": false
-           
-      
           }
         },
         {
-            "path": "arsum/arsum",
-            "style": {
-              "navigationBarTitleText": "AR平面识别",
-              "enablePullDownRefresh": false
-              
-         
-            }
-          },
+          "path": "arsum/arsum",
+          "style": {
+            "navigationBarTitleText": "AR 平面识别",
+            "enablePullDownRefresh": false
+          }
+        },
         {
           "path": "3dview/3dview0/3dview0",
           "style": {
-            "navigationBarTitleText": "3D展示",
+            "navigationBarTitleText": "3D 展示",
             "enablePullDownRefresh": false,
             "usingComponents": {
               "xr-start": "/wxcomponents/xr-start"
@@ -92,14 +45,13 @@
         {
           "path": "arview/arview0/arview0",
           "style": {
-            "navigationBarTitleText": "AR识别",
+            "navigationBarTitleText": "AR 识别",
             "usingComponents": {
-            	"custom": "/wxcomponents/custom/index"
+              "custom": "/wxcomponents/custom/index"
             },
             "disableScroll": true
           }
         }
-        // 如果还有更多页面，继续添加到这里
       ]
     },
     {
@@ -114,101 +66,34 @@
         {
           "path": "search/search",
           "style": {
-            "navigationBarTitleText": "智韵彝漆"
+            "navigationBarTitleText": "搜索"
           }
         },
         {
           "path": "sumcontent/sumcontent",
           "style": {
-            "navigationBarTitleText": "智韵彝漆",
+            "navigationBarTitleText": "文章内容",
             "onReachBottomDistance": 150
           }
         },
         {
           "path": "collection/collection",
           "style": {
-            "navigationBarTitleText": ""
+            "navigationBarTitleText": "我的收藏"
           }
         },
         {
           "path": "officle/officle",
           "style": {
-            "navigationBarTitleText": ""
+            "navigationBarTitleText": "官方动态"
           }
         }
       ]
     }
-    // {
-    //   "root": "storypkg",
-    //   "pages": [{
-    //       "path": "sumstory/sumstory",
-    //       "style": {
-    //         "navigationBarTitleText": "漆器讲解专题"
-    //       }
-    //     },
-    //     {
-    //         "path": "collection/collection",
-    //         "style": {
-    //           "navigationBarTitleText": "收藏的视频"
-    //         }
-    //       },
-    //     {
-    //       "path": "story/story0/story0",
-    //       "style": {
-    //         "navigationBarTitleText": "大漆不朽"
-    //       }
-    //     },
-    //     {
-    //       "path": "story/story1/story1",
-    //       "style": {
-    //         "navigationBarTitleText": "千年彝漆神韵"
-    //       }
-    //     },
-    //     {
-    //       "path": "story/story2/story2",
-    //       "style": {
-    //         "navigationBarTitleText": "凉山彝迹"
-    //       }
-    //     },
-    //     {
-    //       "path": "story/story3/story3",
-    //       "style": {
-    //         "navigationBarTitleText": ""
-    //       }
-    //     },
-    //     {
-    //       "path": "story/story4/story4",
-    //       "style": {
-    //         "navigationBarTitleText": ""
-    //       }
-    //     }
-     
-
-
-    //   ]
-    // },
-    // {
-    //   "root": "communities",
-    //   "pages": [
-
-    //     {
-    //       "path": "pushcommunity/pushcommunity",
-    //       "style": {
-    //         "navigationBarTitleText": "彝圈"
-    //       }
-    //     },
-    //     {
-    //       "path": "mycommunity/mycommunity",
-    //       "style": {
-    //         "navigationBarTitleText": "我的彝圈"
-    //       }
-    //     }
-    //   ]
-    // }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "智韵彝漆",
     "navigationBarBackgroundColor": "#e60527",
     "backgroundColor": "#F8F8F8",
     "usingComponents": {
@@ -235,17 +120,11 @@
     "selectedColor": "#e60527",
     "list": [
       {
-          "iconPath": "static/tabar图标/shouye/首页.png",
-          "selectedIconPath": "static/tabar图标/shouye/首页 (选中).png",
-          "pagePath": "pages/index/index",
-          "text": "首页"
-        },
-      // {
-      //   "iconPath": "static/tabar图标/yiquan/论坛 .png",
-      //   "selectedIconPath": "static/tabar图标/yiquan/论坛(选中).png",
-      //   "pagePath": "pages/community/community",
-      //   "text": "彝圈"
-      // },
+        "iconPath": "static/tabar图标/shouye/首页.png",
+        "selectedIconPath": "static/tabar图标/shouye/首页 (选中).png",
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
       {
         "iconPath": "static/tabar图标/my/_我的 .png",
         "selectedIconPath": "static/tabar图标/my/_我的(选中).png",

@@ -1,6 +1,6 @@
 {
-  "navigationBarTitleText": "",
+  "navigationBarTitleText": "官方动态",
   "usingComponents": {
-    "my-search": "/components/my-search/my-search"
+    "app-search-bar": "/components/app-search-bar/app-search-bar"
   }
 }

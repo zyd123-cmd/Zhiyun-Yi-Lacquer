@@ -1,67 +1,61 @@
 <template>
-	<view style="display: flex;flex-direction: column;">
-		<custom
-			v-if="url"
-			class="custon"
-			:title="title"
-			:url="url"
-			:scale="scale"
-		></custom>
-	</view>
+  <view style="display: flex; flex-direction: column;">
+    <custom v-if="url" class="custon" :title="title" :url="url" :scale="scale"></custom>
+  </view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				// AR 模型 URL，从 3dview 集合的 modelUrl 字段获取
-				url: '',
-				// AR 标题，从 3dview 集合的 titleAR 字段获取
-				title: '',
-				// AR 缩放，从 3dview 集合的 scaleAR 字段获取
-				scale: '',
-			}
-		},
+import { COLLECTIONS, COLLECTION_FALLBACKS, runCollectionWithFallback } from '@/utils/cloud'
 
-		onLoad(option) {
-			uni.showLoading({
-				title: 'AR 模型加载中...'
-			});
-			if (option && option.id) {
-				this.loadArData(option.id);
-			} else {
-				uni.hideLoading();
-			}
-		},
-		methods: {
-			loadArData(id) {
-				const db = wx.cloud.database();
-				db.collection('3dview').doc(id).get().then(res => {
-					const data = res.data || {};
-					if (data.modelUrl) {
-						this.url = data.modelUrl;
-					}
-					if (data.titleAR) {
-						this.title = data.titleAR;
-					}
-					if (data.scaleAR) {
-						this.scale = data.scaleAR;
-					}
-					uni.hideLoading();
-				}).catch(err => {
-					console.error('加载 AR 模型数据失败', err);
-					uni.hideLoading();
-					uni.showToast({
-						title: 'AR 模型加载失败',
-						icon: 'none',
-						duration: 1500,
-					});
-				});
-			},
-		}
-	}
+export default {
+  data() {
+    return {
+      url: '',
+      title: '',
+      scale: '',
+    }
+  },
+  onLoad(option) {
+    uni.showLoading({
+      title: 'AR 模型加载中',
+      mask: true,
+    })
+
+    if (option && option.id) {
+      this.loadArData(option.id)
+      return
+    }
+
+    uni.hideLoading()
+  },
+  methods: {
+    async loadArData(id) {
+      try {
+        const db = wx.cloud.database()
+        const res = await runCollectionWithFallback(
+          [COLLECTIONS.ARTIFACT_MODELS, ...COLLECTION_FALLBACKS.ARTIFACT_MODELS],
+          (collectionName) => db.collection(collectionName).doc(id).get()
+        )
+        const data = res.data || {}
+
+        this.url = data.modelUrl || ''
+        this.title = data.titleAR || ''
+        this.scale = data.scaleAR || ''
+      } catch (error) {
+        console.error('加载 AR 模型数据失败:', error)
+        uni.showToast({
+          title: 'AR 模型加载失败',
+          icon: 'none',
+        })
+      } finally {
+        uni.hideLoading()
+      }
+    },
+  },
+}
 </script>
 
 <style>
-	page {}
+page {
+}
 </style>

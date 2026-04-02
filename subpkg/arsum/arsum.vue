@@ -1,105 +1,132 @@
 <template>
-	<view v-if="isload">
-		<aifunction></aifunction>
-		<view style="width: 100%;">
-			<image style="width: 100%;" mode="widthFix" :src="titleimage"> </image>
-		</view>
-		<view class="navigator-container">
-			<navigator class="navigator-item" v-for="(item, index) in items" :key="index" :url="getArUrl(item)">
-				<view class="navigator-content">
-					<image class="navigator-image" :src="item.image"></image>
-					<text class="navigator-text">{{ item.name }}</text>
-				</view>
-			</navigator>
-		</view>
-	</view>
-	
+  <view v-if="isLoaded">
+    <ai-assistant />
+    <view class="hero-image">
+      <image class="hero-image__img" mode="widthFix" :src="heroImage" />
+    </view>
+    <view class="navigator-container">
+      <navigator
+        v-for="item in items"
+        :key="item._id"
+        class="navigator-item"
+        :url="getArUrl(item)"
+      >
+        <view class="navigator-content">
+          <image class="navigator-image" :src="item.image" />
+          <text class="navigator-text">{{ item.name }}</text>
+        </view>
+      </navigator>
+    </view>
+  </view>
 </template>
 
 <script>
-	export default {
+import AiAssistant from '@/components/ai-assistant/ai-assistant.vue'
+import { COLLECTIONS, COLLECTION_FALLBACKS, runCollectionWithFallback } from '@/utils/cloud'
 
-		data() {
-			return {
-				titleimage: "cloud://cloud1-5gprp4v6c761393f.636c-cloud1-5gprp4v6c761393f-1327529386/swiper/1.jpeg",
-				// 假设有一个items数组，每个对象包含navigator的url、图片地址和文本
-				items: [],
-				isload: false,
-			}
-		},
-		onLoad() {
-			this.getdata();
-		},
-		methods: {
+export default {
+  components: {
+    AiAssistant,
+  },
+  data() {
+    return {
+      heroImage:
+        'cloud://cloud1-5gprp4v6c761393f.636c-cloud1-5gprp4v6c761393f-1327529386/swiper/1.jpeg',
+      items: [],
+      isLoaded: false,
+    }
+  },
+  onLoad() {
+    this.loadModels()
+  },
+  methods: {
+    async loadModels() {
+      uni.showLoading({
+        title: '模型加载中',
+      })
 
-			getdata() {
-				uni.showLoading({
-					title: '模型加载中...'
-				});
-				wx.cloud.callFunction({
-					name: "get3d",
-				}).then(res => {
-					console.log(res.result.data);
-					this.items = res.result.data;
-					uni.hideLoading();
-					this.isload = true;
-				})
-			},
-			getArUrl(item) {
-				const base = item.arpagesrc || '/subpkg/arview/arview0/arview0';
-				return base + '?id=' + item._id;
-			},
-		},
-	}
+      try {
+        const db = wx.cloud.database()
+        const res = await runCollectionWithFallback(
+          [COLLECTIONS.ARTIFACT_MODELS, ...COLLECTION_FALLBACKS.ARTIFACT_MODELS],
+          (collectionName) =>
+            db
+              .collection(collectionName)
+              .orderBy('order', 'asc')
+              .get()
+        )
+
+        this.items = res.data || []
+        this.isLoaded = true
+      } catch (error) {
+        console.error('加载模型列表失败:', error)
+        uni.showToast({
+          title: '模型加载失败',
+          icon: 'none',
+        })
+      } finally {
+        uni.hideLoading()
+      }
+    },
+    getArUrl(item) {
+      const pagePath = item.arpagesrc || '/subpkg/arview/arview0/arview0'
+      return `${pagePath}?id=${item._id}`
+    },
+  },
+}
 </script>
 
 <style>
-	.navigator-container {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-around;
-		padding: 10rpx;
-		background-color: #dfd0bb;
-		/* 更改为新的色调 */
-	}
+.navigator-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 10rpx;
+  background-color: #dfd0bb;
+}
 
-	.navigator-item {
-		flex: 0 1 calc(50% - 20rpx);
-		width: 48%;
-		margin: 10rpx;
-		height: 300rpx;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-		/* 调整阴影颜色以匹配新色调 */
-		transition: transform 0.3s ease;
-	}
+.hero-image {
+  width: 100%;
+}
 
-	.navigator-content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
-		height: 100%;
-		background-color: #fff;
-		/* 可能需要调整内容背景颜色以保持可读性 */
-		border-radius: 10rpx;
-	}
+.hero-image__img {
+  width: 100%;
+}
 
-	.navigator-image {
-		width: 100%;
-		height: 100%;
-		border-radius: 10rpx;
-		object-fit: cover;
-	}
+.navigator-item {
+  flex: 0 1 calc(50% - 20rpx);
+  width: 48%;
+  height: 300rpx;
+  margin: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
 
-	.navigator-text {
-		margin-top: 10rpx;
-		text-align: center;
-		font-size: 28rpx;
-		color: #333;
-		/* 可能需要调整文字颜色以保持可读性 */
-		font-weight: bold;
-	}
+.navigator-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10rpx;
+}
+
+.navigator-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10rpx;
+}
+
+.navigator-text {
+  margin-top: 10rpx;
+  color: #333;
+  font-size: 28rpx;
+  font-weight: bold;
+  text-align: center;
+}
 </style>

@@ -1,280 +1,10 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* index.wxss */
 .article-container {
   padding: 20rpx;
 }
 .article-header {
-  text-align: center;
   margin-bottom: 20rpx;
+  text-align: center;
   display: grid;
 }
 .article-title {
@@ -289,10 +19,37 @@
   font-size: 28rpx;
   line-height: 1.6;
 }
+.article-content-text {
+  display: block;
+  margin-top: 20rpx;
+  color: #333;
+}
 .article-imageview {
   margin-top: 20rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.article-image {
+  width: 100%;
+  border-radius: 16rpx;
+}
+.article-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 30rpx 20rpx 20rpx 0;
+}
+.fav-btn-container {
+  margin-right: 20rpx;
+}
+.handup-container {
+  display: flex;
+  align-items: center;
+}
+.handup-text {
+  margin-left: 10rpx;
+  font-size: 24rpx;
+  color: #666666;
 }
 

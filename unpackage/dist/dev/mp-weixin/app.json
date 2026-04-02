@@ -1,11 +1,7 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/my/my",
-    "pages/homepage/homepage",
-    "pages/TTest/TTest",
-    "pages/logintest/logintest",
-    "pages/test/test"
+    "pages/my/my"
   ],
   "subPackages": [
     {
@@ -30,7 +26,7 @@
   ],
   "window": {
     "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "智韵彝漆",
     "navigationBarBackgroundColor": "#e60527",
     "backgroundColor": "#F8F8F8"
   },

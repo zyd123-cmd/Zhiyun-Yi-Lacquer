@@ -1,116 +1,140 @@
 <template>
-	
   <view class="mainview">
-	  <!-- ai组件 -->
-	<!--  <aifunction></aifunction> -->
-    <!-- 使用自定义的搜索组件 -->
-    <my-search :radius="15" :bgcolor="'#e60527'" @click="gotoSearch"></my-search>
-    <!-- 内容 -->
-    <navigator class="content-item" v-for="(item,index) in announcement" :key="index" :url="getArticleUrl(item)">
+    <app-search-bar :radius="15" background-color="#e60527" @click="goToSearch" />
 
-      <image class="content-image" :src="item.imagesrc" mode="aspectFill">
-      </image>
-      <text class="content-text">{{item.title}}</text>
+    <navigator
+      v-for="article in officialArticles"
+      :key="article._id"
+      class="content-item"
+      :url="getArticleUrl(article)"
+    >
+      <image class="content-image" :src="getCoverImage(article)" mode="aspectFill" />
+      <text class="content-text">{{ article.title }}</text>
     </navigator>
-
-
   </view>
 </template>
 
 <script>
-  export default {
+import AppSearchBar from '@/components/app-search-bar/app-search-bar.vue'
+import {
+  COLLECTIONS,
+  COLLECTION_FALLBACKS,
+  CLOUD_FUNCTIONS,
+  callCloudFunctionWithFallback,
+  extractResultData,
+  runCollectionWithFallback,
+} from '@/utils/cloud'
 
-    data() {
-      return {
-        announcement: []
-      }
-    },
-
-    onLoad() {
-      this.getAnnouncement();
-    },
-
-    methods: {
-      gotoSearch() {
-        uni.navigateTo({
-          url: '/subcontentpkg/search/search'
-        })
-      },
-      getArticleUrl(item) {
-        return '/subcontentpkg/hottopic/article0/article0?id=' + item._id
-      },
-      async getAnnouncement() {
-        const db = wx.cloud.database();
-        const res = await db.collection('model')
-          .field({
-            _id: true,
-            title: true,
-            imagesrc: true,
-            pagesrc: true
-          })
-          .where({
-            type: 'index4'
-          })
-          .orderBy('_id', 'asc')
-          .get();
-        this.announcement = res.data;
-        console.log('官方动态获取成功', this.announcement);
-      }
+export default {
+  components: {
+    AppSearchBar,
+  },
+  data() {
+    return {
+      officialArticles: [],
     }
+  },
+  onLoad() {
+    this.loadOfficialArticles()
+  },
+  methods: {
+    goToSearch() {
+      uni.navigateTo({
+        url: '/subcontentpkg/search/search',
+      })
+    },
+    getArticleUrl(article) {
+      return `/subcontentpkg/hottopic/article0/article0?id=${article._id}`
+    },
+    getCoverImage(article) {
+      if (Array.isArray(article.imagesrc) && article.imagesrc.length > 0) {
+        return article.imagesrc[0]
+      }
 
-  }
+      return article.imagesrc || '/static/导航图/图像.png'
+    },
+    async loadOfficialArticles() {
+      try {
+        try {
+          const res = await callCloudFunctionWithFallback(
+            [CLOUD_FUNCTIONS.GET_ARTICLE_LIST],
+            {
+              offset: 0,
+              pageSize: 100,
+              type: 'index4',
+            },
+            {
+              fallbackWhenEmpty: true,
+            }
+          )
+
+          this.officialArticles = extractResultData(res) || []
+        } catch (cloudError) {
+          const db = wx.cloud.database()
+          const res = await runCollectionWithFallback(
+            [COLLECTIONS.ARTICLES, ...COLLECTION_FALLBACKS.ARTICLES],
+            (collectionName) =>
+              db
+                .collection(collectionName)
+                .field({
+                  _id: true,
+                  title: true,
+                  imagesrc: true,
+                  pagesrc: true,
+                })
+                .where({
+                  type: 'index4',
+                })
+                .orderBy('_id', 'asc')
+                .get()
+          )
+
+          this.officialArticles = res.data || []
+          console.warn('官方动态云函数不可用，已回退数据库直连:', cloudError)
+        }
+      } catch (error) {
+        console.error('官方动态加载失败:', error)
+        uni.showToast({
+          title: '加载失败',
+          icon: 'none',
+        })
+      }
+    },
+  },
+}
 </script>
 
 <style>
-  /* 内容样式 */
-  .content {
-    padding: 20rpx;
-    border: 2px solid ghostwhite;
-    /* 添加黑色边框 */
+.content {
+  padding: 20rpx;
+  border: 2px solid ghostwhite;
+}
 
-  }
+.content-image {
+  width: 200rpx;
+  height: 200rpx;
+  min-width: 200rpx;
+  min-height: 200rpx;
+  margin-right: 10rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
 
-  .content-item {
-    margin-bottom: 2rpx;
-  }
+.content-item {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 2rpx;
+  padding: 10rpx;
+  border: 1px solid ghostwhite;
+  border-radius: 5rpx;
+}
 
-  .content-image {
-    width: 200rpx;
-    height: 200rpx;
-    border-radius: 20rpx;
-    margin-right: 10rpx;
-    /* 添加图片和文字之间的间距 */
-    /* 新增以下样式确保图片不会被挤压变形 */
-    min-width: 200rpx;
-    min-height: 200rpx;
-    flex-shrink: 0;
-    /* 防止图片在flex容器缩放时被挤压 */
-  }
-
-  .content-item {
-    display: flex;
-    /* 使用 Flexbox 布局 */
-    align-items: flex-start;
-    /* 将align-items设置为flex-start，防止文字挤压图片 */
-    border: 1px solid ghostwhite;
-    /* 添加灰色边框 */
-    padding: 10rpx;
-    /* 添加一些内边距 */
-    border-radius: 5rpx;
-    /* 如果需要，添加圆角 */
-    /* 可以考虑设置flex-wrap: wrap; 来处理文字过多的情况 */
-    flex-wrap: wrap;
-  }
-
-  /* 确保.content-text在flex容器中可以灵活布局 */
-  .content-text {
-    font-weight: 500;
-    /* 加粗文字 */
-    font-size: 30rpx;
-    margin-top: 0rpx;
-    margin-left: 0rpx;
-    /* 调整左边距 */
-    flex: 1;
-    /* 允许text扩展以填满可用空间 */
-  }
+.content-text {
+  margin-top: 0rpx;
+  margin-left: 0rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  flex: 1;
+}
 </style>

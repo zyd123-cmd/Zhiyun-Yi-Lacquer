@@ -1,471 +1,361 @@
 <template>
-  <view class="mainview" v-if="isDataLoaded">
-	  <!-- ai组件 -->
-<!-- 	 <aifunction></aifunction> -->
-    <!-- 使用自定义的搜索组件 -->
-    <my-search :radius="15" :bgcolor="'#e60527'" @click="gotoSearch"></my-search>
-    <!-- 轮播图 -->
-    <swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true" class="banner">
-      <swiper-item v-if="swipertab && swipertab.length > 0" v-for="(item, index) in swipertab" :key="index">
-        <navigator :url="item.pagesrc" class="nbanner">
-          <image :src="item.imagesrc" class="swiper-item-image"></image>
+  <view v-if="isReady" class="home-page">
+    <app-search-bar :radius="15" background-color="#e60527" @click="goToSearch" />
+
+    <swiper
+      v-if="swiperItems.length"
+      class="banner"
+      :indicator-dots="true"
+      :autoplay="true"
+      :interval="3000"
+      :duration="1000"
+      :circular="true"
+    >
+      <swiper-item v-for="item in swiperItems" :key="item._id">
+        <navigator class="banner-link" :url="resolveNavigatorUrl(item.pagesrc)">
+          <image :src="item.imagesrc" class="swiper-item-image" mode="aspectFill" />
         </navigator>
       </swiper-item>
     </swiper>
-    <!-- 导航栏 -->
+
     <view class="nav-list">
-      <navigator class="nav-item" v-for="(item,index) in navlist" :key="item._id" :url="item.pagesrc">
-        <image class="nav-item-image" :src="item.imagesrc"></image>
-        <text class="nav-item-text">{{item.text}}</text>
+      <navigator
+        v-for="item in navList"
+        :key="item.text"
+        class="nav-item"
+        :url="resolveNavigatorUrl(item.pagesrc)"
+      >
+        <image class="nav-item-image" :src="item.imagesrc" mode="aspectFit" />
+        <text class="nav-item-text">{{ item.text }}</text>
       </navigator>
     </view>
-    <!-- 滑动栏 -->
+
     <view class="scrollable-tabs">
-      <scroll-view scroll-x="true" class="scroll-view">
-        <view class="tab" v-for="(item, index) in tabs" :key="index" @click="clickTab(index)"
-          :class="{ 'active': index === activeTab }">
+      <scroll-view scroll-x class="scroll-view">
+        <view
+          v-for="(tab, index) in tabs"
+          :key="tab.type"
+          class="tab"
+          :class="{ active: index === activeTab }"
+          @click="activeTab = index"
+        >
           <view class="tab-icon-text">
-            <text class="tabtext">{{ item }}</text>
+            <text class="tabtext">{{ tab.label }}</text>
             <image
+              v-show="index === activeTab"
               src="/static/导航图/滑动条.png"
-              class="tab-icon" v-show="index === activeTab"></image>
+              class="tab-icon"
+            />
           </view>
         </view>
       </scroll-view>
     </view>
-    <!-- 内容显示区域 -->
+
     <view class="content">
-      <view v-for="(item, index) in tabs" :key="index" v-show="index === activeTab">
-        <!-- 这里可以根据实际内容来定义每个视图的结构 -->
-        <!-- 热点话题 -->
-        <view v-if="index === 0">
-          <!-- 热点话题 -->
-          <navigator class="content-item" v-for="(item,index) in hottopic" :key="index" :url="getArticleUrl(item)">
-            <image class="content-image" :src="item.imagesrc[0]" mode="aspectFill">
-            </image>
-            <text class="content-text">{{item.title}}</text>
-          </navigator>
-          <navigator class="moree" url="/subcontentpkg/sumcontent/sumcontent">
-            <text class="more">查看更多</text>
-          </navigator>
-        </view>
-        <view v-if="index === 1">
-          <!-- 最新资讯 1-->
-          <navigator class="content-item" v-for="(item,index) in information" :key="index" :url="getArticleUrl(item)">
-            <image class="content-image" :src="item.imagesrc[0]" mode="aspectFill">
-            </image>
-            <text class="content-text">{{item.title}}</text>
-          </navigator>
-          <navigator class="moree" url="/subcontentpkg/sumcontent/sumcontent">
-            <text class="more">查看更多</text>
-          </navigator>
-        </view>
-        <view v-if="index === 2">    <!-- 精品推荐1-->
-          <navigator class="content-item" v-for="(item,index) in recommend" :key="index" :url="getArticleUrl(item)">
-            <image class="content-image" :src="item.imagesrc[0]" mode="aspectFill">
-            </image>
-            <text class="content-text">{{item.title}}</text>
-          </navigator>
-          <navigator class="moree" url="/subcontentpkg/sumcontent/sumcontent">
-            <text class="more">查看更多</text>
-          </navigator></view>
-        <view v-if="index === 3">
-          <!-- 活动公告 -->
-          <navigator class="content-item" v-for="(item,index) in announcement" :key="index" :url="getArticleUrl(item)">
-            <image class="content-image" :src="item.imagesrc[0]" mode="aspectFill">
-            </image>
-            <text class="content-text">{{item.title}}</text>
-          </navigator>
-          <navigator class="moree" url="/subcontentpkg/sumcontent/sumcontent">
-            <text class="more">查看更多</text>
-          </navigator>
-        </view>
-        
-      </view>
+      <navigator
+        v-for="article in currentArticles"
+        :key="article._id"
+        class="content-item"
+        :url="getArticleUrl(article)"
+      >
+        <image class="content-image" :src="getCoverImage(article)" mode="aspectFill" />
+        <text class="content-text">{{ article.title }}</text>
+      </navigator>
+
+      <navigator class="moree" url="/subcontentpkg/sumcontent/sumcontent">
+        <text class="more">查看更多</text>
+      </navigator>
     </view>
   </view>
 </template>
 
-
 <script>
-  import {
-    mapMutations,
-    mapState
-  } from 'vuex'
-  export default {
-    computed: {
-      // 调用 mapState 方法，把 m_cart 模块中的 cart 数组映射到当前页面中，作为计算属性来使用
-      // ...mapState('模块的名称', ['要映射的数据名称1', '要映射的数据名称2'])
-      ...mapState('m_user', ['userid',"Tank"]),
-    
-    },
-    data() {
-      return {
-        title: 'Hello',
-        tabs: [
-          '精美彝漆',
-          'A I彝漆',
-          '精品推荐',
-          '活动公告',
-         
-        ],
-        activeTab: 0, // 当前激活的标签索引
-        hottopic: [],
-        information: [],
-        swipertab: [],
-        recommend:[],
-        navlist: [{
-            pagesrc: '/subpkg/3djs/3djs',
-            imagesrc: '/static/导航图/3D展示.png',
-            text: '3D展示'
-            
-          },
-          {
-            pagesrc: '/subpkg/arsum/arsum',
-            imagesrc: '/static/导航图/AR识别.png',
-            text: 'AR识别',
-          },
-          {
-            pagesrc: '/subcontentpkg/sumcontent/sumcontent',
-            imagesrc: '/static/导航图/图像.png',
-            text: '漆器图像',
-          },
-          {
-            pagesrc: '/subcontentpkg/officle/officle',
-            imagesrc: '/static/导航图/官方动态 .png',
-            text: '官方动态',
-          },
-        ],
-        isDataLoaded: false,
-        announcement:[]
-      }
-    },
+import AppSearchBar from '@/components/app-search-bar/app-search-bar.vue'
+import {
+  COLLECTIONS,
+  COLLECTION_FALLBACKS,
+  CLOUD_FUNCTIONS,
+  callCloudFunctionWithFallback,
+  extractResultData,
+  runCollectionWithFallback,
+} from '@/utils/cloud'
 
-    onLoad() {
-      this.getData();
-      console.log("判断登录");
-      this.judglogin()
-    },
-
-    methods: {
-        ...mapMutations('m_user', ['updateTank']),
-      // 判断登录
-      judglogin(){
-        console.log("judglogin开始启动userid是");
-        console.log(this.userid);
-        wx.cloud.callFunction({
-          name:"judglogin",
-          data:{
-            id:this.userid,
-          }
-        }).then(res=>{
-          console.log("判断登录的返回值为",res.result);
-          this.updateTank(res.result);
-        })
+export default {
+  components: {
+    AppSearchBar,
+  },
+  data() {
+    return {
+      isReady: false,
+      activeTab: 0,
+      swiperItems: [],
+      navList: [
+        {
+          pagesrc: '/subpkg/3djs/3djs',
+          imagesrc: '/static/导航图/3D展示.png',
+          text: '3D展示',
+        },
+        {
+          pagesrc: '/subpkg/arsum/arsum',
+          imagesrc: '/static/导航图/AR识别.png',
+          text: 'AR识别',
+        },
+        {
+          pagesrc: '/subcontentpkg/sumcontent/sumcontent',
+          imagesrc: '/static/导航图/图像.png',
+          text: '文章内容',
+        },
+        {
+          pagesrc: '/subcontentpkg/officle/officle',
+          imagesrc: '/static/导航图/官方动态 .png',
+          text: '官方动态',
+        },
+      ],
+      tabs: [
+        { label: '热点话题', type: 'index1' },
+        { label: '最新资讯', type: 'index2' },
+        { label: '精品推荐', type: 'index3' },
+        { label: '活动公告', type: 'index4' },
+      ],
+      articleGroups: {
+        index1: [],
+        index2: [],
+        index3: [],
+        index4: [],
       },
-      clickTab(index) {
-        this.activeTab = index; // 更新当前激活的标签索引
-      },
-      gotoSearch() {
-        uni.navigateTo({
-          url: '/subcontentpkg/search/search'
-        })
-      },
-      getArticleUrl(item) {
-        return '/subcontentpkg/hottopic/article0/article0?id=' + item._id
-      },
-    async getSwiper() {
-        const db = wx.cloud.database();
-        const res = await db.collection('swiper')
-          .field({
-            _id: true,
-            imagesrc: true,
-            pagesrc: true
-          })
-          .orderBy('_id', 'asc')
-          .get();
-        this.swipertab = res.data;
-        console.log("轮播图获取成功");
-      },
-      async getHottopic() {
-        const db = wx.cloud.database();
-        const res = await db.collection('model')
-          .field({
-            _id: true,
-            title: true,
-            imagesrc: true,
-            pagesrc: true
-          })
-          .where({
-            type: 'index1'
-          })
-          .orderBy('_id', 'asc')
-          .limit(3)
-          .get();
-        this.hottopic = res.data;
-        console.log("热点话题获取成功");
-      },
-      async getInformation() {
-        const db = wx.cloud.database();
-        const res = await db.collection('model')
-          .field({
-            _id: true,
-            title: true,
-            imagesrc: true,
-            pagesrc: true
-          })
-          .where({
-            type: 'index2'
-          })
-          .orderBy('_id', 'asc')
-          .limit(3)
-          .get();
-        this.information = res.data;
-        console.log("最新资讯获取成功");
-      },
-      async getrecommend() {
-        const db = wx.cloud.database();
-        const res = await db.collection('model')
-          .field({
-            _id: true,
-            title: true,
-            imagesrc: true,
-            pagesrc: true
-          })
-          .where({
-            type: 'index3'
-          })
-          .orderBy('_id', 'asc')
-          .limit(3)
-          .get();
-        this.recommend = res.data;
-        console.log("最新资讯获取成功");
-      },
-      async getAnnouncement() {
-        const db = wx.cloud.database();
-        const res = await db.collection('model')
-          .field({
-            _id: true,
-            title: true,
-            imagesrc: true,
-            pagesrc: true
-          })
-          .where({
-            type: 'index4'
-          })
-          .orderBy('_id', 'asc')
-          .limit(3)
-          .get();
-        this.announcement = res.data;
-        console.log("活动公告获取成功");
-      },
-      async getData() {
-        uni.showLoading({
-          title: "加载中",
-        });
-        try {
-          // 使用 await 等待所有数据获取方法完成
-          await Promise.all([
-            this.getSwiper(),
-            this.getHottopic(),
-            this.getInformation(),
-            this.getrecommend(),
-            this.getAnnouncement()
-          ]);
-          // 所有数据加载完成后隐藏加载提示
-          uni.hideLoading();
-          // 标记数据加载完成
-          this.isDataLoaded = true;
-          console.log("都加载玩了");
-        } catch (err) {
-          // 如果有错误发生，隐藏加载提示并处理错误
-          uni.hideLoading();
-          console.error('数据加载失败:', err);
-        }
-      }
-
     }
-  }
+  },
+  computed: {
+    currentArticles() {
+      const currentTab = this.tabs[this.activeTab]
+      return this.articleGroups[currentTab.type] || []
+    },
+  },
+  onLoad() {
+    this.loadHomeData()
+  },
+  methods: {
+    goToSearch() {
+      uni.navigateTo({
+        url: '/subcontentpkg/search/search',
+      })
+    },
+    resolveNavigatorUrl(url) {
+      return url || '/pages/index/index'
+    },
+    getArticleUrl(article) {
+      return `/subcontentpkg/hottopic/article0/article0?id=${article._id}`
+    },
+    getCoverImage(article) {
+      if (Array.isArray(article.imagesrc) && article.imagesrc.length > 0) {
+        return article.imagesrc[0]
+      }
+
+      return article.imagesrc || '/static/导航图/图像.png'
+    },
+    async loadSwiper() {
+      const db = wx.cloud.database()
+      const res = await db
+        .collection(COLLECTIONS.SWIPER)
+        .field({
+          _id: true,
+          imagesrc: true,
+          pagesrc: true,
+        })
+        .orderBy('_id', 'asc')
+        .get()
+
+      this.swiperItems = res.data || []
+    },
+    async loadArticlesByType(type) {
+      try {
+        const res = await callCloudFunctionWithFallback(
+          [CLOUD_FUNCTIONS.GET_ARTICLE_LIST],
+          {
+            offset: 0,
+            pageSize: 3,
+            type,
+          },
+          {
+            fallbackWhenEmpty: true,
+          }
+        )
+
+        this.$set(this.articleGroups, type, extractResultData(res) || [])
+      } catch (cloudError) {
+        const db = wx.cloud.database()
+        const res = await runCollectionWithFallback(
+          [COLLECTIONS.ARTICLES, ...COLLECTION_FALLBACKS.ARTICLES],
+          (collectionName) =>
+            db
+              .collection(collectionName)
+              .field({
+                _id: true,
+                title: true,
+                imagesrc: true,
+                pagesrc: true,
+                type: true,
+              })
+              .where({ type })
+              .orderBy('_id', 'asc')
+              .limit(3)
+              .get()
+        )
+
+        this.$set(this.articleGroups, type, res.data || [])
+        console.warn('文章分类云函数不可用，已回退数据库直连:', cloudError)
+      }
+    },
+    async loadHomeData() {
+      uni.showLoading({
+        title: '加载中',
+        mask: true,
+      })
+
+      try {
+        await Promise.all([
+          this.loadSwiper(),
+          ...this.tabs.map((tab) => this.loadArticlesByType(tab.type)),
+        ])
+        this.isReady = true
+      } catch (error) {
+        console.error('首页数据加载失败:', error)
+        uni.showToast({
+          title: '首页加载失败',
+          icon: 'none',
+        })
+      } finally {
+        uni.hideLoading()
+      }
+    },
+  },
+}
 </script>
 
 <style scoped>
-  /* 轮播图样式 */
-  .banner {
-    width: 100%;
-    /* 确保轮播图宽度为100% */
-    height: 400rpx;
-    /* 根据需要设置高度 */
-  }
+.banner {
+  width: 100%;
+  height: 400rpx;
+}
 
-  .nbanner {
-    width: 100%;
-    /* 确保轮播图宽度为100% */
-    height: 400rpx;
-  }
+.banner-link {
+  width: 100%;
+  height: 400rpx;
+}
 
-  .swiper-item-image {
-    width: 100%;
-    /* 确保图片宽度填满容器 */
-    height: 100%;
-    /* 确保图片高度填满容器 */
-    display: block;
-    /* 确保图片填满容器并且没有额外的空间 */
-  }
+.swiper-item-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 
-  /* 导航栏样式 */
-  .nav-list {
-    display: flex;
-    /* 水平排列其子元素 */
-    flex-wrap: wrap;
-    /* 如果需要，允许子元素换行 */
-    justify-content: space-around;
-    /* 根据需要调整水平间距 */
-    background-color: ghostwhite;
-    border-radius: 30px;
-    margin-top: 10rpx;
-    margin-bottom: 10rpx;
-  }
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  background-color: ghostwhite;
+  border-radius: 30px;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+}
 
-  .nav-item {
-    display: flex;
-    /* 确保nav-item也是一个Flexbox容器 */
-    flex-direction: column;
-    /* 子元素垂直排列 */
-    align-items: center;
-    /* 中心对齐子元素 */
-    margin: 15rpx;
-    /* 根据需要设置外边距 */
-  }
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 15rpx;
+}
 
-  .nav-item-image {
-    width: 100rpx;
-    height: 100rpx;
-  }
+.nav-item-image {
+  width: 100rpx;
+  height: 100rpx;
+}
 
-  .nav-item-text {
-    white-space: nowrap;
-    /* 防止文本换行 */
-    overflow: hidden;
-    /* 如果文本溢出，则隐藏溢出部分 */
-    text-overflow: ellipsis;
-    /* 文本溢出时显示省略号 */
-    font-size: 20rpx;
-  }
+.nav-item-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 20rpx;
+}
 
-  /* tab滑动栏样式 */
-  .scrollable-tabs {
-    width: 100%;
-    overflow: hidden;
-    /* 隐藏溢出的内容 */
-  }
+.scrollable-tabs {
+  width: 100%;
+  overflow: hidden;
+}
 
-  .scroll-view {
-    white-space: nowrap;
-    /* 防止内容自动换行 */
-    /* 确保没有其他样式影响布局 */
-    display: flex;
-    flex-direction: row;
-    /* 明确设置flex方向为水平 */
-  }
+.scroll-view {
+  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+}
 
-  .tab {
-    display: inline-block;
-    /* 子元素水平排列 */
-    padding: 20rpx 40rpx;
-    /* 设置内边距 */
-    /* border: 1px solid #ddd; */
-    /* 添加边框，根据需要调整样式 */
-    margin-right: 10rpx;
-    /* 设置右边距，确保标签之间有一定的间隔 */
-    transition: color 0.3s;
-    /* 平滑过渡颜色变化 */
-  }
+.tab {
+  display: inline-block;
+  padding: 20rpx 40rpx;
+  margin-right: 10rpx;
+  transition: color 0.3s;
+}
 
-  .tabtext {
-    font-weight: bold;
-  }
+.tabtext {
+  font-weight: bold;
+}
 
-  .tab.active {
-    color: #e60527;
-    /* 激活标签的文字颜色 */
-  }
+.tab.active {
+  color: #e60527;
+}
 
-  .tab-icon-text {
-    display: grid;
-    justify-content: space-around;
-    align-items: center;
-  }
+.tab-icon-text {
+  display: grid;
+  justify-content: space-around;
+  align-items: center;
+}
 
-  .tab-icon {
-    height: 10rpx;
-    width: 100%;
-  }
+.tab-icon {
+  width: 100%;
+  height: 10rpx;
+}
 
-  /* 内容样式 */
-  .content {
-    padding: 20rpx;
-    border: 2px solid ghostwhite;
-    /* 添加黑色边框 */
+.content {
+  padding: 20rpx;
+  border: 2px solid ghostwhite;
+}
 
-  }
+.content-item {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 2rpx;
+  padding: 10rpx;
+  border: 1px solid ghostwhite;
+  border-radius: 5rpx;
+}
 
-  .content-item {
-    margin-bottom: 2rpx;
-  }
+.content-image {
+  width: 200rpx;
+  height: 200rpx;
+  min-width: 200rpx;
+  min-height: 200rpx;
+  margin-right: 10rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
 
-  .content-image {
-    width: 200rpx;
-    height: 200rpx;
-    border-radius: 20rpx;
-    margin-right: 10rpx;
-    /* 添加图片和文字之间的间距 */
-    /* 新增以下样式确保图片不会被挤压变形 */
-    min-width: 200rpx;
-    min-height: 200rpx;
-    flex-shrink: 0;
-    /* 防止图片在flex容器缩放时被挤压 */
-  }
+.content-text {
+  margin-top: 0;
+  margin-left: 0;
+  font-size: 30rpx;
+  font-weight: 500;
+  flex: 1;
+}
 
-  .content-item {
-    display: flex;
-    /* 使用 Flexbox 布局 */
-    align-items: flex-start;
-    /* 将align-items设置为flex-start，防止文字挤压图片 */
-    border: 1px solid ghostwhite;
-    /* 添加灰色边框 */
-    padding: 10rpx;
-    /* 添加一些内边距 */
-    border-radius: 5rpx;
-    /* 如果需要，添加圆角 */
-    /* 可以考虑设置flex-wrap: wrap; 来处理文字过多的情况 */
-    flex-wrap: wrap;
-  }
+.moree {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  /* 确保.content-text在flex容器中可以灵活布局 */
-  .content-text {
-    font-weight: 500;
-    /* 加粗文字 */
-    font-size: 30rpx;
-    margin-top: 0rpx;
-    margin-left: 0rpx;
-    /* 调整左边距 */
-    flex: 1;
-    /* 允许text扩展以填满可用空间 */
-  }
-
-  .moree {
-    display: flex;
-    justify-content: center;
-    /* 水平居中 */
-    align-items: center;
-    /* 垂直居中 */
-  }
-
-  .more {
-
-    color: gray;
-    /* 文字颜色设置为灰色 */
-    font-size: 12px;
-    /* 文字大小设置为12像素 */
-  }
+.more {
+  color: gray;
+  font-size: 12px;
+}
 </style>

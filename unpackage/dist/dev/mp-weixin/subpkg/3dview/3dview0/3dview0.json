@@ -1,9 +1,9 @@
 {
-  "navigationBarTitleText": "3D展示",
+  "navigationBarTitleText": "3D 展示",
   "enablePullDownRefresh": false,
   "disableScroll": true,
   "usingComponents": {
-    "aifunction": "/components/aifunction/aifunction",
+    "ai-assistant": "/components/ai-assistant/ai-assistant",
     "xr-start": "/wxcomponents/xr-start"
   }
 }

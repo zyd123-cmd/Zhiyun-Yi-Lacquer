@@ -190,6 +190,66 @@ module.exports = _setPrototypeOf, module.exports.__esModule = true, module.expor
 
 /***/ }),
 
+/***/ 163:
+/*!***********************************************************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/index.js ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 164));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 165));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 166));
+var _default = {
+  en: _en.default,
+  'zh-Hans': _zhHans.default,
+  'zh-Hant': _zhHant.default
+};
+exports.default = _default;
+
+/***/ }),
+
+/***/ 164:
+/*!**********************************************************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/en.json ***!
+  \**********************************************************************************************/
+/*! exports provided: uni-fav.collect, uni-fav.collected, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-fav.collect\":\"collect\",\"uni-fav.collected\":\"collected\"}");
+
+/***/ }),
+
+/***/ 165:
+/*!***************************************************************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/zh-Hans.json ***!
+  \***************************************************************************************************/
+/*! exports provided: uni-fav.collect, uni-fav.collected, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-fav.collect\":\"收藏\",\"uni-fav.collected\":\"已收藏\"}");
+
+/***/ }),
+
+/***/ 166:
+/*!***************************************************************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/zh-Hant.json ***!
+  \***************************************************************************************************/
+/*! exports provided: uni-fav.collect, uni-fav.collected, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-fav.collect\":\"收藏\",\"uni-fav.collected\":\"已收藏\"}");
+
+/***/ }),
+
 /***/ 17:
 /*!*************************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/isNativeReflectConstruct.js ***!
@@ -206,6 +266,510 @@ function _isNativeReflectConstruct() {
   }, module.exports.__esModule = true, module.exports["default"] = module.exports)();
 }
 module.exports = _isNativeReflectConstruct, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ 174:
+/*!**********************************************************************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-icons/components/uni-icons/uniicons_file_vue.js ***!
+  \**********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.fontData = void 0;
+var fontData = [{
+  "font_class": "arrow-down",
+  "unicode": "\uE6BE"
+}, {
+  "font_class": "arrow-left",
+  "unicode": "\uE6BC"
+}, {
+  "font_class": "arrow-right",
+  "unicode": "\uE6BB"
+}, {
+  "font_class": "arrow-up",
+  "unicode": "\uE6BD"
+}, {
+  "font_class": "auth",
+  "unicode": "\uE6AB"
+}, {
+  "font_class": "auth-filled",
+  "unicode": "\uE6CC"
+}, {
+  "font_class": "back",
+  "unicode": "\uE6B9"
+}, {
+  "font_class": "bars",
+  "unicode": "\uE627"
+}, {
+  "font_class": "calendar",
+  "unicode": "\uE6A0"
+}, {
+  "font_class": "calendar-filled",
+  "unicode": "\uE6C0"
+}, {
+  "font_class": "camera",
+  "unicode": "\uE65A"
+}, {
+  "font_class": "camera-filled",
+  "unicode": "\uE658"
+}, {
+  "font_class": "cart",
+  "unicode": "\uE631"
+}, {
+  "font_class": "cart-filled",
+  "unicode": "\uE6D0"
+}, {
+  "font_class": "chat",
+  "unicode": "\uE65D"
+}, {
+  "font_class": "chat-filled",
+  "unicode": "\uE659"
+}, {
+  "font_class": "chatboxes",
+  "unicode": "\uE696"
+}, {
+  "font_class": "chatboxes-filled",
+  "unicode": "\uE692"
+}, {
+  "font_class": "chatbubble",
+  "unicode": "\uE697"
+}, {
+  "font_class": "chatbubble-filled",
+  "unicode": "\uE694"
+}, {
+  "font_class": "checkbox",
+  "unicode": "\uE62B"
+}, {
+  "font_class": "checkbox-filled",
+  "unicode": "\uE62C"
+}, {
+  "font_class": "checkmarkempty",
+  "unicode": "\uE65C"
+}, {
+  "font_class": "circle",
+  "unicode": "\uE65B"
+}, {
+  "font_class": "circle-filled",
+  "unicode": "\uE65E"
+}, {
+  "font_class": "clear",
+  "unicode": "\uE66D"
+}, {
+  "font_class": "close",
+  "unicode": "\uE673"
+}, {
+  "font_class": "closeempty",
+  "unicode": "\uE66C"
+}, {
+  "font_class": "cloud-download",
+  "unicode": "\uE647"
+}, {
+  "font_class": "cloud-download-filled",
+  "unicode": "\uE646"
+}, {
+  "font_class": "cloud-upload",
+  "unicode": "\uE645"
+}, {
+  "font_class": "cloud-upload-filled",
+  "unicode": "\uE648"
+}, {
+  "font_class": "color",
+  "unicode": "\uE6CF"
+}, {
+  "font_class": "color-filled",
+  "unicode": "\uE6C9"
+}, {
+  "font_class": "compose",
+  "unicode": "\uE67F"
+}, {
+  "font_class": "contact",
+  "unicode": "\uE693"
+}, {
+  "font_class": "contact-filled",
+  "unicode": "\uE695"
+}, {
+  "font_class": "down",
+  "unicode": "\uE6B8"
+}, {
+  "font_class": "bottom",
+  "unicode": "\uE6B8"
+}, {
+  "font_class": "download",
+  "unicode": "\uE68D"
+}, {
+  "font_class": "download-filled",
+  "unicode": "\uE681"
+}, {
+  "font_class": "email",
+  "unicode": "\uE69E"
+}, {
+  "font_class": "email-filled",
+  "unicode": "\uE69A"
+}, {
+  "font_class": "eye",
+  "unicode": "\uE651"
+}, {
+  "font_class": "eye-filled",
+  "unicode": "\uE66A"
+}, {
+  "font_class": "eye-slash",
+  "unicode": "\uE6B3"
+}, {
+  "font_class": "eye-slash-filled",
+  "unicode": "\uE6B4"
+}, {
+  "font_class": "fire",
+  "unicode": "\uE6A1"
+}, {
+  "font_class": "fire-filled",
+  "unicode": "\uE6C5"
+}, {
+  "font_class": "flag",
+  "unicode": "\uE65F"
+}, {
+  "font_class": "flag-filled",
+  "unicode": "\uE660"
+}, {
+  "font_class": "folder-add",
+  "unicode": "\uE6A9"
+}, {
+  "font_class": "folder-add-filled",
+  "unicode": "\uE6C8"
+}, {
+  "font_class": "font",
+  "unicode": "\uE6A3"
+}, {
+  "font_class": "forward",
+  "unicode": "\uE6BA"
+}, {
+  "font_class": "gear",
+  "unicode": "\uE664"
+}, {
+  "font_class": "gear-filled",
+  "unicode": "\uE661"
+}, {
+  "font_class": "gift",
+  "unicode": "\uE6A4"
+}, {
+  "font_class": "gift-filled",
+  "unicode": "\uE6C4"
+}, {
+  "font_class": "hand-down",
+  "unicode": "\uE63D"
+}, {
+  "font_class": "hand-down-filled",
+  "unicode": "\uE63C"
+}, {
+  "font_class": "hand-up",
+  "unicode": "\uE63F"
+}, {
+  "font_class": "hand-up-filled",
+  "unicode": "\uE63E"
+}, {
+  "font_class": "headphones",
+  "unicode": "\uE630"
+}, {
+  "font_class": "heart",
+  "unicode": "\uE639"
+}, {
+  "font_class": "heart-filled",
+  "unicode": "\uE641"
+}, {
+  "font_class": "help",
+  "unicode": "\uE679"
+}, {
+  "font_class": "help-filled",
+  "unicode": "\uE674"
+}, {
+  "font_class": "home",
+  "unicode": "\uE662"
+}, {
+  "font_class": "home-filled",
+  "unicode": "\uE663"
+}, {
+  "font_class": "image",
+  "unicode": "\uE670"
+}, {
+  "font_class": "image-filled",
+  "unicode": "\uE678"
+}, {
+  "font_class": "images",
+  "unicode": "\uE650"
+}, {
+  "font_class": "images-filled",
+  "unicode": "\uE64B"
+}, {
+  "font_class": "info",
+  "unicode": "\uE669"
+}, {
+  "font_class": "info-filled",
+  "unicode": "\uE649"
+}, {
+  "font_class": "left",
+  "unicode": "\uE6B7"
+}, {
+  "font_class": "link",
+  "unicode": "\uE6A5"
+}, {
+  "font_class": "list",
+  "unicode": "\uE644"
+}, {
+  "font_class": "location",
+  "unicode": "\uE6AE"
+}, {
+  "font_class": "location-filled",
+  "unicode": "\uE6AF"
+}, {
+  "font_class": "locked",
+  "unicode": "\uE66B"
+}, {
+  "font_class": "locked-filled",
+  "unicode": "\uE668"
+}, {
+  "font_class": "loop",
+  "unicode": "\uE633"
+}, {
+  "font_class": "mail-open",
+  "unicode": "\uE643"
+}, {
+  "font_class": "mail-open-filled",
+  "unicode": "\uE63A"
+}, {
+  "font_class": "map",
+  "unicode": "\uE667"
+}, {
+  "font_class": "map-filled",
+  "unicode": "\uE666"
+}, {
+  "font_class": "map-pin",
+  "unicode": "\uE6AD"
+}, {
+  "font_class": "map-pin-ellipse",
+  "unicode": "\uE6AC"
+}, {
+  "font_class": "medal",
+  "unicode": "\uE6A2"
+}, {
+  "font_class": "medal-filled",
+  "unicode": "\uE6C3"
+}, {
+  "font_class": "mic",
+  "unicode": "\uE671"
+}, {
+  "font_class": "mic-filled",
+  "unicode": "\uE677"
+}, {
+  "font_class": "micoff",
+  "unicode": "\uE67E"
+}, {
+  "font_class": "micoff-filled",
+  "unicode": "\uE6B0"
+}, {
+  "font_class": "minus",
+  "unicode": "\uE66F"
+}, {
+  "font_class": "minus-filled",
+  "unicode": "\uE67D"
+}, {
+  "font_class": "more",
+  "unicode": "\uE64D"
+}, {
+  "font_class": "more-filled",
+  "unicode": "\uE64E"
+}, {
+  "font_class": "navigate",
+  "unicode": "\uE66E"
+}, {
+  "font_class": "navigate-filled",
+  "unicode": "\uE67A"
+}, {
+  "font_class": "notification",
+  "unicode": "\uE6A6"
+}, {
+  "font_class": "notification-filled",
+  "unicode": "\uE6C1"
+}, {
+  "font_class": "paperclip",
+  "unicode": "\uE652"
+}, {
+  "font_class": "paperplane",
+  "unicode": "\uE672"
+}, {
+  "font_class": "paperplane-filled",
+  "unicode": "\uE675"
+}, {
+  "font_class": "person",
+  "unicode": "\uE699"
+}, {
+  "font_class": "person-filled",
+  "unicode": "\uE69D"
+}, {
+  "font_class": "personadd",
+  "unicode": "\uE69F"
+}, {
+  "font_class": "personadd-filled",
+  "unicode": "\uE698"
+}, {
+  "font_class": "personadd-filled-copy",
+  "unicode": "\uE6D1"
+}, {
+  "font_class": "phone",
+  "unicode": "\uE69C"
+}, {
+  "font_class": "phone-filled",
+  "unicode": "\uE69B"
+}, {
+  "font_class": "plus",
+  "unicode": "\uE676"
+}, {
+  "font_class": "plus-filled",
+  "unicode": "\uE6C7"
+}, {
+  "font_class": "plusempty",
+  "unicode": "\uE67B"
+}, {
+  "font_class": "pulldown",
+  "unicode": "\uE632"
+}, {
+  "font_class": "pyq",
+  "unicode": "\uE682"
+}, {
+  "font_class": "qq",
+  "unicode": "\uE680"
+}, {
+  "font_class": "redo",
+  "unicode": "\uE64A"
+}, {
+  "font_class": "redo-filled",
+  "unicode": "\uE655"
+}, {
+  "font_class": "refresh",
+  "unicode": "\uE657"
+}, {
+  "font_class": "refresh-filled",
+  "unicode": "\uE656"
+}, {
+  "font_class": "refreshempty",
+  "unicode": "\uE6BF"
+}, {
+  "font_class": "reload",
+  "unicode": "\uE6B2"
+}, {
+  "font_class": "right",
+  "unicode": "\uE6B5"
+}, {
+  "font_class": "scan",
+  "unicode": "\uE62A"
+}, {
+  "font_class": "search",
+  "unicode": "\uE654"
+}, {
+  "font_class": "settings",
+  "unicode": "\uE653"
+}, {
+  "font_class": "settings-filled",
+  "unicode": "\uE6CE"
+}, {
+  "font_class": "shop",
+  "unicode": "\uE62F"
+}, {
+  "font_class": "shop-filled",
+  "unicode": "\uE6CD"
+}, {
+  "font_class": "smallcircle",
+  "unicode": "\uE67C"
+}, {
+  "font_class": "smallcircle-filled",
+  "unicode": "\uE665"
+}, {
+  "font_class": "sound",
+  "unicode": "\uE684"
+}, {
+  "font_class": "sound-filled",
+  "unicode": "\uE686"
+}, {
+  "font_class": "spinner-cycle",
+  "unicode": "\uE68A"
+}, {
+  "font_class": "staff",
+  "unicode": "\uE6A7"
+}, {
+  "font_class": "staff-filled",
+  "unicode": "\uE6CB"
+}, {
+  "font_class": "star",
+  "unicode": "\uE688"
+}, {
+  "font_class": "star-filled",
+  "unicode": "\uE68F"
+}, {
+  "font_class": "starhalf",
+  "unicode": "\uE683"
+}, {
+  "font_class": "trash",
+  "unicode": "\uE687"
+}, {
+  "font_class": "trash-filled",
+  "unicode": "\uE685"
+}, {
+  "font_class": "tune",
+  "unicode": "\uE6AA"
+}, {
+  "font_class": "tune-filled",
+  "unicode": "\uE6CA"
+}, {
+  "font_class": "undo",
+  "unicode": "\uE64F"
+}, {
+  "font_class": "undo-filled",
+  "unicode": "\uE64C"
+}, {
+  "font_class": "up",
+  "unicode": "\uE6B6"
+}, {
+  "font_class": "top",
+  "unicode": "\uE6B6"
+}, {
+  "font_class": "upload",
+  "unicode": "\uE690"
+}, {
+  "font_class": "upload-filled",
+  "unicode": "\uE68E"
+}, {
+  "font_class": "videocam",
+  "unicode": "\uE68C"
+}, {
+  "font_class": "videocam-filled",
+  "unicode": "\uE689"
+}, {
+  "font_class": "vip",
+  "unicode": "\uE6A8"
+}, {
+  "font_class": "vip-filled",
+  "unicode": "\uE6C6"
+}, {
+  "font_class": "wallet",
+  "unicode": "\uE6B1"
+}, {
+  "font_class": "wallet-filled",
+  "unicode": "\uE6C2"
+}, {
+  "font_class": "weibo",
+  "unicode": "\uE68B"
+}, {
+  "font_class": "weixin",
+  "unicode": "\uE691"
+}];
+
+// export const fontData = JSON.parse<IconsDataItem>(fontDataJson)
+exports.fontData = fontData;
 
 /***/ }),
 
@@ -227,6 +791,66 @@ module.exports = _toConsumableArray, module.exports.__esModule = true, module.ex
 
 /***/ }),
 
+/***/ 182:
+/*!*************************************************************************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/index.js ***!
+  \*************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 183));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 184));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 185));
+var _default = {
+  en: _en.default,
+  'zh-Hans': _zhHans.default,
+  'zh-Hant': _zhHant.default
+};
+exports.default = _default;
+
+/***/ }),
+
+/***/ 183:
+/*!************************************************************************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/en.json ***!
+  \************************************************************************************************************/
+/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"Search enter content\"}");
+
+/***/ }),
+
+/***/ 184:
+/*!*****************************************************************************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/zh-Hans.json ***!
+  \*****************************************************************************************************************/
+/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"取消\",\"uni-search-bar.placeholder\":\"请输入搜索内容\"}");
+
+/***/ }),
+
+/***/ 185:
+/*!*****************************************************************************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/zh-Hant.json ***!
+  \*****************************************************************************************************************/
+/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"取消\",\"uni-search-bar.placeholder\":\"請輸入搜索內容\"}");
+
+/***/ }),
+
 /***/ 19:
 /*!******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js ***!
@@ -239,33 +863,6 @@ function _arrayWithoutHoles(arr) {
   if (Array.isArray(arr)) return arrayLikeToArray(arr);
 }
 module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ 199:
-/*!***********************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/index.js ***!
-  \***********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 200));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 201));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 202));
-var _default = {
-  en: _en.default,
-  'zh-Hans': _zhHans.default,
-  'zh-Hant': _zhHant.default
-};
-exports.default = _default;
 
 /***/ }),
 
@@ -2774,39 +3371,6 @@ module.exports = _iterableToArray, module.exports.__esModule = true, module.expo
 
 /***/ }),
 
-/***/ 200:
-/*!**********************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/en.json ***!
-  \**********************************************************************************************/
-/*! exports provided: uni-fav.collect, uni-fav.collected, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-fav.collect\":\"collect\",\"uni-fav.collected\":\"collected\"}");
-
-/***/ }),
-
-/***/ 201:
-/*!***************************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/zh-Hans.json ***!
-  \***************************************************************************************************/
-/*! exports provided: uni-fav.collect, uni-fav.collected, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-fav.collect\":\"收藏\",\"uni-fav.collected\":\"已收藏\"}");
-
-/***/ }),
-
-/***/ 202:
-/*!***************************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/zh-Hant.json ***!
-  \***************************************************************************************************/
-/*! exports provided: uni-fav.collect, uni-fav.collected, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-fav.collect\":\"收藏\",\"uni-fav.collected\":\"已收藏\"}");
-
-/***/ }),
-
 /***/ 21:
 /*!******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/nonIterableSpread.js ***!
@@ -2818,548 +3382,6 @@ function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 module.exports = _nonIterableSpread, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ 210:
-/*!**********************************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-icons/components/uni-icons/uniicons_file_vue.js ***!
-  \**********************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.fontData = void 0;
-var fontData = [{
-  "font_class": "arrow-down",
-  "unicode": "\uE6BE"
-}, {
-  "font_class": "arrow-left",
-  "unicode": "\uE6BC"
-}, {
-  "font_class": "arrow-right",
-  "unicode": "\uE6BB"
-}, {
-  "font_class": "arrow-up",
-  "unicode": "\uE6BD"
-}, {
-  "font_class": "auth",
-  "unicode": "\uE6AB"
-}, {
-  "font_class": "auth-filled",
-  "unicode": "\uE6CC"
-}, {
-  "font_class": "back",
-  "unicode": "\uE6B9"
-}, {
-  "font_class": "bars",
-  "unicode": "\uE627"
-}, {
-  "font_class": "calendar",
-  "unicode": "\uE6A0"
-}, {
-  "font_class": "calendar-filled",
-  "unicode": "\uE6C0"
-}, {
-  "font_class": "camera",
-  "unicode": "\uE65A"
-}, {
-  "font_class": "camera-filled",
-  "unicode": "\uE658"
-}, {
-  "font_class": "cart",
-  "unicode": "\uE631"
-}, {
-  "font_class": "cart-filled",
-  "unicode": "\uE6D0"
-}, {
-  "font_class": "chat",
-  "unicode": "\uE65D"
-}, {
-  "font_class": "chat-filled",
-  "unicode": "\uE659"
-}, {
-  "font_class": "chatboxes",
-  "unicode": "\uE696"
-}, {
-  "font_class": "chatboxes-filled",
-  "unicode": "\uE692"
-}, {
-  "font_class": "chatbubble",
-  "unicode": "\uE697"
-}, {
-  "font_class": "chatbubble-filled",
-  "unicode": "\uE694"
-}, {
-  "font_class": "checkbox",
-  "unicode": "\uE62B"
-}, {
-  "font_class": "checkbox-filled",
-  "unicode": "\uE62C"
-}, {
-  "font_class": "checkmarkempty",
-  "unicode": "\uE65C"
-}, {
-  "font_class": "circle",
-  "unicode": "\uE65B"
-}, {
-  "font_class": "circle-filled",
-  "unicode": "\uE65E"
-}, {
-  "font_class": "clear",
-  "unicode": "\uE66D"
-}, {
-  "font_class": "close",
-  "unicode": "\uE673"
-}, {
-  "font_class": "closeempty",
-  "unicode": "\uE66C"
-}, {
-  "font_class": "cloud-download",
-  "unicode": "\uE647"
-}, {
-  "font_class": "cloud-download-filled",
-  "unicode": "\uE646"
-}, {
-  "font_class": "cloud-upload",
-  "unicode": "\uE645"
-}, {
-  "font_class": "cloud-upload-filled",
-  "unicode": "\uE648"
-}, {
-  "font_class": "color",
-  "unicode": "\uE6CF"
-}, {
-  "font_class": "color-filled",
-  "unicode": "\uE6C9"
-}, {
-  "font_class": "compose",
-  "unicode": "\uE67F"
-}, {
-  "font_class": "contact",
-  "unicode": "\uE693"
-}, {
-  "font_class": "contact-filled",
-  "unicode": "\uE695"
-}, {
-  "font_class": "down",
-  "unicode": "\uE6B8"
-}, {
-  "font_class": "bottom",
-  "unicode": "\uE6B8"
-}, {
-  "font_class": "download",
-  "unicode": "\uE68D"
-}, {
-  "font_class": "download-filled",
-  "unicode": "\uE681"
-}, {
-  "font_class": "email",
-  "unicode": "\uE69E"
-}, {
-  "font_class": "email-filled",
-  "unicode": "\uE69A"
-}, {
-  "font_class": "eye",
-  "unicode": "\uE651"
-}, {
-  "font_class": "eye-filled",
-  "unicode": "\uE66A"
-}, {
-  "font_class": "eye-slash",
-  "unicode": "\uE6B3"
-}, {
-  "font_class": "eye-slash-filled",
-  "unicode": "\uE6B4"
-}, {
-  "font_class": "fire",
-  "unicode": "\uE6A1"
-}, {
-  "font_class": "fire-filled",
-  "unicode": "\uE6C5"
-}, {
-  "font_class": "flag",
-  "unicode": "\uE65F"
-}, {
-  "font_class": "flag-filled",
-  "unicode": "\uE660"
-}, {
-  "font_class": "folder-add",
-  "unicode": "\uE6A9"
-}, {
-  "font_class": "folder-add-filled",
-  "unicode": "\uE6C8"
-}, {
-  "font_class": "font",
-  "unicode": "\uE6A3"
-}, {
-  "font_class": "forward",
-  "unicode": "\uE6BA"
-}, {
-  "font_class": "gear",
-  "unicode": "\uE664"
-}, {
-  "font_class": "gear-filled",
-  "unicode": "\uE661"
-}, {
-  "font_class": "gift",
-  "unicode": "\uE6A4"
-}, {
-  "font_class": "gift-filled",
-  "unicode": "\uE6C4"
-}, {
-  "font_class": "hand-down",
-  "unicode": "\uE63D"
-}, {
-  "font_class": "hand-down-filled",
-  "unicode": "\uE63C"
-}, {
-  "font_class": "hand-up",
-  "unicode": "\uE63F"
-}, {
-  "font_class": "hand-up-filled",
-  "unicode": "\uE63E"
-}, {
-  "font_class": "headphones",
-  "unicode": "\uE630"
-}, {
-  "font_class": "heart",
-  "unicode": "\uE639"
-}, {
-  "font_class": "heart-filled",
-  "unicode": "\uE641"
-}, {
-  "font_class": "help",
-  "unicode": "\uE679"
-}, {
-  "font_class": "help-filled",
-  "unicode": "\uE674"
-}, {
-  "font_class": "home",
-  "unicode": "\uE662"
-}, {
-  "font_class": "home-filled",
-  "unicode": "\uE663"
-}, {
-  "font_class": "image",
-  "unicode": "\uE670"
-}, {
-  "font_class": "image-filled",
-  "unicode": "\uE678"
-}, {
-  "font_class": "images",
-  "unicode": "\uE650"
-}, {
-  "font_class": "images-filled",
-  "unicode": "\uE64B"
-}, {
-  "font_class": "info",
-  "unicode": "\uE669"
-}, {
-  "font_class": "info-filled",
-  "unicode": "\uE649"
-}, {
-  "font_class": "left",
-  "unicode": "\uE6B7"
-}, {
-  "font_class": "link",
-  "unicode": "\uE6A5"
-}, {
-  "font_class": "list",
-  "unicode": "\uE644"
-}, {
-  "font_class": "location",
-  "unicode": "\uE6AE"
-}, {
-  "font_class": "location-filled",
-  "unicode": "\uE6AF"
-}, {
-  "font_class": "locked",
-  "unicode": "\uE66B"
-}, {
-  "font_class": "locked-filled",
-  "unicode": "\uE668"
-}, {
-  "font_class": "loop",
-  "unicode": "\uE633"
-}, {
-  "font_class": "mail-open",
-  "unicode": "\uE643"
-}, {
-  "font_class": "mail-open-filled",
-  "unicode": "\uE63A"
-}, {
-  "font_class": "map",
-  "unicode": "\uE667"
-}, {
-  "font_class": "map-filled",
-  "unicode": "\uE666"
-}, {
-  "font_class": "map-pin",
-  "unicode": "\uE6AD"
-}, {
-  "font_class": "map-pin-ellipse",
-  "unicode": "\uE6AC"
-}, {
-  "font_class": "medal",
-  "unicode": "\uE6A2"
-}, {
-  "font_class": "medal-filled",
-  "unicode": "\uE6C3"
-}, {
-  "font_class": "mic",
-  "unicode": "\uE671"
-}, {
-  "font_class": "mic-filled",
-  "unicode": "\uE677"
-}, {
-  "font_class": "micoff",
-  "unicode": "\uE67E"
-}, {
-  "font_class": "micoff-filled",
-  "unicode": "\uE6B0"
-}, {
-  "font_class": "minus",
-  "unicode": "\uE66F"
-}, {
-  "font_class": "minus-filled",
-  "unicode": "\uE67D"
-}, {
-  "font_class": "more",
-  "unicode": "\uE64D"
-}, {
-  "font_class": "more-filled",
-  "unicode": "\uE64E"
-}, {
-  "font_class": "navigate",
-  "unicode": "\uE66E"
-}, {
-  "font_class": "navigate-filled",
-  "unicode": "\uE67A"
-}, {
-  "font_class": "notification",
-  "unicode": "\uE6A6"
-}, {
-  "font_class": "notification-filled",
-  "unicode": "\uE6C1"
-}, {
-  "font_class": "paperclip",
-  "unicode": "\uE652"
-}, {
-  "font_class": "paperplane",
-  "unicode": "\uE672"
-}, {
-  "font_class": "paperplane-filled",
-  "unicode": "\uE675"
-}, {
-  "font_class": "person",
-  "unicode": "\uE699"
-}, {
-  "font_class": "person-filled",
-  "unicode": "\uE69D"
-}, {
-  "font_class": "personadd",
-  "unicode": "\uE69F"
-}, {
-  "font_class": "personadd-filled",
-  "unicode": "\uE698"
-}, {
-  "font_class": "personadd-filled-copy",
-  "unicode": "\uE6D1"
-}, {
-  "font_class": "phone",
-  "unicode": "\uE69C"
-}, {
-  "font_class": "phone-filled",
-  "unicode": "\uE69B"
-}, {
-  "font_class": "plus",
-  "unicode": "\uE676"
-}, {
-  "font_class": "plus-filled",
-  "unicode": "\uE6C7"
-}, {
-  "font_class": "plusempty",
-  "unicode": "\uE67B"
-}, {
-  "font_class": "pulldown",
-  "unicode": "\uE632"
-}, {
-  "font_class": "pyq",
-  "unicode": "\uE682"
-}, {
-  "font_class": "qq",
-  "unicode": "\uE680"
-}, {
-  "font_class": "redo",
-  "unicode": "\uE64A"
-}, {
-  "font_class": "redo-filled",
-  "unicode": "\uE655"
-}, {
-  "font_class": "refresh",
-  "unicode": "\uE657"
-}, {
-  "font_class": "refresh-filled",
-  "unicode": "\uE656"
-}, {
-  "font_class": "refreshempty",
-  "unicode": "\uE6BF"
-}, {
-  "font_class": "reload",
-  "unicode": "\uE6B2"
-}, {
-  "font_class": "right",
-  "unicode": "\uE6B5"
-}, {
-  "font_class": "scan",
-  "unicode": "\uE62A"
-}, {
-  "font_class": "search",
-  "unicode": "\uE654"
-}, {
-  "font_class": "settings",
-  "unicode": "\uE653"
-}, {
-  "font_class": "settings-filled",
-  "unicode": "\uE6CE"
-}, {
-  "font_class": "shop",
-  "unicode": "\uE62F"
-}, {
-  "font_class": "shop-filled",
-  "unicode": "\uE6CD"
-}, {
-  "font_class": "smallcircle",
-  "unicode": "\uE67C"
-}, {
-  "font_class": "smallcircle-filled",
-  "unicode": "\uE665"
-}, {
-  "font_class": "sound",
-  "unicode": "\uE684"
-}, {
-  "font_class": "sound-filled",
-  "unicode": "\uE686"
-}, {
-  "font_class": "spinner-cycle",
-  "unicode": "\uE68A"
-}, {
-  "font_class": "staff",
-  "unicode": "\uE6A7"
-}, {
-  "font_class": "staff-filled",
-  "unicode": "\uE6CB"
-}, {
-  "font_class": "star",
-  "unicode": "\uE688"
-}, {
-  "font_class": "star-filled",
-  "unicode": "\uE68F"
-}, {
-  "font_class": "starhalf",
-  "unicode": "\uE683"
-}, {
-  "font_class": "trash",
-  "unicode": "\uE687"
-}, {
-  "font_class": "trash-filled",
-  "unicode": "\uE685"
-}, {
-  "font_class": "tune",
-  "unicode": "\uE6AA"
-}, {
-  "font_class": "tune-filled",
-  "unicode": "\uE6CA"
-}, {
-  "font_class": "undo",
-  "unicode": "\uE64F"
-}, {
-  "font_class": "undo-filled",
-  "unicode": "\uE64C"
-}, {
-  "font_class": "up",
-  "unicode": "\uE6B6"
-}, {
-  "font_class": "top",
-  "unicode": "\uE6B6"
-}, {
-  "font_class": "upload",
-  "unicode": "\uE690"
-}, {
-  "font_class": "upload-filled",
-  "unicode": "\uE68E"
-}, {
-  "font_class": "videocam",
-  "unicode": "\uE68C"
-}, {
-  "font_class": "videocam-filled",
-  "unicode": "\uE689"
-}, {
-  "font_class": "vip",
-  "unicode": "\uE6A8"
-}, {
-  "font_class": "vip-filled",
-  "unicode": "\uE6C6"
-}, {
-  "font_class": "wallet",
-  "unicode": "\uE6B1"
-}, {
-  "font_class": "wallet-filled",
-  "unicode": "\uE6C2"
-}, {
-  "font_class": "weibo",
-  "unicode": "\uE68B"
-}, {
-  "font_class": "weixin",
-  "unicode": "\uE691"
-}];
-
-// export const fontData = JSON.parse<IconsDataItem>(fontDataJson)
-exports.fontData = fontData;
-
-/***/ }),
-
-/***/ 218:
-/*!*************************************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/index.js ***!
-  \*************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 219));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 220));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 221));
-var _default = {
-  en: _en.default,
-  'zh-Hans': _zhHans.default,
-  'zh-Hant': _zhHant.default
-};
-exports.default = _default;
-
-/***/ }),
-
-/***/ 219:
-/*!************************************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/en.json ***!
-  \************************************************************************************************************/
-/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"Search enter content\"}");
 
 /***/ }),
 
@@ -3900,28 +3922,6 @@ function resolveLocaleChain(locale) {
 
 /***/ }),
 
-/***/ 220:
-/*!*****************************************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/zh-Hans.json ***!
-  \*****************************************************************************************************************/
-/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"取消\",\"uni-search-bar.placeholder\":\"请输入搜索内容\"}");
-
-/***/ }),
-
-/***/ 221:
-/*!*****************************************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/zh-Hant.json ***!
-  \*****************************************************************************************************************/
-/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"取消\",\"uni-search-bar.placeholder\":\"請輸入搜索內容\"}");
-
-/***/ }),
-
 /***/ 23:
 /*!***************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/classCallCheck.js ***!
@@ -3935,141 +3935,6 @@ function _classCallCheck(instance, Constructor) {
   }
 }
 module.exports = _classCallCheck, module.exports.__esModule = true, module.exports["default"] = module.exports;
-
-/***/ }),
-
-/***/ 236:
-/*!******************************************************************************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/uni_modules/uni-transition/components/uni-transition/createAnimation.js ***!
-  \******************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.createAnimation = createAnimation;
-var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
-var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
-var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-// const defaultOption = {
-// 	duration: 300,
-// 	timingFunction: 'linear',
-// 	delay: 0,
-// 	transformOrigin: '50% 50% 0'
-// }
-var MPAnimation = /*#__PURE__*/function () {
-  function MPAnimation(options, _this) {
-    (0, _classCallCheck2.default)(this, MPAnimation);
-    this.options = options;
-    // 在iOS10+QQ小程序平台下，传给原生的对象一定是个普通对象而不是Proxy对象，否则会报parameter should be Object instead of ProxyObject的错误
-    this.animation = uni.createAnimation(_objectSpread({}, options));
-    this.currentStepAnimates = {};
-    this.next = 0;
-    this.$ = _this;
-  }
-  (0, _createClass2.default)(MPAnimation, [{
-    key: "_nvuePushAnimates",
-    value: function _nvuePushAnimates(type, args) {
-      var aniObj = this.currentStepAnimates[this.next];
-      var styles = {};
-      if (!aniObj) {
-        styles = {
-          styles: {},
-          config: {}
-        };
-      } else {
-        styles = aniObj;
-      }
-      if (animateTypes1.includes(type)) {
-        if (!styles.styles.transform) {
-          styles.styles.transform = '';
-        }
-        var unit = '';
-        if (type === 'rotate') {
-          unit = 'deg';
-        }
-        styles.styles.transform += "".concat(type, "(").concat(args + unit, ") ");
-      } else {
-        styles.styles[type] = "".concat(args);
-      }
-      this.currentStepAnimates[this.next] = styles;
-    }
-  }, {
-    key: "_animateRun",
-    value: function _animateRun() {
-      var styles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var ref = this.$.$refs['ani'].ref;
-      if (!ref) return;
-      return new Promise(function (resolve, reject) {
-        nvueAnimation.transition(ref, _objectSpread({
-          styles: styles
-        }, config), function (res) {
-          resolve();
-        });
-      });
-    }
-  }, {
-    key: "_nvueNextAnimate",
-    value: function _nvueNextAnimate(animates) {
-      var _this2 = this;
-      var step = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var fn = arguments.length > 2 ? arguments[2] : undefined;
-      var obj = animates[step];
-      if (obj) {
-        var styles = obj.styles,
-          config = obj.config;
-        this._animateRun(styles, config).then(function () {
-          step += 1;
-          _this2._nvueNextAnimate(animates, step, fn);
-        });
-      } else {
-        this.currentStepAnimates = {};
-        typeof fn === 'function' && fn();
-        this.isEnd = true;
-      }
-    }
-  }, {
-    key: "step",
-    value: function step() {
-      var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      this.animation.step(config);
-      return this;
-    }
-  }, {
-    key: "run",
-    value: function run(fn) {
-      this.$.animationData = this.animation.export();
-      this.$.timer = setTimeout(function () {
-        typeof fn === 'function' && fn();
-      }, this.$.durationTime);
-    }
-  }]);
-  return MPAnimation;
-}();
-var animateTypes1 = ['matrix', 'matrix3d', 'rotate', 'rotate3d', 'rotateX', 'rotateY', 'rotateZ', 'scale', 'scale3d', 'scaleX', 'scaleY', 'scaleZ', 'skew', 'skewX', 'skewY', 'translate', 'translate3d', 'translateX', 'translateY', 'translateZ'];
-var animateTypes2 = ['opacity', 'backgroundColor'];
-var animateTypes3 = ['width', 'height', 'left', 'right', 'top', 'bottom'];
-animateTypes1.concat(animateTypes2, animateTypes3).forEach(function (type) {
-  MPAnimation.prototype[type] = function () {
-    var _this$animation;
-    (_this$animation = this.animation)[type].apply(_this$animation, arguments);
-    return this;
-  };
-});
-function createAnimation(option, _this) {
-  if (!_this) return;
-  clearTimeout(_this.timer);
-  return new MPAnimation(option, _this);
-}
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 
@@ -10375,23 +10240,15 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 25));
 var _vuex = _interopRequireDefault(__webpack_require__(/*! vuex */ 34));
-var _cart = _interopRequireDefault(__webpack_require__(/*! ./cart.js */ 35));
+var _article = _interopRequireDefault(__webpack_require__(/*! ./article.js */ 35));
 var _user = _interopRequireDefault(__webpack_require__(/*! ./user.js */ 36));
-// 1. 导入 Vue 和 Vuex
-
-// 2. 将 Vuex 安装为 Vue 的插件
 _vue.default.use(_vuex.default);
-
-// 3. 创建 Store 的实例对象
 var store = new _vuex.default.Store({
-  // TODO：挂载 store 模块
   modules: {
-    m_cart: _cart.default,
+    m_article: _article.default,
     m_user: _user.default
   }
 });
-
-// 4. 向外共享 Store 的实例对象
 var _default = store;
 exports.default = _default;
 
@@ -11655,136 +11512,57 @@ module.exports = index_cjs;
 /***/ }),
 
 /***/ 35:
-/*!********************************************************!*\
-  !*** D:/Study/project/Zhiyun-Yi-Lacquer/store/cart.js ***!
-  \********************************************************/
+/*!***********************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/store/article.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
+var FAVORITES_STORAGE_KEY = 'favoriteArticles';
+var LIKED_ARTICLES_STORAGE_KEY = 'likedArticles';
 var _default = {
-  // 为当前模块开启命名空间
   namespaced: true,
-  // 模块的 state 数据
   state: function state() {
     return {
-      cart: JSON.parse(uni.getStorageSync('cart') || '[]'),
-      //文章收藏的
-      handup: JSON.parse(uni.getStorageSync('handup') || '[]'),
-      //文章点赞的
-      storycart: JSON.parse(uni.getStorageSync('storycart') || '[]'),
-      //视频收藏的
-      storyhandup: JSON.parse(uni.getStorageSync('storyhandup') || '[]') //点赞的
+      favoriteArticles: JSON.parse(uni.getStorageSync(FAVORITES_STORAGE_KEY) || '[]'),
+      likedArticles: JSON.parse(uni.getStorageSync(LIKED_ARTICLES_STORAGE_KEY) || '[]')
     };
   },
-
-  // 模块的 mutations 方法
   mutations: {
-    //保存文字收藏到本地
-    saveToStorage: function saveToStorage(state) {
-      uni.setStorageSync('cart', JSON.stringify(state.cart));
+    persistFavorites: function persistFavorites(state) {
+      uni.setStorageSync(FAVORITES_STORAGE_KEY, JSON.stringify(state.favoriteArticles));
     },
-    //保存文章点赞到本地
-    saveToHandup: function saveToHandup(state) {
-      uni.setStorageSync('handup', JSON.stringify(state.handup));
+    persistLikedArticles: function persistLikedArticles(state) {
+      uni.setStorageSync(LIKED_ARTICLES_STORAGE_KEY, JSON.stringify(state.likedArticles));
     },
-    //保存视频点赞到本地
-    saveTostoryhandup: function saveTostoryhandup(state) {
-      uni.setStorageSync('storyhandup', JSON.stringify(state.storyhandup));
-    },
-    //保存视频收藏到本地
-    saveTostorycartStorage: function saveTostorycartStorage(state) {
-      uni.setStorageSync('storycart', JSON.stringify(state.storycart));
-    },
-    //添加文章收藏赞到本地
-    addToCart: function addToCart(state, content) {
-      // 根据提交的Id，查询购物车中是否存在这件
-      // 如果不存在，则 findResult 为 undefined；否则，为查找到的商品信息对象
-      var findResult = state.cart.find(function (x) {
-        return x.id === content.id;
+    toggleFavoriteArticle: function toggleFavoriteArticle(state, article) {
+      var exists = state.favoriteArticles.some(function (item) {
+        return item.id === article.id;
       });
-      if (!findResult) {
-        console.log("没有这篇文章现在加入");
-        // 如果购物车中没有这件商品，则直接 push
-        state.cart.push(content);
-      } else {
-        state.cart = state.cart.filter(function (item) {
-          return item.id !== content.id;
-        });
-        console.log("已经收藏过了，从收藏列表中移除");
-      }
-      // 通过 commit 方法，调用 m_cart 命名空间下的 saveToStorage 方法
-      this.commit('m_cart/saveToStorage');
+      state.favoriteArticles = exists ? state.favoriteArticles.filter(function (item) {
+        return item.id !== article.id;
+      }) : [].concat((0, _toConsumableArray2.default)(state.favoriteArticles), [article]);
+      this.commit('m_article/persistFavorites');
     },
-    //添加文章点赞赞到本地
-    addToHandup: function addToHandup(state, handid) {
-      // 根据提交的Id，查询购物车中是否存在这件
-      // 如果不存在，则 findResult 为 undefined；否则，为查找到的商品信息对象
-      var findResult = state.handup.find(function (x) {
-        return x.id === handid.id;
+    toggleLikedArticle: function toggleLikedArticle(state, articleId) {
+      var exists = state.likedArticles.some(function (item) {
+        return item.id === articleId.id;
       });
-      if (!findResult) {
-        console.log("没有点赞这篇文章现在加入");
-        // 如果购物车中没有这件商品，则直接 push
-        state.handup.push(handid);
-      } else {
-        state.handup = state.handup.filter(function (item) {
-          return item.id !== handid.id;
-        });
-        console.log("已经点赞过了，从点赞列表中移除");
-      }
-      // 通过 commit 方法，调用 m_cart 命名空间下的 saveToStorage 方法
-      this.commit('m_cart/saveTostoryhandup');
-    },
-    //添加视频点赞赞到本地
-    addTostoryhandup: function addTostoryhandup(state, handid) {
-      // 根据提交的Id，查询购物车中是否存在这件
-      // 如果不存在，则 findResult 为 undefined；否则，为查找到的商品信息对象
-      var findResult = state.storyhandup.find(function (x) {
-        return x.id === handid.id;
-      });
-      if (!findResult) {
-        console.log("没有点赞这个视频现在加入");
-        // 如果购物车中没有这件商品，则直接 push
-        state.storyhandup.push(handid);
-      } else {
-        state.storyhandup = state.storyhandup.filter(function (item) {
-          return item.id !== handid.id;
-        });
-        console.log("已经点赞过了这个视频，从点赞列表中移除");
-      }
-      // 通过 commit 方法，调用 m_cart 命名空间下的 saveToStorage 方法
-      this.commit('m_cart/saveTostoryhandup');
-    },
-    //添加视频收藏赞到本地
-    addTostoryCart: function addTostoryCart(state, content) {
-      // 根据提交的Id，查询购物车中是否存在这件
-      // 如果不存在，则 findResult 为 undefined；否则，为查找到的商品信息对象
-      var findResult = state.storycart.find(function (x) {
-        return x.id === content.id;
-      });
-      if (!findResult) {
-        console.log("没有这个视频现在加入");
-        // 如果购物车中没有这件商品，则直接 push
-        state.storycart.push(content);
-      } else {
-        state.storycart = state.storycart.filter(function (item) {
-          return item.id !== content.id;
-        });
-        console.log("已经收藏过了这个视频，从收藏列表中移除");
-      }
-      // 通过 commit 方法，调用 m_cart 命名空间下的 saveToStorage 方法
-      this.commit('m_cart/saveTostorycartStorage');
+      state.likedArticles = exists ? state.likedArticles.filter(function (item) {
+        return item.id !== articleId.id;
+      }) : [].concat((0, _toConsumableArray2.default)(state.likedArticles), [articleId]);
+      this.commit('m_article/persistLikedArticles');
     }
-  },
-  // 模块的 getters 属性
-  getters: {}
+  }
 };
 exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
@@ -11805,55 +11583,26 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var USER_ID_STORAGE_KEY = 'userId';
+var LOGIN_STATUS_STORAGE_KEY = 'isLoggedIn';
 var _default = {
-  // 为当前模块开启命名空间
   namespaced: true,
-  // 模块的 state 数据
   state: function state() {
     return {
-      userid: JSON.parse(uni.getStorageSync('userid') || '[]'),
-      Tank: JSON.parse(uni.getStorageSync('Tank') || false),
-      loginTank: JSON.parse(uni.getStorageSync('Tank') || true)
+      userId: JSON.parse(uni.getStorageSync(USER_ID_STORAGE_KEY) || '""'),
+      isLoggedIn: JSON.parse(uni.getStorageSync(LOGIN_STATUS_STORAGE_KEY) || 'false')
     };
   },
-  // 模块的 mutations 方法
   mutations: {
-    // 更新userid
-    updateUserid: function updateUserid(state, userid) {
-      state.userid = userid;
-      console.log('存到本地的userid是', userid);
-      // 通过 this.commit() 方法，调用 m_user 模块下的 saveUserInfoToStorage 方法，将 userinfo 对象持久化存储到本地
-      this.commit('m_user/saveUseridToStorage');
+    setUserId: function setUserId(state, userId) {
+      state.userId = userId;
+      uni.setStorageSync(USER_ID_STORAGE_KEY, JSON.stringify(userId));
     },
-    // 更新 Tank
-    updateTank: function updateTank(state, Tank) {
-      state.Tank = Tank;
-      console.log('存到本地的 Tank是', Tank);
-      // 通过 this.commit() 方法，调用 m_user 模块下的 saveUserInfoToStorage 方法，将 userinfo 对象持久化存储到本地
-      this.commit('m_user/saveTankToStorage');
-    },
-    // 更新 loginTank
-    updateloginTank: function updateloginTank(state, loginTank) {
-      state.loginTank = loginTank;
-      console.log('存到本地的 loginTank是', loginTank);
-      // 通过 this.commit() 方法，调用 m_user 模块下的 saveUserInfoToStorage 方法，将 userinfo 对象持久化存储到本地
-      this.commit('m_user/saveloginTankToStorage');
-    },
-    // 将 userid 持久化存储到本地
-    saveUseridToStorage: function saveUseridToStorage(state) {
-      uni.setStorageSync('userid', JSON.stringify(state.userid));
-    },
-    // 将 Tank 持久化存储到本地
-    saveTankToStorage: function saveTankToStorage(state) {
-      uni.setStorageSync('Tank', JSON.stringify(state.Tank));
-    },
-    // 将 loginTank 持久化存储到本地
-    saveloginTankToStorage: function saveloginTankToStorage(state) {
-      uni.setStorageSync('loginTank ', JSON.stringify(state.loginTank));
+    setLoginStatus: function setLoginStatus(state, isLoggedIn) {
+      state.isLoggedIn = Boolean(isLoggedIn);
+      uni.setStorageSync(LOGIN_STATUS_STORAGE_KEY, JSON.stringify(Boolean(isLoggedIn)));
     }
-  },
-  // 模块的 getters 属性
-  getters: {}
+  }
 };
 exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
@@ -12274,6 +12023,256 @@ function _asyncToGenerator(fn) {
   };
 }
 module.exports = _asyncToGenerator, module.exports.__esModule = true, module.exports["default"] = module.exports;
+
+/***/ }),
+
+/***/ 47:
+/*!*********************************************************!*\
+  !*** D:/Study/project/Zhiyun-Yi-Lacquer/utils/cloud.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(wx) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.COLLECTION_FALLBACKS = exports.COLLECTIONS = exports.CLOUD_FUNCTION_FALLBACKS = exports.CLOUD_FUNCTIONS = void 0;
+exports.callCloudFunctionWithFallback = callCloudFunctionWithFallback;
+exports.extractResultData = extractResultData;
+exports.getErrorMessage = getErrorMessage;
+exports.hasUsableData = hasUsableData;
+exports.isFunctionNotFoundError = isFunctionNotFoundError;
+exports.runCollectionWithFallback = runCollectionWithFallback;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 44));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 46));
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
+var COLLECTIONS = Object.freeze({
+  SWIPER: 'swiper',
+  USERS: 'user',
+  ARTICLES: 'articles',
+  ARTIFACT_MODELS: 'artifact_models'
+});
+exports.COLLECTIONS = COLLECTIONS;
+var COLLECTION_FALLBACKS = Object.freeze({
+  ARTICLES: ['model', 'content'],
+  ARTIFACT_MODELS: ['3dview']
+});
+exports.COLLECTION_FALLBACKS = COLLECTION_FALLBACKS;
+var CLOUD_FUNCTIONS = Object.freeze({
+  GET_ARTICLE_LIST: 'getArticleList',
+  GET_ARTICLE_DETAIL: 'getArticleDetail',
+  UPDATE_ARTICLE_LIKES: 'updateArticleLikes',
+  GET_ARTIFACT_MODELS: 'getArtifactModels',
+  GET_USER_PROFILE: 'getUserProfile',
+  CREATE_USER_PROFILE: 'createUserProfile',
+  UPDATE_USER_AVATAR: 'updateUserAvatar',
+  UPDATE_USER_NICKNAME: 'updateUserNickname'
+});
+exports.CLOUD_FUNCTIONS = CLOUD_FUNCTIONS;
+var CLOUD_FUNCTION_FALLBACKS = Object.freeze({
+  GET_ARTICLE_LIST: ['getmaincontent'],
+  GET_ARTICLE_DETAIL: ['GetDate', 'getimage'],
+  UPDATE_ARTICLE_LIKES: ['addHandup'],
+  GET_ARTIFACT_MODELS: ['get3d']
+});
+exports.CLOUD_FUNCTION_FALLBACKS = CLOUD_FUNCTION_FALLBACKS;
+function normalizeCandidates(candidates) {
+  var candidateList = Array.isArray(candidates) ? candidates : [candidates];
+  return Array.from(new Set(candidateList.filter(function (item) {
+    return typeof item === 'string' && item.trim().length > 0;
+  })));
+}
+function isPlainObject(value) {
+  return Object.prototype.toString.call(value) === '[object Object]';
+}
+function extractResultData(result) {
+  if (result && (0, _typeof2.default)(result) === 'object' && 'result' in result) {
+    if (result.result && (0, _typeof2.default)(result.result) === 'object' && 'data' in result.result) {
+      return result.result.data;
+    }
+    return result.result;
+  }
+  if (result && (0, _typeof2.default)(result) === 'object' && 'data' in result) {
+    return result.data;
+  }
+  return result;
+}
+function hasUsableData(data) {
+  if (Array.isArray(data)) {
+    return data.length > 0;
+  }
+  if (isPlainObject(data)) {
+    return Object.keys(data).length > 0;
+  }
+  return data !== null && typeof data !== 'undefined' && data !== '';
+}
+function getErrorMessage(error) {
+  if (!error) {
+    return '';
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  return error.message || error.errMsg || '';
+}
+function isFunctionNotFoundError(error) {
+  var message = getErrorMessage(error);
+  return message.indexOf('FUNCTION_NOT_FOUND') !== -1 || message.indexOf('FunctionName parameter could not be found') !== -1;
+}
+function runCollectionWithFallback(_x, _x2) {
+  return _runCollectionWithFallback.apply(this, arguments);
+}
+function _runCollectionWithFallback() {
+  _runCollectionWithFallback = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(collectionNames, executor) {
+    var options,
+      names,
+      fallbackWhenEmpty,
+      getData,
+      lastError,
+      index,
+      collectionName,
+      result,
+      data,
+      isLastCandidate,
+      _args = arguments;
+    return _regenerator.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            options = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            names = normalizeCandidates(collectionNames);
+            fallbackWhenEmpty = Boolean(options.fallbackWhenEmpty);
+            getData = typeof options.getData === 'function' ? options.getData : extractResultData;
+            lastError = null;
+            index = 0;
+          case 6:
+            if (!(index < names.length)) {
+              _context.next = 27;
+              break;
+            }
+            collectionName = names[index];
+            _context.prev = 8;
+            _context.next = 11;
+            return executor(collectionName);
+          case 11:
+            result = _context.sent;
+            data = getData(result);
+            isLastCandidate = index === names.length - 1;
+            if (!(!fallbackWhenEmpty || hasUsableData(data) || isLastCandidate)) {
+              _context.next = 16;
+              break;
+            }
+            return _context.abrupt("return", result);
+          case 16:
+            lastError = new Error("Collection ".concat(collectionName, " returned empty data"));
+            _context.next = 24;
+            break;
+          case 19:
+            _context.prev = 19;
+            _context.t0 = _context["catch"](8);
+            lastError = _context.t0;
+            if (!(index === names.length - 1)) {
+              _context.next = 24;
+              break;
+            }
+            throw _context.t0;
+          case 24:
+            index += 1;
+            _context.next = 6;
+            break;
+          case 27:
+            throw lastError || new Error('No collection candidates available');
+          case 28:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[8, 19]]);
+  }));
+  return _runCollectionWithFallback.apply(this, arguments);
+}
+function callCloudFunctionWithFallback(_x3) {
+  return _callCloudFunctionWithFallback.apply(this, arguments);
+}
+function _callCloudFunctionWithFallback() {
+  _callCloudFunctionWithFallback = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(functionNames) {
+    var data,
+      options,
+      names,
+      fallbackWhenEmpty,
+      getData,
+      lastError,
+      index,
+      functionName,
+      result,
+      resultData,
+      isLastCandidate,
+      _args2 = arguments;
+    return _regenerator.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            data = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
+            options = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
+            names = normalizeCandidates(functionNames);
+            fallbackWhenEmpty = Boolean(options.fallbackWhenEmpty);
+            getData = typeof options.getData === 'function' ? options.getData : extractResultData;
+            lastError = null;
+            index = 0;
+          case 7:
+            if (!(index < names.length)) {
+              _context2.next = 28;
+              break;
+            }
+            functionName = names[index];
+            _context2.prev = 9;
+            _context2.next = 12;
+            return wx.cloud.callFunction({
+              name: functionName,
+              data: data
+            });
+          case 12:
+            result = _context2.sent;
+            resultData = getData(result);
+            isLastCandidate = index === names.length - 1;
+            if (!(!fallbackWhenEmpty || hasUsableData(resultData) || isLastCandidate)) {
+              _context2.next = 17;
+              break;
+            }
+            return _context2.abrupt("return", result);
+          case 17:
+            lastError = new Error("Cloud function ".concat(functionName, " returned empty data"));
+            _context2.next = 25;
+            break;
+          case 20:
+            _context2.prev = 20;
+            _context2.t0 = _context2["catch"](9);
+            lastError = _context2.t0;
+            if (!(!isFunctionNotFoundError(_context2.t0) || index === names.length - 1)) {
+              _context2.next = 25;
+              break;
+            }
+            throw _context2.t0;
+          case 25:
+            index += 1;
+            _context2.next = 7;
+            break;
+          case 28:
+            throw lastError || new Error('No cloud function candidates available');
+          case 29:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[9, 20]]);
+  }));
+  return _callCloudFunctionWithFallback.apply(this, arguments);
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
 
 /***/ }),
 
