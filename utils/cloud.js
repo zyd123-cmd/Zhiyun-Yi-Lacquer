@@ -5,6 +5,8 @@ export const COLLECTIONS = Object.freeze({
   ARTIFACT_MODELS: 'artifact_models',
   ARTICLE_COMMENTS: 'article_comments',
   ARTICLE_COMMENT_LIKES: 'article_comment_likes',
+  YIQUAN_POSTS: 'yiquan_posts',
+  YIQUAN_POST_COMMENTS: 'yiquan_post_comments',
 })
 
 export const COLLECTION_FALLBACKS = Object.freeze({
@@ -26,6 +28,12 @@ export const CLOUD_FUNCTIONS = Object.freeze({
   CREATE_USER_PROFILE: 'createUserProfile',
   UPDATE_USER_AVATAR: 'updateUserAvatar',
   UPDATE_USER_NICKNAME: 'updateUserNickname',
+  GET_YIQUAN_POSTS: 'getYiquanPosts',
+  CREATE_YIQUAN_POST: 'createYiquanPost',
+  DELETE_YIQUAN_POST: 'deleteYiquanPost',
+  GET_YIQUAN_COMMENTS: 'getYiquanComments',
+  CREATE_YIQUAN_COMMENT: 'createYiquanComment',
+  DELETE_YIQUAN_COMMENT: 'deleteYiquanComment',
 })
 
 export const CLOUD_FUNCTION_FALLBACKS = Object.freeze({

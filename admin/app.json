@@ -6,7 +6,8 @@
     "pages/article-form/article-form",
     "pages/model-list/model-list",
     "pages/model-form/model-form",
-    "pages/comment-list/comment-list"
+    "pages/comment-list/comment-list",
+    "pages/yiquan-list/yiquan-list"
   ],
   "window": {
     "navigationBarTitleText": "管理员后台",

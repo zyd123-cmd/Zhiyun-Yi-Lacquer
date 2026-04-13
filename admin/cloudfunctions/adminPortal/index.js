@@ -1,5 +1,6 @@
 const cloud = require('wx-server-sdk')
 const crypto = require('crypto')
+const createYiquanAdminActions = require('./modules/yiquan')
 
 // 中文注释：初始化云开发环境，确保管理员后台所有操作都运行在当前云环境。
 cloud.init({
@@ -864,6 +865,16 @@ async function deleteCommentByAdmin(event) {
   }, '评论删除成功')
 }
 
+// 中文注释：初始化彝圈管理员动作集合，把主入口已有的数据库、鉴权和响应工具注入到独立模块中。
+const yiquanAdminActions = createYiquanAdminActions({
+  db,
+  normalizeText,
+  buildSuccess,
+  buildFailure,
+  assertAdminSession,
+  removeCollectionDocumentsByField,
+})
+
 // 中文注释：统一根据 action 路由到具体管理员后台逻辑，减少管理员端函数调用分散程度。
 exports.main = async (event) => {
   console.log('管理员后台云函数：收到管理员请求', maskSensitiveEvent(event || {}))
@@ -899,6 +910,12 @@ exports.main = async (event) => {
         return await listComments(event)
       case 'deleteComment':
         return await deleteCommentByAdmin(event)
+      case 'listYiquanPosts':
+        return await yiquanAdminActions.listYiquanPosts(event)
+      case 'reviewYiquanPost':
+        return await yiquanAdminActions.reviewYiquanPost(event)
+      case 'deleteYiquanPost':
+        return await yiquanAdminActions.deleteYiquanPost(event)
       default:
         console.log('管理员后台云函数：收到未知 action，直接返回失败结果', action)
         return buildFailure('未知的管理员操作类型')

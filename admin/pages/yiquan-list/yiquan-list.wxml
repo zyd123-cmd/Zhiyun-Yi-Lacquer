@@ -1,0 +1,58 @@
+<view class="page-shell">
+  <view class="card-panel yiquan-hero">
+    <view class="section-title">彝圈审核</view>
+    <view class="yiquan-hero__desc">普通用户发布的彝圈动态会先进入待审核列表，通过后才会在用户端彝圈展示。</view>
+  </view>
+
+  <view class="card-panel">
+    <van-tabs active="{{ statusIndex }}" color="#8f1d22" bind:change="handleStatusChange">
+      <van-tab wx:for="{{ statusOptions }}" wx:key="value" title="{{ item.label }}" />
+    </van-tabs>
+  </view>
+
+  <view wx:if="{{ isLoading }}" class="card-panel loading-panel">
+    <van-loading size="24px" color="#8f1d22" />
+    <view class="loading-text">彝圈动态加载中...</view>
+  </view>
+
+  <van-empty wx:elif="{{ !displayPostList.length }}" description="当前状态暂无彝圈动态" />
+
+  <view wx:else class="post-list">
+    <view wx:for="{{ displayPostList }}" wx:key="_id" class="card-panel post-card">
+      <view class="post-card__header">
+        <view>
+          <view class="post-card__nickname">{{ item.nickName }}</view>
+          <view class="post-card__time">发布：{{ item.createdAtText }}</view>
+        </view>
+        <van-tag type="{{ item.tagType }}">{{ item.statusText }}</van-tag>
+      </view>
+
+      <view class="post-card__content">{{ item.content || '仅发布图片' }}</view>
+
+      <view wx:if="{{ item.imageList.length }}" class="post-card__grid">
+        <image
+          wx:for="{{ item.imageList }}"
+          wx:for-item="imageUrl"
+          wx:for-index="imageIndex"
+          wx:key="*this"
+          class="post-card__image"
+          src="{{ imageUrl }}"
+          mode="aspectFill"
+          data-id="{{ item._id }}"
+          data-index="{{ imageIndex }}"
+          bind:tap="previewImage"
+        />
+      </view>
+
+      <view class="post-card__meta">图片：{{ item.imageCount }} 张，评论：{{ item.commentCount }} 条</view>
+      <view class="post-card__meta">审核：{{ item.reviewedAtText }}</view>
+      <view wx:if="{{ item.reviewRemark }}" class="post-card__meta">备注：{{ item.reviewRemark }}</view>
+
+      <view class="action-row post-card__actions">
+        <van-button wx:if="{{ item.status !== 'approved' }}" size="small" type="primary" plain data-id="{{ item._id }}" data-status="approved" bind:click="reviewPost">通过</van-button>
+        <van-button wx:if="{{ item.status !== 'rejected' }}" size="small" type="warning" plain data-id="{{ item._id }}" data-status="rejected" bind:click="reviewPost">驳回</van-button>
+        <van-button size="small" type="danger" plain data-id="{{ item._id }}" bind:click="deletePost">删除</van-button>
+      </view>
+    </view>
+  </view>
+</view>

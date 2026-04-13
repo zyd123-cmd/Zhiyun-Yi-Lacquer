@@ -1,0 +1,9 @@
+{
+  "name": "createYiquanPost",
+  "version": "1.0.0",
+  "description": "创建彝圈待审核动态",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.1"
+  }
+}

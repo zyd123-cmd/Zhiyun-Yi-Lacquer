@@ -7,6 +7,19 @@
       }
     },
     {
+      "path": "pages/yiquan/yiquan",
+      "style": {
+        "navigationBarTitleText": "彝圈",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/yiquan/publish",
+      "style": {
+        "navigationBarTitleText": "发布动态"
+      }
+    },
+    {
       "path": "pages/my/my",
       "style": {
         "navigationBarTitleText": "我的"
@@ -124,6 +137,12 @@
         "selectedIconPath": "static/tabar图标/shouye/首页 (选中).png",
         "pagePath": "pages/index/index",
         "text": "首页"
+      },
+      {
+        "iconPath": "static/tabar图标/yiquan/论坛 .png",
+        "selectedIconPath": "static/tabar图标/yiquan/论坛(选中).png",
+        "pagePath": "pages/yiquan/yiquan",
+        "text": "彝圈"
       },
       {
         "iconPath": "static/tabar图标/my/_我的 .png",

@@ -1,0 +1,9 @@
+{
+  "name": "deleteYiquanComment",
+  "version": "1.0.0",
+  "description": "删除自己的彝圈评论",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.1"
+  }
+}

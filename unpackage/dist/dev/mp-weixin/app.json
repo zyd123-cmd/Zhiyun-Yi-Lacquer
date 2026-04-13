@@ -1,6 +1,8 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/yiquan/yiquan",
+    "pages/yiquan/publish",
     "pages/my/my"
   ],
   "subPackages": [
@@ -38,6 +40,12 @@
         "selectedIconPath": "static/tabar图标/shouye/首页 (选中).png",
         "pagePath": "pages/index/index",
         "text": "首页"
+      },
+      {
+        "iconPath": "static/tabar图标/yiquan/论坛 .png",
+        "selectedIconPath": "static/tabar图标/yiquan/论坛(选中).png",
+        "pagePath": "pages/yiquan/yiquan",
+        "text": "彝圈"
       },
       {
         "iconPath": "static/tabar图标/my/_我的 .png",

@@ -22,6 +22,7 @@
       <van-grid-item icon="photo-o" text="上传模型" bind:click="goToModelForm" />
       <van-grid-item icon="apps-o" text="模型管理" bind:click="goToModelList" />
       <van-grid-item icon="chat-o" text="评论管理" bind:click="goToCommentList" />
+      <van-grid-item icon="friends-o" text="彝圈审核" bind:click="goToYiquanList" />
       <van-grid-item icon="close" text="退出登录" bind:click="logout" />
     </van-grid>
   </view>

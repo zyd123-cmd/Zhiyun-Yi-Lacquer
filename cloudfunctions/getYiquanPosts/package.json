@@ -1,0 +1,9 @@
+{
+  "name": "getYiquanPosts",
+  "version": "1.0.0",
+  "description": "获取彝圈动态列表",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.1"
+  }
+}

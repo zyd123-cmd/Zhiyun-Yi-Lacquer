@@ -1,0 +1,9 @@
+{
+  "name": "createYiquanComment",
+  "version": "1.0.0",
+  "description": "创建彝圈评论或回复",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.1"
+  }
+}

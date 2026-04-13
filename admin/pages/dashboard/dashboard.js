@@ -86,6 +86,13 @@ Page({
       url: '/pages/comment-list/comment-list',
     })
   },
+  // 中文注释：跳转到彝圈审核页，供管理员审核普通用户提交的动态内容。
+  goToYiquanList() {
+    console.log('管理员后台首页：准备跳转到彝圈审核页')
+    wx.navigateTo({
+      url: '/pages/yiquan-list/yiquan-list',
+    })
+  },
   // 中文注释：执行管理员退出登录逻辑，同时清空本地会话并回到登录页。
   async logout() {
     console.log('管理员后台首页：开始执行管理员退出登录流程')
