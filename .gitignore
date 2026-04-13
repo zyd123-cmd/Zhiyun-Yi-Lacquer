@@ -101,7 +101,8 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 .vant/*
-wxcomponents/vant/
+!wxcomponents/vant/
+!wxcomponents/vant/**
 # 日志文件
 npm-debug.log*
 yarn-debug.log*
