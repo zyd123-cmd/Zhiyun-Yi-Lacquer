@@ -15,16 +15,40 @@ Page({
   // 中文注释：页面初始数据用于维护审核状态筛选、原始动态列表和展示动态列表。
   data: {
     isLoading: false,
+    isSilentRefreshing: false,
+    lastRefreshTimeText: '',
     statusIndex: 1,
     statusOptions: STATUS_OPTIONS,
     postList: [],
     displayPostList: [],
+  },
+  // 中文注释：页面加载时初始化自动刷新定时器引用，避免多次进入页面叠加定时任务。
+  onLoad() {
+    console.log('管理员彝圈审核页：页面加载完成，准备初始化自动刷新状态')
+    this.refreshTimer = null
+    console.log('管理员彝圈审核页：自动刷新状态初始化完成')
   },
   // 中文注释：页面显示时刷新列表，保证管理员回到审核页能看到最新投稿状态。
   onShow() {
     console.log('管理员彝圈审核页：页面显示，准备加载彝圈动态列表')
     initCloud()
     this.loadPostList()
+    this.startAutoRefresh()
+  },
+  // 中文注释：页面隐藏时停止自动刷新，避免后台页面继续消耗云函数调用次数。
+  onHide() {
+    console.log('管理员彝圈审核页：页面隐藏，准备停止自动刷新')
+    this.stopAutoRefresh()
+  },
+  // 中文注释：页面卸载时再次兜底停止自动刷新，避免定时器残留造成重复请求。
+  onUnload() {
+    console.log('管理员彝圈审核页：页面卸载，准备清理自动刷新')
+    this.stopAutoRefresh()
+  },
+  // 中文注释：支持管理员下拉刷新，手动触发时走静默刷新避免页面大面积闪动。
+  onPullDownRefresh() {
+    console.log('管理员彝圈审核页：收到下拉刷新指令，准备静默加载最新动态')
+    this.loadPostList({ silent: true, stopPullDownRefresh: true })
   },
   // 中文注释：统一格式化动态数据，补齐时间文本和状态标签类型，便于模板直接渲染。
   formatPost(post) {
@@ -47,27 +71,86 @@ Page({
     return formattedPost
   },
   // 中文注释：统一加载彝圈动态列表，包含待审核、已通过和已驳回三类状态。
-  async loadPostList() {
-    console.log('管理员彝圈审核页：开始加载彝圈动态列表')
-    this.setData({ isLoading: true })
+  async loadPostList(options = {}) {
+    const silent = Boolean(options.silent)
+    const stopPullDownRefresh = Boolean(options.stopPullDownRefresh)
+    console.log('管理员彝圈审核页：开始加载彝圈动态列表', options)
+
+    if (this.data.isLoading || this.data.isSilentRefreshing) {
+      console.log('管理员彝圈审核页：当前已有列表加载任务在执行，跳过本次重复刷新')
+      if (stopPullDownRefresh) {
+        wx.stopPullDownRefresh()
+        console.log('管理员彝圈审核页：重复刷新场景下已停止下拉刷新动画')
+      }
+      return
+    }
+
+    if (silent) {
+      this.setData({ isSilentRefreshing: true })
+      console.log('管理员彝圈审核页：静默刷新状态已开启')
+    } else {
+      this.setData({ isLoading: true })
+      console.log('管理员彝圈审核页：页面加载状态已开启')
+    }
 
     try {
       const result = await callAdminAction('listYiquanPosts')
       console.log('管理员彝圈审核页：彝圈动态列表云函数返回结果', result)
       const postList = (result.data || []).map((post) => this.formatPost(post))
-      this.setData({ postList })
+      const lastRefreshTimeText = formatTime(Date.now())
+      this.setData({ postList, lastRefreshTimeText })
+      console.log('管理员彝圈审核页：列表数据和最近刷新时间已写入页面状态', lastRefreshTimeText)
       this.applyStatusFilter()
       console.log('管理员彝圈审核页：彝圈动态列表加载完成', postList.length)
     } catch (error) {
       console.error('管理员彝圈审核页：彝圈动态列表加载失败', error)
+      const errorMessage = error && error.message ? error.message : ''
+      const toastTitle = errorMessage.indexOf('未知的管理员操作类型') !== -1
+        ? '请重新上传部署 adminPortal 云函数'
+        : error.message || '彝圈动态加载失败'
       wx.showToast({
-        title: error.message || '彝圈动态加载失败',
+        title: toastTitle,
         icon: 'none',
       })
     } finally {
-      this.setData({ isLoading: false })
+      this.setData({ isLoading: false, isSilentRefreshing: false })
+      if (stopPullDownRefresh) {
+        wx.stopPullDownRefresh()
+        console.log('管理员彝圈审核页：下拉刷新动画已停止')
+      }
       console.log('管理员彝圈审核页：彝圈动态列表加载流程结束')
     }
+  },
+  // 中文注释：统一启动自动刷新，保证审核页停留时也能持续拿到最新待审核动态。
+  startAutoRefresh() {
+    console.log('管理员彝圈审核页：开始启动自动刷新定时器')
+    if (this.refreshTimer) {
+      console.log('管理员彝圈审核页：自动刷新定时器已存在，跳过重复启动')
+      return
+    }
+
+    this.refreshTimer = setInterval(() => {
+      console.log('管理员彝圈审核页：自动刷新定时器触发，准备静默加载最新动态')
+      this.loadPostList({ silent: true })
+    }, 8000)
+    console.log('管理员彝圈审核页：自动刷新定时器启动完成')
+  },
+  // 中文注释：统一停止自动刷新，页面离开时主动释放定时器资源。
+  stopAutoRefresh() {
+    console.log('管理员彝圈审核页：开始停止自动刷新定时器')
+    if (!this.refreshTimer) {
+      console.log('管理员彝圈审核页：当前没有自动刷新定时器，无需清理')
+      return
+    }
+
+    clearInterval(this.refreshTimer)
+    this.refreshTimer = null
+    console.log('管理员彝圈审核页：自动刷新定时器已停止')
+  },
+  // 中文注释：统一处理管理员点击刷新按钮，立即静默获取最新待审核动态。
+  manualRefresh() {
+    console.log('管理员彝圈审核页：收到手动刷新指令，准备静默加载最新动态')
+    this.loadPostList({ silent: true })
   },
   // 中文注释：统一根据当前 tab 状态过滤动态列表。
   applyStatusFilter() {
@@ -138,7 +221,7 @@ Page({
         title: result.message || '审核完成',
         icon: 'success',
       })
-      this.loadPostList()
+      this.loadPostList({ silent: true })
     } catch (error) {
       console.error('管理员彝圈审核页：动态审核动作执行失败', error)
       wx.showToast({
@@ -175,7 +258,7 @@ Page({
         title: result.message || '动态已删除',
         icon: 'success',
       })
-      this.loadPostList()
+      this.loadPostList({ silent: true })
     } catch (error) {
       console.error('管理员彝圈审核页：动态删除动作执行失败', error)
       wx.showToast({

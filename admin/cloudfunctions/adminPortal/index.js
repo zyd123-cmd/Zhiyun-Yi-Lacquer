@@ -600,6 +600,9 @@ async function listModels(event) {
       modelUrl: model.modelUrl || '',
       scale3d: model.scale3d || '',
       position3d: model.position3d || '',
+      titleAR: model.titleAR || model.name || '',
+      scaleAR: model.scaleAR || model.scale3d || '',
+      arpagesrc: model.arpagesrc || '/subpkg/arview/arview0/arview0',
       description: model.description || '',
       order: Number(model.order || 0),
       updatedAt: Number(model.updatedAt || 0),
@@ -634,8 +637,16 @@ async function saveModel(event) {
   const modelUrl = normalizeText(event.modelUrl)
   const scale3d = normalizeText(event.scale3d) || '1 1 1'
   const position3d = normalizeText(event.position3d) || '0 0 0'
+  const titleAR = normalizeText(event.titleAR) || name
+  const scaleAR = normalizeText(event.scaleAR) || scale3d
+  const arpagesrc = normalizeText(event.arpagesrc) || '/subpkg/arview/arview0/arview0'
   const description = normalizeText(event.description)
   const order = normalizeNumber(event.order, 0)
+  console.log('管理员后台云函数：模型 AR 参数规范化完成', {
+    titleAR,
+    scaleAR,
+    arpagesrc,
+  })
 
   if (!name) {
     return buildFailure('模型名称不能为空')
@@ -660,6 +671,9 @@ async function saveModel(event) {
     modelUrl,
     scale3d,
     position3d,
+    titleAR,
+    scaleAR,
+    arpagesrc,
     description,
     order,
     updatedAt: currentTime,

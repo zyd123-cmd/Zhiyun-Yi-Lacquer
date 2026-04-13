@@ -1,4 +1,6 @@
 export const YIQUAN_FEED_CACHE_KEY = 'yiquanFeedCacheV1'
+// 中文注释：记录刚提交成功的动态，返回彝圈列表页时可立即展示待审核状态。
+export const YIQUAN_LATEST_SUBMITTED_POST_KEY = 'yiquanLatestSubmittedPostV1'
 export const YIQUAN_DEFAULT_AVATAR = '/static/myicon/user.png'
 export const YIQUAN_DEFAULT_BACKGROUND = '/static/logo.png'
 

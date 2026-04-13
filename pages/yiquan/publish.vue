@@ -65,6 +65,7 @@
 <script>
 import { mapState } from 'vuex'
 import { CLOUD_FUNCTIONS } from '@/utils/cloud'
+import { YIQUAN_LATEST_SUBMITTED_POST_KEY } from '@/utils/yiquan'
 
 const MAX_IMAGE_COUNT = 9
 
@@ -319,6 +320,15 @@ export default {
 
         if (!result.success) {
           throw new Error(result.message || '动态提交失败')
+        }
+
+        // 中文注释：发布成功后先把新动态写入本地桥接缓存，返回列表页时立即展示待审核状态。
+        if (result.data && result.data._id) {
+          console.log('彝圈发布页：开始缓存刚提交的待审核动态', result.data)
+          uni.setStorageSync(YIQUAN_LATEST_SUBMITTED_POST_KEY, JSON.stringify(result.data))
+          console.log('彝圈发布页：刚提交的待审核动态缓存完成')
+        } else {
+          console.log('彝圈发布页：云函数未返回新动态数据，跳过本地桥接缓存')
         }
 
         uni.showToast({

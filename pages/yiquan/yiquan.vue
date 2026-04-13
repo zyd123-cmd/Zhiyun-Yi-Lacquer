@@ -140,17 +140,13 @@
       </view>
     </view>
 
-    <view class="floating-button" @click="isLoggedIn ? goToPublish() : goToLogin()">
-      <text class="floating-button__icon">+</text>
-      <text class="floating-button__text">{{ isLoggedIn ? '发动态' : '去登录' }}</text>
-    </view>
   </view>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { CLOUD_FUNCTIONS, resolveCloudFileSource, resolveCloudFileSourceList } from '@/utils/cloud'
-import { YIQUAN_DEFAULT_AVATAR, YIQUAN_DEFAULT_BACKGROUND, YIQUAN_FEED_CACHE_KEY, buildYiquanCommentTree, createEmptyYiquanCommentPanelState, normalizeYiquanComment, normalizeYiquanPost } from '@/utils/yiquan'
+import { YIQUAN_DEFAULT_AVATAR, YIQUAN_DEFAULT_BACKGROUND, YIQUAN_FEED_CACHE_KEY, YIQUAN_LATEST_SUBMITTED_POST_KEY, buildYiquanCommentTree, createEmptyYiquanCommentPanelState, normalizeYiquanComment, normalizeYiquanPost } from '@/utils/yiquan'
 
 const YIQUAN_FEED_CACHE_EXPIRE_MS = 5 * 60 * 1000
 
@@ -178,9 +174,11 @@ export default {
     this.loadHeroProfile()
     this.loadPostList()
   },
-  onShow() {
+  async onShow() {
     console.log('彝圈页面：页面重新显示，准备刷新资料和动态列表')
     this.loadHeroProfile()
+    await this.consumeLatestSubmittedPost()
+    console.log('彝圈页面：刚提交动态桥接缓存处理完成，准备按需静默刷新列表')
     if (this.hasLoadedOnce) {
       this.loadPostList({ silent: true })
     }
@@ -250,6 +248,65 @@ export default {
       console.log('彝圈页面：开始写入本地动态缓存', list)
       uni.setStorageSync(YIQUAN_FEED_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), list: Array.isArray(list) ? list : [] }))
       console.log('彝圈页面：本地动态缓存写入完成')
+    },
+    // 中文注释：统一读取发布页桥接缓存，把刚提交的待审核动态立即合并到当前列表。
+    async consumeLatestSubmittedPost() {
+      console.log('彝圈页面：开始检查是否存在刚提交的待审核动态')
+      try {
+        const latestPostText = uni.getStorageSync(YIQUAN_LATEST_SUBMITTED_POST_KEY)
+        if (!latestPostText) {
+          console.log('彝圈页面：没有发现刚提交的待审核动态缓存，直接跳过合并')
+          return
+        }
+
+        console.log('彝圈页面：已读取刚提交的待审核动态缓存，准备清理缓存')
+        uni.removeStorageSync(YIQUAN_LATEST_SUBMITTED_POST_KEY)
+        console.log('彝圈页面：刚提交的待审核动态缓存清理完成')
+
+        const latestPost = JSON.parse(latestPostText)
+        console.log('彝圈页面：刚提交的待审核动态解析完成', latestPost)
+
+        if (!latestPost || !latestPost._id) {
+          console.log('彝圈页面：刚提交的待审核动态数据无效，停止合并')
+          return
+        }
+
+        const rawPostList = [latestPost, ...this.postList.map((post) => post.rawData || post)]
+        const mergedRawPostList = this.mergeWithLocalPrivatePostList(rawPostList)
+        this.postList = await this.buildPostList(mergedRawPostList)
+        this.writeFeedCache(mergedRawPostList)
+        this.hasLoadedOnce = true
+        console.log('彝圈页面：刚提交的待审核动态已合并到当前列表', latestPost._id)
+      } catch (error) {
+        console.error('彝圈页面：合并刚提交的待审核动态失败', error)
+        uni.removeStorageSync(YIQUAN_LATEST_SUBMITTED_POST_KEY)
+        console.log('彝圈页面：异常场景下已清理刚提交动态缓存')
+      }
+    },
+    // 中文注释：统一保留本地可见的本人非公开动态，避免静默刷新时被旧云函数结果覆盖掉。
+    mergeWithLocalPrivatePostList(rawPostList) {
+      console.log('彝圈页面：开始合并云端动态和本地本人待审核动态', rawPostList)
+      const safeRawPostList = Array.isArray(rawPostList) ? rawPostList.filter((post) => post && post._id) : []
+      const rawPostIdMap = safeRawPostList.reduce((map, post) => {
+        map[post._id] = true
+        return map
+      }, {})
+      const localPrivatePostList = this.postList
+        .filter((post) => post && post._id && post.status !== 'approved' && post.canDelete && !rawPostIdMap[post._id])
+        .map((post) => post.rawData || post)
+
+      console.log('彝圈页面：本地本人非公开动态筛选完成', localPrivatePostList)
+      const mergedPostMap = [...safeRawPostList, ...localPrivatePostList].reduce((map, post) => {
+        if (post && post._id && post.status !== 'deleted') {
+          map[post._id] = post
+        }
+        return map
+      }, {})
+      const mergedPostList = Object.keys(mergedPostMap)
+        .map((postId) => mergedPostMap[postId])
+        .sort((currentPost, nextPost) => Number(nextPost.createdAt || 0) - Number(currentPost.createdAt || 0))
+      console.log('彝圈页面：云端动态和本地本人待审核动态合并完成', mergedPostList)
+      return mergedPostList
     },
     // 中文注释：统一校验登录态，避免未登录时继续执行发布、评论和删除动作。
     async ensureLoggedIn(actionText) {
@@ -354,8 +411,9 @@ export default {
         console.log('彝圈页面：获取彝圈动态云函数返回结果', result)
         if (!result.success) throw new Error(result.message || '动态加载失败')
         const rawPostList = result && result.data && Array.isArray(result.data.list) ? result.data.list : []
-        this.postList = await this.buildPostList(rawPostList)
-        this.writeFeedCache(rawPostList)
+        const mergedRawPostList = this.mergeWithLocalPrivatePostList(rawPostList)
+        this.postList = await this.buildPostList(mergedRawPostList)
+        this.writeFeedCache(mergedRawPostList)
         this.hasLoadedOnce = true
       } catch (error) {
         console.error('彝圈页面：动态列表加载失败', error)
@@ -560,7 +618,7 @@ export default {
 </script>
 
 <style lang="scss">
-.yiquan-page { min-height: 100vh; padding-bottom: 140rpx; background: linear-gradient(180deg, #f4eee8 0%, #f8f7f5 100%); }
+.yiquan-page { min-height: 100vh; padding-bottom: 56rpx; background: linear-gradient(180deg, #f4eee8 0%, #f8f7f5 100%); }
 .hero { position: relative; height: 420rpx; overflow: hidden; }
 .hero__bg, .hero__mask { position: absolute; inset: 0; width: 100%; height: 100%; }
 .hero__mask { background: linear-gradient(180deg, rgba(18, 10, 8, 0.12) 0%, rgba(18, 10, 8, 0.56) 100%); }
@@ -581,6 +639,9 @@ export default {
 .post-card__name { font-size: 30rpx; font-weight: 700; color: #2f2723; }
 .post-card__time { margin-top: 8rpx; font-size: 22rpx; color: #998a80; }
 .post-card__delete, .comment-item__action--danger, .comment-editor__reply-cancel { color: #b73324; }
+.post-card__header-actions { display: flex; align-items: center; gap: 18rpx; }
+.post-card__status { padding: 6rpx 14rpx; border-radius: 999rpx; background: #f5e6d8; font-size: 22rpx; color: #8f1d22; }
+.post-card__review-tip { margin-top: 18rpx; padding: 16rpx 20rpx; border-radius: 18rpx; background: #fff4df; font-size: 24rpx; line-height: 1.6; color: #8a5a16; }
 .post-card__content { display: block; margin-top: 22rpx; font-size: 30rpx; line-height: 1.8; color: #433933; word-break: break-all; }
 .post-card__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12rpx; margin-top: 22rpx; }
 .post-card__image { width: 100%; height: 210rpx; border-radius: 18rpx; background: #f1ede8; }
@@ -609,8 +670,4 @@ export default {
 .reply-item__avatar { width: 50rpx; height: 50rpx; border-radius: 14rpx; background: #efe7df; }
 .reply-item__body { flex: 1; margin-left: 14rpx; }
 .reply-item__tag { color: #8f1d22; }
-.floating-button { position: fixed; right: 28rpx; bottom: 44rpx; display: flex; align-items: center; padding: 0 26rpx; height: 92rpx; border-radius: 999rpx; background: linear-gradient(90deg, #8f1d22 0%, #c53f2b 100%); box-shadow: 0 16rpx 32rpx rgba(143,29,34,.24); }
-.floating-button__icon, .floating-button__text { color: #fff; }
-.floating-button__icon { font-size: 42rpx; }
-.floating-button__text { margin-left: 10rpx; font-size: 26rpx; }
 </style>

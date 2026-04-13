@@ -3936,7 +3936,7 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.YIQUAN_FEED_CACHE_KEY = exports.YIQUAN_DEFAULT_BACKGROUND = exports.YIQUAN_DEFAULT_AVATAR = void 0;
+exports.YIQUAN_LATEST_SUBMITTED_POST_KEY = exports.YIQUAN_FEED_CACHE_KEY = exports.YIQUAN_DEFAULT_BACKGROUND = exports.YIQUAN_DEFAULT_AVATAR = void 0;
 exports.buildYiquanCommentTree = buildYiquanCommentTree;
 exports.createEmptyYiquanCommentPanelState = createEmptyYiquanCommentPanelState;
 exports.formatYiquanTime = formatYiquanTime;
@@ -3947,7 +3947,10 @@ var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/run
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 var YIQUAN_FEED_CACHE_KEY = 'yiquanFeedCacheV1';
+// 中文注释：记录刚提交成功的动态，返回彝圈列表页时可立即展示待审核状态。
 exports.YIQUAN_FEED_CACHE_KEY = YIQUAN_FEED_CACHE_KEY;
+var YIQUAN_LATEST_SUBMITTED_POST_KEY = 'yiquanLatestSubmittedPostV1';
+exports.YIQUAN_LATEST_SUBMITTED_POST_KEY = YIQUAN_LATEST_SUBMITTED_POST_KEY;
 var YIQUAN_DEFAULT_AVATAR = '/static/myicon/user.png';
 exports.YIQUAN_DEFAULT_AVATAR = YIQUAN_DEFAULT_AVATAR;
 var YIQUAN_DEFAULT_BACKGROUND = '/static/logo.png';

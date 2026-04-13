@@ -19,9 +19,14 @@
         <view class="article-card__meta">作者：{{ item.author || '未填写' }}</view>
         <view class="article-card__meta">分类：{{ item.type || '未分类' }}</view>
         <view class="article-card__meta">更新时间：{{ item.updatedAtText }}</view>
-        <view class="action-row article-card__actions">
-          <van-button size="small" plain type="primary" data-id="{{ item._id }}" bind:click="editArticle">编辑</van-button>
-          <van-button size="small" plain type="danger" data-id="{{ item._id }}" bind:click="deleteArticle">删除</van-button>
+        <!-- 中文注释：列表操作按钮使用独立两列布局，避免长标题或长字段把删除按钮挤出屏幕。 -->
+        <view class="article-card__actions">
+          <view class="article-card__action-button">
+            <van-button size="small" block plain type="primary" data-id="{{ item._id }}" bind:click="editArticle">编辑</van-button>
+          </view>
+          <view class="article-card__action-button">
+            <van-button size="small" block plain type="danger" data-id="{{ item._id }}" bind:click="deleteArticle">删除</van-button>
+          </view>
         </view>
       </view>
     </view>

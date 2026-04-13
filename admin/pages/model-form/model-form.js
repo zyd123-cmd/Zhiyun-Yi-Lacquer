@@ -18,6 +18,9 @@ Page({
       modelUrl: '',
       scale3d: '1 1 1',
       position3d: '0 0 0',
+      titleAR: '',
+      scaleAR: '1 1 1',
+      arpagesrc: '/subpkg/arview/arview0/arview0',
       description: '',
       order: '0',
     },
@@ -66,6 +69,14 @@ Page({
       })
       console.log('管理员模型表单页：模型详情读取成功', result)
       const modelData = result.data || {}
+      const nextTitleAR = modelData.titleAR || modelData.name || ''
+      const nextScaleAR = modelData.scaleAR || modelData.scale3d || '1 1 1'
+      const nextArPageSrc = modelData.arpagesrc || '/subpkg/arview/arview0/arview0'
+      console.log('管理员模型表单页：AR 参数回填数据整理完成', {
+        nextTitleAR,
+        nextScaleAR,
+        nextArPageSrc,
+      })
       this.setData({
         modelFileName: modelData.modelUrl ? (modelData.modelUrl.split('/').pop() || '') : '',
         form: {
@@ -74,6 +85,9 @@ Page({
           modelUrl: modelData.modelUrl || '',
           scale3d: modelData.scale3d || '1 1 1',
           position3d: modelData.position3d || '0 0 0',
+          titleAR: nextTitleAR,
+          scaleAR: nextScaleAR,
+          arpagesrc: nextArPageSrc,
           description: modelData.description || '',
           order: String(modelData.order || 0),
         },
@@ -204,6 +218,9 @@ Page({
         modelUrl: this.data.form.modelUrl,
         scale3d: this.data.form.scale3d,
         position3d: this.data.form.position3d,
+        titleAR: this.data.form.titleAR,
+        scaleAR: this.data.form.scaleAR,
+        arpagesrc: this.data.form.arpagesrc,
         description: this.data.form.description,
         order: this.data.form.order,
       })

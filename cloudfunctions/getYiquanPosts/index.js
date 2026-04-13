@@ -58,7 +58,7 @@ function formatPost(post, currentUserId, currentOpenid) {
   return formattedPost
 }
 
-// 中文注释：云函数入口，只返回审核通过的动态，保证普通用户端看不到待审核内容。
+// 中文注释：云函数入口返回公开动态，同时补充当前用户自己的待审核和驳回动态。
 exports.main = async (event) => {
   console.log('获取彝圈动态云函数：收到动态列表查询请求', event || {})
   const pageSize = normalizePageSize(event && event.pageSize)

@@ -1,3 +1,5 @@
 {
-  "navigationBarTitleText": "彝圈审核"
+  "navigationBarTitleText": "彝圈审核",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
 }

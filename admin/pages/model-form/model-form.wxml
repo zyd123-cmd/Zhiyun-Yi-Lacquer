@@ -32,6 +32,28 @@
         data-field="position3d"
         bind:change="handleFieldChange"
       />
+      <!-- 中文注释：AR 页面会读取 titleAR、scaleAR 和 arpagesrc，这里统一补齐对应配置项。 -->
+      <van-field
+        value="{{ form.titleAR }}"
+        label="AR 标题"
+        placeholder="请输入 AR 展示标题"
+        data-field="titleAR"
+        bind:change="handleFieldChange"
+      />
+      <van-field
+        value="{{ form.scaleAR }}"
+        label="AR 缩放"
+        placeholder="例如 1 1 1"
+        data-field="scaleAR"
+        bind:change="handleFieldChange"
+      />
+      <van-field
+        value="{{ form.arpagesrc }}"
+        label="AR 页面"
+        placeholder="默认 /subpkg/arview/arview0/arview0"
+        data-field="arpagesrc"
+        bind:change="handleFieldChange"
+      />
       <van-field
         value="{{ form.description }}"
         label="说明"

@@ -1,8 +1,28 @@
+.yiquan-hero__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24rpx;
+}
+
+.yiquan-hero__content {
+  flex: 1;
+}
+
 .yiquan-hero__desc {
   margin-top: 12rpx;
   font-size: 24rpx;
   line-height: 1.7;
   color: #8b7f76;
+}
+
+.yiquan-hero__refresh {
+  margin-top: 18rpx;
+  padding: 14rpx 18rpx;
+  border-radius: 16rpx;
+  background: #fff6ea;
+  font-size: 22rpx;
+  color: #8a5a16;
 }
 
 .loading-panel {

@@ -18,10 +18,16 @@
         <view class="model-card__title">{{ item.name }}</view>
         <view class="model-card__meta">排序：{{ item.order }}</view>
         <view class="model-card__meta">GLB：{{ item.modelUrl }}</view>
+        <view class="model-card__meta">AR 缩放：{{ item.scaleAR || '未设置' }}</view>
         <view class="model-card__meta">更新时间：{{ item.updatedAtText }}</view>
-        <view class="action-row model-card__actions">
-          <van-button size="small" plain type="primary" data-id="{{ item._id }}" bind:click="editModel">编辑</van-button>
-          <van-button size="small" plain type="danger" data-id="{{ item._id }}" bind:click="deleteModel">删除</van-button>
+        <!-- 中文注释：列表操作按钮使用独立两列布局，避免长 GLB 地址把删除按钮挤出屏幕。 -->
+        <view class="model-card__actions">
+          <view class="model-card__action-button">
+            <van-button size="small" block plain type="primary" data-id="{{ item._id }}" bind:click="editModel">编辑</van-button>
+          </view>
+          <view class="model-card__action-button">
+            <van-button size="small" block plain type="danger" data-id="{{ item._id }}" bind:click="deleteModel">删除</van-button>
+          </view>
         </view>
       </view>
     </view>
