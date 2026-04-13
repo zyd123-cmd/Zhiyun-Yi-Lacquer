@@ -190,62 +190,125 @@ var _default = {
     UserLoginPanel: UserLoginPanel,
     UserProfilePanel: UserProfilePanel
   },
-  computed: _objectSpread({}, (0, _vuex.mapState)('m_user', ['userId'])),
+  computed: _objectSpread({}, (0, _vuex.mapState)('m_user', ['manualLogout', 'userId'])),
   data: function data() {
     return {
-      showProfile: false
+      showProfile: false,
+      isCheckingLogin: false
     };
   },
   onLoad: function onLoad() {
+    console.log('我的页面：页面加载完成，准备恢复微信登录态');
     this.loadLoginState();
   },
   onShow: function onShow() {
+    console.log('我的页面：页面重新显示，准备刷新微信登录态');
     this.loadLoginState();
   },
-  methods: _objectSpread(_objectSpread({}, (0, _vuex.mapMutations)('m_user', ['setLoginStatus'])), {}, {
+  methods: _objectSpread(_objectSpread({}, (0, _vuex.mapMutations)('m_user', ['setLoginStatus', 'setManualLogout', 'setOpenId', 'setUserId'])), {}, {
+    // 中文注释：封装 wx.login，确保登录页每次都走微信官方登录接口。
+    runWeChatLogin: function runWeChatLogin() {
+      console.log('我的页面：开始调用 wx.login 获取微信登录 code');
+      return new Promise(function (resolve, reject) {
+        wx.login({
+          success: function success(res) {
+            console.log('我的页面：wx.login 调用成功', res);
+            if (!res.code) {
+              reject(new Error('wx.login 未返回有效 code'));
+              return;
+            }
+            resolve(res.code);
+          },
+          fail: function fail(error) {
+            console.error('我的页面：wx.login 调用失败', error);
+            reject(error);
+          }
+        });
+      });
+    },
+    // 中文注释：进入页面时按当前微信身份静默恢复登录态。
     loadLoginState: function loadLoginState() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var res, hasProfile;
+        var code, res, result, hasProfile;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (_this.userId) {
+                console.log('我的页面：开始执行登录态恢复逻辑');
+                if (!_this.isCheckingLogin) {
                   _context.next = 4;
                   break;
                 }
+                console.log('我的页面：当前已有登录态恢复任务在执行，直接跳过');
+                return _context.abrupt("return");
+              case 4:
+                if (!_this.manualLogout) {
+                  _context.next = 9;
+                  break;
+                }
+                console.log('我的页面：检测到用户手动退出过，本次不做静默登录');
                 _this.showProfile = false;
                 _this.setLoginStatus(false);
                 return _context.abrupt("return");
-              case 4:
-                _context.prev = 4;
-                _context.next = 7;
+              case 9:
+                _this.isCheckingLogin = true;
+                console.log('我的页面：已锁定登录态恢复流程，准备向云端校验当前微信身份');
+                _context.prev = 11;
+                _context.next = 14;
+                return _this.runWeChatLogin();
+              case 14:
+                code = _context.sent;
+                console.log('我的页面：已拿到微信登录 code，准备调用云函数换取项目用户态');
+                _context.next = 18;
                 return wx.cloud.callFunction({
-                  name: _cloud.CLOUD_FUNCTIONS.GET_USER_PROFILE,
+                  name: _cloud.CLOUD_FUNCTIONS.WECHAT_LOGIN,
                   data: {
-                    id: _this.userId
+                    code: code,
+                    createIfNotExists: false
                   }
                 });
-              case 7:
+              case 18:
                 res = _context.sent;
-                hasProfile = Boolean(res && res.result && res.result.data && res.result.data._id);
-                _this.showProfile = hasProfile;
-                _this.setLoginStatus(hasProfile);
-                _context.next = 18;
+                result = res && res.result ? res.result : {};
+                console.log('我的页面：微信登录云函数返回结果', result);
+                hasProfile = Boolean(result.success && result.data && result.data._id);
+                if (hasProfile) {
+                  _context.next = 28;
+                  break;
+                }
+                console.log('我的页面：当前微信账号尚未建档，展示登录面板，并保留旧 userId 供首次绑定兼容');
+                _this.showProfile = false;
+                _this.setOpenId(result.openid || '');
+                _this.setLoginStatus(false);
+                return _context.abrupt("return");
+              case 28:
+                console.log('我的页面：当前微信账号已建档，开始同步本地用户状态');
+                _this.setUserId(result.data._id);
+                _this.setOpenId(result.openid || result.data.openid || '');
+                _this.setLoginStatus(true);
+                _this.setManualLogout(false);
+                _this.showProfile = true;
+                console.log('我的页面：微信登录态恢复完成，已展示个人中心');
+                _context.next = 42;
                 break;
-              case 13:
-                _context.prev = 13;
-                _context.t0 = _context["catch"](4);
-                console.error('加载登录状态失败:', _context.t0);
+              case 37:
+                _context.prev = 37;
+                _context.t0 = _context["catch"](11);
+                console.error('我的页面：登录态恢复失败', _context.t0);
                 _this.showProfile = false;
                 _this.setLoginStatus(false);
-              case 18:
+              case 42:
+                _context.prev = 42;
+                _this.isCheckingLogin = false;
+                console.log('我的页面：登录态恢复流程结束，已释放执行锁');
+                return _context.finish(42);
+              case 46:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[4, 13]]);
+        }, _callee, null, [[11, 37, 42, 46]]);
       }))();
     }
   })

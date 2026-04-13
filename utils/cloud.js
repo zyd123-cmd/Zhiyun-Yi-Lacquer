@@ -11,6 +11,7 @@ export const COLLECTION_FALLBACKS = Object.freeze({
 })
 
 export const CLOUD_FUNCTIONS = Object.freeze({
+  WECHAT_LOGIN: 'wechatLogin',
   GET_ARTICLE_LIST: 'getArticleList',
   GET_ARTICLE_DETAIL: 'getArticleDetail',
   UPDATE_ARTICLE_LIKES: 'updateArticleLikes',
