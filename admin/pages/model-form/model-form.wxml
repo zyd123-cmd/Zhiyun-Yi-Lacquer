@@ -20,19 +20,18 @@
       />
       <van-field
         value="{{ form.scale3d }}"
-        label="缩放"
+        label="3D 缩放"
         placeholder="例如 1 1 1"
         data-field="scale3d"
         bind:change="handleFieldChange"
       />
       <van-field
         value="{{ form.position3d }}"
-        label="位置"
+        label="3D 位置"
         placeholder="例如 0 0 0"
         data-field="position3d"
         bind:change="handleFieldChange"
       />
-      <!-- 中文注释：AR 页面会读取 titleAR、scaleAR 和 arpagesrc，这里统一补齐对应配置项。 -->
       <van-field
         value="{{ form.titleAR }}"
         label="AR 标题"
@@ -48,13 +47,6 @@
         bind:change="handleFieldChange"
       />
       <van-field
-        value="{{ form.arpagesrc }}"
-        label="AR 页面"
-        placeholder="默认 /subpkg/arview/arview0/arview0"
-        data-field="arpagesrc"
-        bind:change="handleFieldChange"
-      />
-      <van-field
         value="{{ form.description }}"
         label="说明"
         placeholder="请输入模型说明"
@@ -66,7 +58,7 @@
     <view class="upload-panel">
       <view class="upload-panel__header">
         <view class="upload-panel__title">模型封面</view>
-        <van-button size="small" plain type="primary" bind:click="chooseCoverImage">上传封面</van-button>
+        <van-button custom-class="compact-toolbar-button" size="small" plain type="primary" bind:click="chooseCoverImage">上传封面</van-button>
       </view>
       <image wx:if="{{ form.image }}" src="{{ form.image }}" class="cover-preview" mode="aspectFill" />
     </view>
@@ -74,7 +66,7 @@
     <view class="upload-panel">
       <view class="upload-panel__header">
         <view class="upload-panel__title">GLB 模型文件</view>
-        <van-button size="small" plain type="primary" bind:click="chooseModelFile">上传 GLB</van-button>
+        <van-button custom-class="compact-toolbar-button" size="small" plain type="primary" bind:click="chooseModelFile">上传 GLB</van-button>
       </view>
       <view class="upload-panel__tip">当前模型文件：{{ modelFileName || '尚未上传' }}</view>
       <view wx:if="{{ form.modelUrl }}" class="file-id-box">{{ form.modelUrl }}</view>

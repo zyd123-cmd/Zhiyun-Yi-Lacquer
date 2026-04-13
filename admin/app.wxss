@@ -36,4 +36,29 @@ page {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16rpx;
+}
+
+.compact-toolbar-button {
+  flex-shrink: 0;
+  min-width: 0 !important;
+  height: 56rpx !important;
+  line-height: 56rpx !important;
+  padding: 0 16rpx !important;
+  font-size: 22rpx !important;
+  --button-small-height: 56rpx;
+  --button-small-font-size: 22rpx;
+  --button-small-min-width: 0;
+}
+
+.compact-action-button {
+  min-width: 0 !important;
+  height: 44rpx !important;
+  line-height: 44rpx !important;
+  padding: 0 6rpx !important;
+  font-size: 20rpx !important;
+  overflow: hidden;
+  --button-mini-height: 44rpx;
+  --button-mini-font-size: 20rpx;
+  --button-mini-min-width: 0;
 }

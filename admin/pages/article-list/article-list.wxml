@@ -1,7 +1,7 @@
 <view class="page-shell">
   <view class="card-panel action-row-spread">
     <view class="section-title article-list-title">文章列表</view>
-    <van-button type="danger" size="small" bind:click="goToCreateArticle">发布文章</van-button>
+    <van-button custom-class="compact-toolbar-button" type="danger" size="small" bind:click="goToCreateArticle">发布文章</van-button>
   </view>
 
   <view wx:if="{{ isLoading }}" class="card-panel loading-panel">
@@ -19,13 +19,12 @@
         <view class="article-card__meta">作者：{{ item.author || '未填写' }}</view>
         <view class="article-card__meta">分类：{{ item.type || '未分类' }}</view>
         <view class="article-card__meta">更新时间：{{ item.updatedAtText }}</view>
-        <!-- 中文注释：列表操作按钮使用独立两列布局，避免长标题或长字段把删除按钮挤出屏幕。 -->
         <view class="article-card__actions">
           <view class="article-card__action-button">
-            <van-button size="small" block plain type="primary" data-id="{{ item._id }}" bind:click="editArticle">编辑</van-button>
+            <van-button custom-class="compact-action-button" size="mini" block plain type="primary" data-id="{{ item._id }}" bind:click="editArticle">编辑</van-button>
           </view>
           <view class="article-card__action-button">
-            <van-button size="small" block plain type="danger" data-id="{{ item._id }}" bind:click="deleteArticle">删除</van-button>
+            <van-button custom-class="compact-action-button" size="mini" block plain type="danger" data-id="{{ item._id }}" bind:click="deleteArticle">删除</van-button>
           </view>
         </view>
       </view>

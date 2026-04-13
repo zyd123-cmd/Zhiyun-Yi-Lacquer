@@ -49,16 +49,14 @@
   overflow-wrap: anywhere;
 }
 
-/* 中文注释：操作按钮改为两列网格，保证编辑和删除按钮在窄屏下也能完整展示。 */
 .article-card__actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18rpx;
+  gap: 8rpx;
   width: 100%;
   margin-top: 20rpx;
 }
 
-/* 中文注释：按钮外层负责承接网格宽度，避免 Vant 按钮内部宽度计算被长文本影响。 */
 .article-card__action-button {
   min-width: 0;
 }

@@ -1,7 +1,7 @@
 <view class="page-shell">
   <view class="card-panel action-row-spread">
     <view class="section-title model-list-title">模型列表</view>
-    <van-button type="danger" size="small" bind:click="goToCreateModel">上传模型</van-button>
+    <van-button custom-class="compact-toolbar-button" type="danger" size="small" bind:click="goToCreateModel">上传模型</van-button>
   </view>
 
   <view wx:if="{{ isLoading }}" class="card-panel loading-panel">
@@ -20,13 +20,12 @@
         <view class="model-card__meta">GLB：{{ item.modelUrl }}</view>
         <view class="model-card__meta">AR 缩放：{{ item.scaleAR || '未设置' }}</view>
         <view class="model-card__meta">更新时间：{{ item.updatedAtText }}</view>
-        <!-- 中文注释：列表操作按钮使用独立两列布局，避免长 GLB 地址把删除按钮挤出屏幕。 -->
         <view class="model-card__actions">
           <view class="model-card__action-button">
-            <van-button size="small" block plain type="primary" data-id="{{ item._id }}" bind:click="editModel">编辑</van-button>
+            <van-button custom-class="compact-action-button" size="mini" block plain type="primary" data-id="{{ item._id }}" bind:click="editModel">编辑</van-button>
           </view>
           <view class="model-card__action-button">
-            <van-button size="small" block plain type="danger" data-id="{{ item._id }}" bind:click="deleteModel">删除</van-button>
+            <van-button custom-class="compact-action-button" size="mini" block plain type="danger" data-id="{{ item._id }}" bind:click="deleteModel">删除</van-button>
           </view>
         </view>
       </view>

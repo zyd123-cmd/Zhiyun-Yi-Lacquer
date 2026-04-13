@@ -5,7 +5,17 @@
         <view class="section-title">彝圈审核</view>
         <view class="yiquan-hero__desc">普通用户发布的彝圈动态会先进入待审核列表，通过后才会在用户端彝圈展示。</view>
       </view>
-      <van-button size="small" type="danger" plain loading="{{ isLoading || isSilentRefreshing }}" disabled="{{ isLoading || isSilentRefreshing }}" bind:click="manualRefresh">立即刷新</van-button>
+      <van-button
+        custom-class="compact-toolbar-button"
+        size="small"
+        type="danger"
+        plain
+        loading="{{ isLoading || isSilentRefreshing }}"
+        disabled="{{ isLoading || isSilentRefreshing }}"
+        bind:click="manualRefresh"
+      >
+        立即刷新
+      </van-button>
     </view>
     <view class="yiquan-hero__refresh">最近刷新：{{ lastRefreshTimeText || '等待刷新' }}，页面停留时每 8 秒自动同步一次。</view>
   </view>
@@ -54,10 +64,16 @@
       <view class="post-card__meta">审核：{{ item.reviewedAtText }}</view>
       <view wx:if="{{ item.reviewRemark }}" class="post-card__meta">备注：{{ item.reviewRemark }}</view>
 
-      <view class="action-row post-card__actions">
-        <van-button wx:if="{{ item.status !== 'approved' }}" size="small" type="primary" plain data-id="{{ item._id }}" data-status="approved" bind:click="reviewPost">通过</van-button>
-        <van-button wx:if="{{ item.status !== 'rejected' }}" size="small" type="warning" plain data-id="{{ item._id }}" data-status="rejected" bind:click="reviewPost">驳回</van-button>
-        <van-button size="small" type="danger" plain data-id="{{ item._id }}" bind:click="deletePost">删除</van-button>
+      <view class="post-card__actions">
+        <view wx:if="{{ item.status !== 'approved' }}" class="post-card__action-button">
+          <van-button custom-class="compact-action-button" size="mini" block type="primary" plain data-id="{{ item._id }}" data-status="approved" bind:click="reviewPost">通过</van-button>
+        </view>
+        <view wx:if="{{ item.status !== 'rejected' }}" class="post-card__action-button">
+          <van-button custom-class="compact-action-button" size="mini" block type="warning" plain data-id="{{ item._id }}" data-status="rejected" bind:click="reviewPost">驳回</van-button>
+        </view>
+        <view class="post-card__action-button">
+          <van-button custom-class="compact-action-button" size="mini" block type="danger" plain data-id="{{ item._id }}" bind:click="deletePost">删除</van-button>
+        </view>
       </view>
     </view>
   </view>

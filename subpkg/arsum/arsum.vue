@@ -80,7 +80,7 @@ export default {
 .navigator-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
   padding: 10rpx;
   background-color: #dfd0bb;
 }
@@ -94,8 +94,8 @@ export default {
 }
 
 .navigator-item {
-  flex: 0 1 calc(50% - 20rpx);
-  width: 48%;
+  box-sizing: border-box;
+  flex: 0 0 calc(50% - 20rpx);
   height: 300rpx;
   margin: 10rpx;
   display: flex;

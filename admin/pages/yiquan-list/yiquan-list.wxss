@@ -2,7 +2,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24rpx;
+  gap: 16rpx;
 }
 
 .yiquan-hero__content {
@@ -82,5 +82,13 @@
 }
 
 .post-card__actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8rpx;
+  width: 100%;
   margin-top: 20rpx;
+}
+
+.post-card__action-button {
+  min-width: 0;
 }

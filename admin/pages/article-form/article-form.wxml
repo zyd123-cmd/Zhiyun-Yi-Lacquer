@@ -29,7 +29,7 @@
     <view class="upload-panel">
       <view class="upload-panel__header">
         <view class="upload-panel__title">文章图片</view>
-        <van-button size="small" plain type="primary" bind:click="chooseImages">上传图片</van-button>
+        <van-button custom-class="compact-toolbar-button" size="small" plain type="primary" bind:click="chooseImages">上传图片</van-button>
       </view>
       <view class="upload-panel__tip">默认第一张图片会作为文章封面</view>
 
@@ -37,7 +37,7 @@
         <view wx:for="{{ form.imagesrc }}" wx:key="*this" class="image-item">
           <image src="{{ item }}" class="image-item__img" mode="aspectFill" />
           <van-button
-            custom-class="image-item__delete"
+            custom-class="compact-action-button image-item__delete"
             size="mini"
             type="danger"
             plain
