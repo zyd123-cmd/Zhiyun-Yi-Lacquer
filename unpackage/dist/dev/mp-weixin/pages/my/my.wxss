@@ -24,7 +24,61 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-page,
-.my-container {
-  height: 100%;
+.my-page {
+  min-height: 100%;
+}
+.my-page__loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #fff8f5 0%, #f6f2ef 100%);
+}
+.my-page__loading-card {
+  width: 100%;
+  max-width: 560rpx;
+  padding: 56rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+  border-radius: 28rpx;
+  background-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18rpx 40rpx rgba(192, 0, 0, 0.08);
+}
+.my-page__loading-spinner {
+  width: 72rpx;
+  height: 72rpx;
+  border: 8rpx solid rgba(192, 0, 0, 0.12);
+  border-top-color: #c00000;
+  border-radius: 50%;
+  -webkit-animation: my-page-spin 0.9s linear infinite;
+          animation: my-page-spin 0.9s linear infinite;
+}
+.my-page__loading-text {
+  font-size: 28rpx;
+  color: #5c4a42;
+  letter-spacing: 2rpx;
+}
+@-webkit-keyframes my-page-spin {
+from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+}
+to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+}
+}
+@keyframes my-page-spin {
+from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+}
+to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+}
 }

@@ -1,0 +1,35 @@
+.login-page {
+  padding-top: 56rpx;
+}
+
+.login-hero {
+  background: linear-gradient(135deg, #8f1d22, #c14840);
+  color: #ffffff;
+}
+
+.login-hero__title {
+  font-size: 44rpx;
+  font-weight: 700;
+}
+
+.login-hero__desc {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  line-height: 1.6;
+  opacity: 0.92;
+}
+
+.form-panel {
+  padding: 24rpx 8rpx 8rpx;
+}
+
+.bootstrap-tip {
+  margin: 24rpx 8rpx;
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #8b7f76;
+}
+
+.submit-button {
+  margin-top: 24rpx;
+}

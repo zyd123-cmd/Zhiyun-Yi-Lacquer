@@ -1,6 +1,8 @@
 
 .article-container {
-  padding: 20rpx;
+  padding: 20rpx 20rpx 40rpx;
+  box-sizing: border-box;
+  background: #f7f4f1;
 }
 .article-header {
   margin-bottom: 20rpx;
@@ -10,14 +12,19 @@
 .article-title {
   font-size: 36rpx;
   font-weight: bold;
+  color: #2f2723;
 }
 .article-source {
   font-size: 24rpx;
   color: #666;
 }
 .article-content {
+  padding: 24rpx;
+  border-radius: 24rpx;
+  background: #ffffff;
   font-size: 28rpx;
   line-height: 1.6;
+  box-shadow: 0 16rpx 36rpx rgba(87, 53, 35, 0.06);
 }
 .article-content-text {
   display: block;
@@ -51,5 +58,184 @@
   margin-left: 10rpx;
   font-size: 24rpx;
   color: #666666;
+}
+.comment-section {
+  margin-top: 24rpx;
+  padding: 28rpx 24rpx;
+  border-radius: 24rpx;
+  background: #ffffff;
+  box-shadow: 0 16rpx 36rpx rgba(87, 53, 35, 0.06);
+}
+.comment-section__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.comment-section__title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #2f2723;
+}
+.comment-section__tip {
+  font-size: 24rpx;
+  color: #8b7f76;
+}
+.comment-editor {
+  margin-top: 24rpx;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  background: #f8f5f2;
+}
+.comment-editor__replying {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+.comment-editor__replying-text {
+  font-size: 24rpx;
+  color: #6f5f56;
+}
+.comment-editor__replying-cancel {
+  font-size: 24rpx;
+  color: #c00000;
+}
+.comment-editor__textarea {
+  width: 100%;
+  min-height: 140rpx;
+  font-size: 28rpx;
+  color: #2f2723;
+}
+.comment-editor__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+.comment-editor__count {
+  font-size: 22rpx;
+  color: #9a8c82;
+}
+.comment-editor__submit {
+  margin: 0;
+  padding: 0 28rpx;
+  border-radius: 999rpx;
+  background: #c00000;
+}
+.comment-state-card {
+  margin-top: 24rpx;
+  padding: 36rpx 20rpx;
+  border-radius: 20rpx;
+  background: #faf7f4;
+  text-align: center;
+}
+.comment-state-card__text {
+  font-size: 26rpx;
+  color: #8b7f76;
+}
+.comment-list {
+  margin-top: 24rpx;
+}
+.comment-item {
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid #f1e8e2;
+}
+.comment-item:last-child {
+  border-bottom: none;
+}
+.comment-item__main {
+  display: flex;
+  align-items: flex-start;
+}
+.comment-item__avatar {
+  width: 72rpx;
+  height: 72rpx;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #f1ede8;
+}
+.comment-item__body {
+  flex: 1;
+  margin-left: 20rpx;
+}
+.comment-item__meta,
+.comment-reply-item__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.comment-item__nickname,
+.comment-reply-item__nickname {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2f2723;
+}
+.comment-item__time,
+.comment-reply-item__time {
+  font-size: 22rpx;
+  color: #a29388;
+}
+.comment-item__content,
+.comment-reply-item__content {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #433933;
+  word-break: break-all;
+}
+.comment-item__content--deleted {
+  color: #a29388;
+  font-style: italic;
+}
+.comment-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 28rpx;
+  margin-top: 16rpx;
+}
+.comment-action {
+  display: flex;
+  align-items: center;
+}
+.comment-action__text {
+  margin-left: 8rpx;
+  font-size: 24rpx;
+  color: #8b7f76;
+}
+.comment-action--danger {
+  margin-left: auto;
+}
+.comment-action__text--danger {
+  color: #c00000;
+}
+.comment-reply-list {
+  margin-top: 20rpx;
+  margin-left: 92rpx;
+  padding: 18rpx 18rpx 4rpx;
+  border-radius: 18rpx;
+  background: #faf7f4;
+}
+.comment-reply-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+}
+.comment-reply-item:last-child {
+  margin-bottom: 0;
+}
+.comment-reply-item__avatar {
+  width: 56rpx;
+  height: 56rpx;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #f1ede8;
+}
+.comment-reply-item__body {
+  flex: 1;
+  margin-left: 16rpx;
+}
+.comment-reply-item__reply-tag {
+  color: #c00000;
 }
 

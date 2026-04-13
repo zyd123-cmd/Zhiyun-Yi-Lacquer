@@ -1,0 +1,39 @@
+@import "./wxcomponents/vant/common/index.wxss";
+
+page {
+  background: #f7f7f7;
+  color: #2f2723;
+}
+
+.page-shell {
+  min-height: 100vh;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.card-panel {
+  margin-bottom: 24rpx;
+  padding: 24rpx;
+  border-radius: 24rpx;
+  background: #ffffff;
+  box-shadow: 0 16rpx 36rpx rgba(87, 53, 35, 0.08);
+}
+
+.section-title {
+  margin-bottom: 20rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2f2723;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.action-row-spread {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

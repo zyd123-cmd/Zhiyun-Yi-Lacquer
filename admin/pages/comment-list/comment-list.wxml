@@ -1,0 +1,33 @@
+<view class="page-shell">
+  <view class="card-panel">
+    <view class="section-title">评论治理</view>
+    <view class="comment-tip">用于删除违规评论、无意义评论和测试评论。</view>
+  </view>
+
+  <view wx:if="{{ isLoading }}" class="card-panel loading-panel">
+    <van-loading size="24px" color="#8f1d22" />
+    <view class="loading-text">评论列表加载中...</view>
+  </view>
+
+  <van-empty wx:elif="{{ !commentList.length }}" description="暂无评论数据" />
+
+  <view wx:else class="comment-list">
+    <view wx:for="{{ commentList }}" wx:key="_id" class="card-panel comment-card">
+      <view class="comment-card__header">
+        <view class="comment-card__title">{{ item.articleTitle }}</view>
+        <van-tag type="{{ item.status === 'deleted' ? 'default' : 'danger' }}">
+          {{ item.status === 'deleted' ? '已删除' : '正常' }}
+        </van-tag>
+      </view>
+
+      <view class="comment-card__meta">评论人：{{ item.nickName }}</view>
+      <view class="comment-card__meta">时间：{{ item.createdAtText }}</view>
+      <view class="comment-card__meta">点赞：{{ item.likeCount }}，回复：{{ item.replyCount }}</view>
+      <view class="comment-card__content">{{ item.content }}</view>
+
+      <view class="action-row comment-card__actions">
+        <van-button size="small" plain type="danger" data-id="{{ item._id }}" bind:click="deleteComment">删除评论</van-button>
+      </view>
+    </view>
+  </view>
+</view>

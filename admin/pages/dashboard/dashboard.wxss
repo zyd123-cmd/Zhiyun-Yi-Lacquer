@@ -1,0 +1,33 @@
+.dashboard-hero {
+  background: linear-gradient(135deg, #fff4f3, #fffaf7);
+}
+
+.dashboard-hero__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.dashboard-hero__title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #2f2723;
+}
+
+.dashboard-hero__desc {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #8b7f76;
+}
+
+.dashboard-hero__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+
+.dashboard-hero__meta-item {
+  font-size: 24rpx;
+  color: #5b4e47;
+}

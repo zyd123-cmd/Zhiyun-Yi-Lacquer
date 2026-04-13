@@ -13343,14 +13343,43 @@ exports.default = _default;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
 var USER_ID_STORAGE_KEY = 'userId';
 var OPEN_ID_STORAGE_KEY = 'openId';
 var LOGIN_STATUS_STORAGE_KEY = 'isLoggedIn';
 var MANUAL_LOGOUT_STORAGE_KEY = 'manualLogout';
+var USER_PROFILE_STORAGE_KEY = 'userProfile';
+
+// 中文注释：统一兜底的空用户资料结构，避免页面到处判空。
+function createEmptyUserProfile() {
+  console.log('用户状态模块：开始创建空用户资料对象');
+  return {
+    id: '',
+    avatarUrl: '',
+    nickName: ''
+  };
+}
+
+// 中文注释：统一格式化用户资料，兼容云端 `_id` 和前端 `id` 两种写法。
+function normalizeUserProfile(profile) {
+  console.log('用户状态模块：开始标准化用户资料', profile);
+  if (!profile || (0, _typeof2.default)(profile) !== 'object') {
+    console.log('用户状态模块：传入的用户资料无效，返回空资料');
+    return createEmptyUserProfile();
+  }
+  var normalizedProfile = {
+    id: profile.id || profile._id || '',
+    avatarUrl: profile.avatarUrl || '',
+    nickName: profile.nickName || ''
+  };
+  console.log('用户状态模块：用户资料标准化完成', normalizedProfile);
+  return normalizedProfile;
+}
 
 // 中文注释：统一读取本地缓存，避免每次都重复解析逻辑。
 function readStorageValue(storageKey, fallbackValue) {
@@ -13373,7 +13402,8 @@ var _default = {
       userId: readStorageValue(USER_ID_STORAGE_KEY, '""'),
       openId: readStorageValue(OPEN_ID_STORAGE_KEY, '""'),
       isLoggedIn: readStorageValue(LOGIN_STATUS_STORAGE_KEY, 'false'),
-      manualLogout: readStorageValue(MANUAL_LOGOUT_STORAGE_KEY, 'false')
+      manualLogout: readStorageValue(MANUAL_LOGOUT_STORAGE_KEY, 'false'),
+      userProfile: normalizeUserProfile(readStorageValue(USER_PROFILE_STORAGE_KEY, '{}'))
     };
   },
   mutations: {
@@ -13403,16 +13433,31 @@ var _default = {
       writeStorageValue(MANUAL_LOGOUT_STORAGE_KEY, normalizedStatus);
       console.log('用户状态模块：手动退出标记更新完成', state.manualLogout);
     },
+    setUserProfile: function setUserProfile(state, profile) {
+      var normalizedProfile = normalizeUserProfile(profile);
+      console.log('用户状态模块：准备更新用户资料缓存', normalizedProfile);
+      state.userProfile = normalizedProfile;
+      writeStorageValue(USER_PROFILE_STORAGE_KEY, normalizedProfile);
+      console.log('用户状态模块：用户资料缓存更新完成', state.userProfile);
+    },
+    clearUserProfile: function clearUserProfile(state) {
+      console.log('用户状态模块：准备清空用户资料缓存');
+      state.userProfile = createEmptyUserProfile();
+      writeStorageValue(USER_PROFILE_STORAGE_KEY, state.userProfile);
+      console.log('用户状态模块：用户资料缓存清空完成');
+    },
     clearUserSession: function clearUserSession(state) {
       console.log('用户状态模块：开始清空本地用户会话');
       state.userId = '';
       state.openId = '';
       state.isLoggedIn = false;
       state.manualLogout = true;
+      state.userProfile = createEmptyUserProfile();
       writeStorageValue(USER_ID_STORAGE_KEY, state.userId);
       writeStorageValue(OPEN_ID_STORAGE_KEY, state.openId);
       writeStorageValue(LOGIN_STATUS_STORAGE_KEY, state.isLoggedIn);
       writeStorageValue(MANUAL_LOGOUT_STORAGE_KEY, state.manualLogout);
+      writeStorageValue(USER_PROFILE_STORAGE_KEY, state.userProfile);
       console.log('用户状态模块：本地用户会话清空完成');
     }
   }
@@ -13825,6 +13870,742 @@ module.exports = _asyncToGenerator, module.exports.__esModule = true, module.exp
 
 /***/ }),
 /* 51 */
+/*!*************************************************************!*\
+  !*** D:/project/Zhiyun-Yi-Lacquer/utils/article-service.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(wx) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.fetchArticleDetail = fetchArticleDetail;
+exports.fetchArticleList = fetchArticleList;
+exports.fetchSwiperItems = fetchSwiperItems;
+exports.getArticleCoverImage = getArticleCoverImage;
+exports.getArticleDetailUrl = getArticleDetailUrl;
+exports.mergeArticleList = mergeArticleList;
+exports.searchArticleSummaries = searchArticleSummaries;
+exports.updateArticleDetailCache = updateArticleDetailCache;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 48));
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 50));
+var _cloud = __webpack_require__(/*! @/utils/cloud */ 52);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+var ARTICLE_LIST_CACHE_TTL = 2 * 60 * 1000;
+var ARTICLE_DETAIL_CACHE_TTL = 5 * 60 * 1000;
+var ARTICLE_SWIPER_CACHE_TTL = 10 * 60 * 1000;
+var ARTICLE_SEARCH_CACHE_TTL = 2 * 60 * 1000;
+var articleMemoryCacheMap = Object.create(null);
+var articlePendingRequestMap = Object.create(null);
+
+// 中文注释：统一构造缓存键，避免不同页面对同一份文章数据重复发起请求。
+function buildCacheKey(scope) {
+  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  return "".concat(scope, ":").concat(JSON.stringify(params));
+}
+
+// 中文注释：统一做深拷贝，避免页面侧修改缓存对象后把缓存污染掉。
+function cloneCacheValue(value) {
+  if (typeof value === 'undefined') {
+    return value;
+  }
+  try {
+    return JSON.parse(JSON.stringify(value));
+  } catch (error) {
+    console.warn('文章服务模块：缓存数据深拷贝失败，当前回退为原始数据', error);
+    return value;
+  }
+}
+
+// 中文注释：统一读取内存缓存，并在过期时及时清理，避免旧数据长期占用内存。
+function readMemoryCache(cacheKey) {
+  var cacheItem = articleMemoryCacheMap[cacheKey];
+  if (!cacheItem) {
+    return null;
+  }
+  if (cacheItem.expiresAt <= Date.now()) {
+    console.log('文章服务模块：检测到缓存已过期，准备清理对应缓存项', cacheKey);
+    delete articleMemoryCacheMap[cacheKey];
+    return null;
+  }
+  console.log('文章服务模块：命中内存缓存，当前直接返回缓存数据', cacheKey);
+  return cloneCacheValue(cacheItem.data);
+}
+
+// 中文注释：统一写入内存缓存，提升同一次会话内的页面切换速度。
+function writeMemoryCache(cacheKey, data, ttl) {
+  console.log('文章服务模块：开始写入内存缓存', {
+    cacheKey: cacheKey,
+    ttl: ttl
+  });
+  articleMemoryCacheMap[cacheKey] = {
+    expiresAt: Date.now() + ttl,
+    data: cloneCacheValue(data)
+  };
+  console.log('文章服务模块：内存缓存写入完成', cacheKey);
+  return cloneCacheValue(data);
+}
+
+// 中文注释：统一做请求去重，避免同一时刻多个页面或多个组件重复请求同一份数据。
+function useCachedRequest(_x, _x2, _x3) {
+  return _useCachedRequest.apply(this, arguments);
+} // 中文注释：统一把文章摘要字段整理成前端稳定可用的结构，减少页面层反复兜底。
+function _useCachedRequest() {
+  _useCachedRequest = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(cacheKey, ttl, requestExecutor) {
+    var forceRefresh,
+      cachedValue,
+      _args2 = arguments;
+    return _regenerator.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            forceRefresh = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : false;
+            console.log('文章服务模块：开始执行带缓存的数据请求', {
+              cacheKey: cacheKey,
+              ttl: ttl,
+              forceRefresh: forceRefresh
+            });
+            if (forceRefresh) {
+              _context2.next = 7;
+              break;
+            }
+            cachedValue = readMemoryCache(cacheKey);
+            if (!(cachedValue !== null)) {
+              _context2.next = 7;
+              break;
+            }
+            console.log('文章服务模块：当前请求直接返回缓存结果', cacheKey);
+            return _context2.abrupt("return", cachedValue);
+          case 7:
+            if (!articlePendingRequestMap[cacheKey]) {
+              _context2.next = 10;
+              break;
+            }
+            console.log('文章服务模块：检测到同键请求正在执行，当前复用进行中的 Promise', cacheKey);
+            return _context2.abrupt("return", articlePendingRequestMap[cacheKey]);
+          case 10:
+            articlePendingRequestMap[cacheKey] = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+              var responseData;
+              return _regenerator.default.wrap(function _callee$(_context) {
+                while (1) {
+                  switch (_context.prev = _context.next) {
+                    case 0:
+                      _context.prev = 0;
+                      console.log('文章服务模块：开始执行新的远端请求', cacheKey);
+                      _context.next = 4;
+                      return requestExecutor();
+                    case 4:
+                      responseData = _context.sent;
+                      console.log('文章服务模块：远端请求执行完成，准备写入缓存', cacheKey);
+                      return _context.abrupt("return", writeMemoryCache(cacheKey, responseData, ttl));
+                    case 7:
+                      _context.prev = 7;
+                      console.log('文章服务模块：当前请求执行流程结束，准备释放请求占位', cacheKey);
+                      delete articlePendingRequestMap[cacheKey];
+                      return _context.finish(7);
+                    case 11:
+                    case "end":
+                      return _context.stop();
+                  }
+                }
+              }, _callee, null, [[0,, 7, 11]]);
+            }))();
+            return _context2.abrupt("return", articlePendingRequestMap[cacheKey]);
+          case 12:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _useCachedRequest.apply(this, arguments);
+}
+function normalizeArticleSummary() {
+  var article = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var rawImageList = Array.isArray(article.imagesrc) ? article.imagesrc : article.imagesrc ? [article.imagesrc] : [];
+  return {
+    _id: article._id || '',
+    title: article.title || '',
+    author: article.author || '',
+    imagesrc: rawImageList.filter(function (item) {
+      return typeof item === 'string' && item.trim().length > 0;
+    }),
+    pagesrc: article.pagesrc || '',
+    type: article.type || '',
+    handup: Number(article.handup || 0)
+  };
+}
+
+// 中文注释：统一整理文章详情数据，避免详情页每次都做字段兼容判断。
+function normalizeArticleDetail() {
+  var article = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var normalizedSummary = normalizeArticleSummary(article);
+  var normalizedContent = Array.isArray(article.content) ? article.content.filter(function (item) {
+    return typeof item === 'string';
+  }) : typeof article.content === 'string' && article.content.trim() ? [article.content] : [];
+  return _objectSpread(_objectSpread({}, normalizedSummary), {}, {
+    content: normalizedContent
+  });
+}
+
+// 中文注释：统一把文章列表标准化，减少页面层的数组判空和字段兼容逻辑。
+function normalizeArticleSummaryList() {
+  var articleList = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var normalizedList = Array.isArray(articleList) ? articleList.map(function (article) {
+    return normalizeArticleSummary(article);
+  }) : [];
+  return normalizedList.filter(function (article) {
+    return Boolean(article._id);
+  });
+}
+
+// 中文注释：统一处理云函数和数据库返回的分页结果，让页面层只关心 list、nextCursor 和 hasMore。
+function normalizeArticleListPage(rawData, pageSize) {
+  console.log('文章服务模块：开始标准化文章分页结果', {
+    pageSize: pageSize,
+    rawDataType: Array.isArray(rawData) ? 'array' : (0, _typeof2.default)(rawData)
+  });
+  if (Array.isArray(rawData)) {
+    var _normalizedList = normalizeArticleSummaryList(rawData);
+    var _hasMore = _normalizedList.length === pageSize;
+    var _nextCursor = _hasMore && _normalizedList.length ? _normalizedList[_normalizedList.length - 1]._id : '';
+    console.log('文章服务模块：文章分页结果标准化完成', {
+      listLength: _normalizedList.length,
+      hasMore: _hasMore,
+      nextCursor: _nextCursor
+    });
+    return {
+      list: _normalizedList,
+      nextCursor: _nextCursor,
+      hasMore: _hasMore
+    };
+  }
+  var normalizedList = normalizeArticleSummaryList(rawData && rawData.list);
+  var hasMore = typeof (rawData && rawData.hasMore) === 'boolean' ? rawData.hasMore : normalizedList.length === pageSize;
+  var nextCursor = hasMore ? rawData && rawData.nextCursor || (normalizedList.length ? normalizedList[normalizedList.length - 1]._id : '') : '';
+  console.log('文章服务模块：对象型文章分页结果标准化完成', {
+    listLength: normalizedList.length,
+    hasMore: hasMore,
+    nextCursor: nextCursor
+  });
+  return {
+    list: normalizedList,
+    nextCursor: nextCursor,
+    hasMore: hasMore
+  };
+}
+
+// 中文注释：统一从数据库读取分页文章列表，并优先使用游标翻页代替 skip，降低越翻越慢的问题。
+function loadArticleListFromDatabase(_x4) {
+  return _loadArticleListFromDatabase.apply(this, arguments);
+} // 中文注释：统一从数据库直连读取文章详情，作为云函数异常时的兜底方案。
+function _loadArticleListFromDatabase() {
+  _loadArticleListFromDatabase = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(_ref) {
+    var _ref$type, type, _ref$pageSize, pageSize, _ref$cursor, cursor, _ref$offset, offset, db, command, response, rawList, hasMore, visibleList, normalizedPage;
+    return _regenerator.default.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _ref$type = _ref.type, type = _ref$type === void 0 ? '' : _ref$type, _ref$pageSize = _ref.pageSize, pageSize = _ref$pageSize === void 0 ? 7 : _ref$pageSize, _ref$cursor = _ref.cursor, cursor = _ref$cursor === void 0 ? '' : _ref$cursor, _ref$offset = _ref.offset, offset = _ref$offset === void 0 ? 0 : _ref$offset;
+            console.log('文章服务模块：开始通过数据库直连加载文章列表', {
+              type: type,
+              pageSize: pageSize,
+              cursor: cursor,
+              offset: offset
+            });
+            db = wx.cloud.database();
+            command = db.command;
+            _context3.next = 6;
+            return (0, _cloud.runCollectionWithFallback)([_cloud.COLLECTIONS.ARTICLES].concat((0, _toConsumableArray2.default)(_cloud.COLLECTION_FALLBACKS.ARTICLES)), function (collectionName) {
+              console.log('文章服务模块：开始查询候选文章集合', {
+                collectionName: collectionName,
+                type: type,
+                pageSize: pageSize,
+                cursor: cursor,
+                offset: offset
+              });
+              var query = db.collection(collectionName).field({
+                _id: true,
+                title: true,
+                author: true,
+                imagesrc: true,
+                pagesrc: true,
+                type: true,
+                handup: true
+              }).orderBy('_id', 'asc');
+              var queryCondition = {};
+              if (type) {
+                queryCondition.type = type;
+              }
+              if (cursor) {
+                queryCondition._id = command.gt(cursor);
+              }
+              if (Object.keys(queryCondition).length > 0) {
+                console.log('文章服务模块：当前文章列表查询命中了筛选条件', queryCondition);
+                query = query.where(queryCondition);
+              }
+              if (!cursor && offset > 0) {
+                console.log('文章服务模块：当前数据库直连查询仍需兼容旧的 offset 分页参数', offset);
+                query = query.skip(offset);
+              }
+              return query.limit(pageSize + 1).get();
+            }, {
+              fallbackWhenEmpty: true
+            });
+          case 6:
+            response = _context3.sent;
+            rawList = response && Array.isArray(response.data) ? response.data : [];
+            hasMore = rawList.length > pageSize;
+            visibleList = hasMore ? rawList.slice(0, pageSize) : rawList;
+            normalizedPage = {
+              list: normalizeArticleSummaryList(visibleList),
+              nextCursor: hasMore && visibleList.length ? visibleList[visibleList.length - 1]._id : '',
+              hasMore: hasMore
+            };
+            console.log('文章服务模块：数据库直连文章列表加载完成', {
+              listLength: normalizedPage.list.length,
+              hasMore: normalizedPage.hasMore,
+              nextCursor: normalizedPage.nextCursor
+            });
+            return _context3.abrupt("return", normalizedPage);
+          case 13:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _loadArticleListFromDatabase.apply(this, arguments);
+}
+function loadArticleDetailFromDatabase(_x5) {
+  return _loadArticleDetailFromDatabase.apply(this, arguments);
+} // 中文注释：统一转义搜索关键字，避免正则特殊字符放大查询成本或导致结果异常。
+function _loadArticleDetailFromDatabase() {
+  _loadArticleDetailFromDatabase = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(articleId) {
+    var db, response, normalizedArticle;
+    return _regenerator.default.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            console.log('文章服务模块：开始通过数据库直连加载文章详情', articleId);
+            db = wx.cloud.database();
+            _context4.next = 4;
+            return (0, _cloud.runCollectionWithFallback)([_cloud.COLLECTIONS.ARTICLES].concat((0, _toConsumableArray2.default)(_cloud.COLLECTION_FALLBACKS.ARTICLES)), function (collectionName) {
+              return db.collection(collectionName).field({
+                _id: true,
+                title: true,
+                author: true,
+                imagesrc: true,
+                pagesrc: true,
+                type: true,
+                handup: true,
+                content: true
+              }).doc(articleId).get();
+            }, {
+              fallbackWhenEmpty: true
+            });
+          case 4:
+            response = _context4.sent;
+            normalizedArticle = normalizeArticleDetail(response && response.data || {});
+            console.log('文章服务模块：数据库直连文章详情加载完成', normalizedArticle._id);
+            return _context4.abrupt("return", normalizedArticle);
+          case 8:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _loadArticleDetailFromDatabase.apply(this, arguments);
+}
+function escapeSearchKeyword(keyword) {
+  return String(keyword || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// 中文注释：统一提供轮播图数据读取能力，并对静态内容做短时缓存。
+function fetchSwiperItems() {
+  return _fetchSwiperItems.apply(this, arguments);
+} // 中文注释：统一获取文章列表，优先使用云函数与游标分页，并提供缓存与数据库兜底。
+function _fetchSwiperItems() {
+  _fetchSwiperItems = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
+    var options,
+      forceRefresh,
+      cacheKey,
+      _args6 = arguments;
+    return _regenerator.default.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            options = _args6.length > 0 && _args6[0] !== undefined ? _args6[0] : {};
+            forceRefresh = Boolean(options.forceRefresh);
+            cacheKey = buildCacheKey('swiper-items', {});
+            console.log('文章服务模块：开始获取首页轮播图数据', {
+              forceRefresh: forceRefresh
+            });
+            return _context6.abrupt("return", useCachedRequest(cacheKey, ARTICLE_SWIPER_CACHE_TTL, /*#__PURE__*/(0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+              var db, response, swiperList;
+              return _regenerator.default.wrap(function _callee5$(_context5) {
+                while (1) {
+                  switch (_context5.prev = _context5.next) {
+                    case 0:
+                      db = wx.cloud.database();
+                      _context5.next = 3;
+                      return db.collection(_cloud.COLLECTIONS.SWIPER).field({
+                        _id: true,
+                        imagesrc: true,
+                        pagesrc: true
+                      }).orderBy('_id', 'asc').get();
+                    case 3:
+                      response = _context5.sent;
+                      swiperList = Array.isArray(response.data) ? response.data.map(function (item) {
+                        return {
+                          _id: item._id || '',
+                          imagesrc: item.imagesrc || '',
+                          pagesrc: item.pagesrc || ''
+                        };
+                      }) : [];
+                      console.log('文章服务模块：首页轮播图数据加载完成', swiperList.length);
+                      return _context5.abrupt("return", swiperList);
+                    case 7:
+                    case "end":
+                      return _context5.stop();
+                  }
+                }
+              }, _callee5);
+            })), forceRefresh));
+          case 5:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6);
+  }));
+  return _fetchSwiperItems.apply(this, arguments);
+}
+function fetchArticleList() {
+  return _fetchArticleList.apply(this, arguments);
+} // 中文注释：统一获取文章详情，并缓存最近访问的文章详情以提升二次打开速度。
+function _fetchArticleList() {
+  _fetchArticleList = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee8() {
+    var options,
+      type,
+      pageSize,
+      cursor,
+      offset,
+      forceRefresh,
+      cacheKey,
+      _args8 = arguments;
+    return _regenerator.default.wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            options = _args8.length > 0 && _args8[0] !== undefined ? _args8[0] : {};
+            type = typeof options.type === 'string' ? options.type.trim() : '';
+            pageSize = Math.max(1, Number(options.pageSize) || 7);
+            cursor = typeof options.cursor === 'string' ? options.cursor.trim() : '';
+            offset = Math.max(0, Number(options.offset) || 0);
+            forceRefresh = Boolean(options.forceRefresh);
+            cacheKey = buildCacheKey('article-list', {
+              type: type,
+              pageSize: pageSize,
+              cursor: cursor,
+              offset: offset
+            });
+            console.log('文章服务模块：开始获取文章列表数据', {
+              type: type,
+              pageSize: pageSize,
+              cursor: cursor,
+              offset: offset,
+              forceRefresh: forceRefresh
+            });
+            return _context8.abrupt("return", useCachedRequest(cacheKey, ARTICLE_LIST_CACHE_TTL, /*#__PURE__*/(0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee7() {
+              var response, normalizedPage;
+              return _regenerator.default.wrap(function _callee7$(_context7) {
+                while (1) {
+                  switch (_context7.prev = _context7.next) {
+                    case 0:
+                      _context7.prev = 0;
+                      console.log('文章服务模块：准备通过云函数获取文章列表', {
+                        type: type,
+                        pageSize: pageSize,
+                        cursor: cursor,
+                        offset: offset
+                      });
+                      _context7.next = 4;
+                      return (0, _cloud.callCloudFunctionWithFallback)([_cloud.CLOUD_FUNCTIONS.GET_ARTICLE_LIST], {
+                        type: type,
+                        pageSize: pageSize,
+                        cursor: cursor,
+                        offset: offset
+                      }, {
+                        fallbackWhenEmpty: true
+                      });
+                    case 4:
+                      response = _context7.sent;
+                      normalizedPage = normalizeArticleListPage((0, _cloud.extractResultData)(response), pageSize);
+                      console.log('文章服务模块：云函数文章列表加载完成', {
+                        listLength: normalizedPage.list.length,
+                        hasMore: normalizedPage.hasMore,
+                        nextCursor: normalizedPage.nextCursor
+                      });
+                      return _context7.abrupt("return", normalizedPage);
+                    case 10:
+                      _context7.prev = 10;
+                      _context7.t0 = _context7["catch"](0);
+                      console.warn('文章服务模块：云函数文章列表加载失败，当前回退数据库直连方案', _context7.t0);
+                      return _context7.abrupt("return", loadArticleListFromDatabase({
+                        type: type,
+                        pageSize: pageSize,
+                        cursor: cursor,
+                        offset: offset
+                      }));
+                    case 14:
+                    case "end":
+                      return _context7.stop();
+                  }
+                }
+              }, _callee7, null, [[0, 10]]);
+            })), forceRefresh));
+          case 9:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8);
+  }));
+  return _fetchArticleList.apply(this, arguments);
+}
+function fetchArticleDetail() {
+  return _fetchArticleDetail.apply(this, arguments);
+} // 中文注释：统一更新文章详情缓存，保证点赞等乐观更新后再次进入详情页仍能看到较新的状态。
+function _fetchArticleDetail() {
+  _fetchArticleDetail = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee10() {
+    var options,
+      articleId,
+      forceRefresh,
+      cacheKey,
+      _args10 = arguments;
+    return _regenerator.default.wrap(function _callee10$(_context10) {
+      while (1) {
+        switch (_context10.prev = _context10.next) {
+          case 0:
+            options = _args10.length > 0 && _args10[0] !== undefined ? _args10[0] : {};
+            articleId = typeof options.articleId === 'string' ? options.articleId.trim() : '';
+            forceRefresh = Boolean(options.forceRefresh);
+            cacheKey = buildCacheKey('article-detail', {
+              articleId: articleId
+            });
+            console.log('文章服务模块：开始获取文章详情数据', {
+              articleId: articleId,
+              forceRefresh: forceRefresh
+            });
+            if (articleId) {
+              _context10.next = 8;
+              break;
+            }
+            console.log('文章服务模块：当前缺少文章 id，直接返回空文章详情对象');
+            return _context10.abrupt("return", {});
+          case 8:
+            return _context10.abrupt("return", useCachedRequest(cacheKey, ARTICLE_DETAIL_CACHE_TTL, /*#__PURE__*/(0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee9() {
+              var response, normalizedArticle;
+              return _regenerator.default.wrap(function _callee9$(_context9) {
+                while (1) {
+                  switch (_context9.prev = _context9.next) {
+                    case 0:
+                      _context9.prev = 0;
+                      console.log('文章服务模块：准备通过云函数获取文章详情', articleId);
+                      _context9.next = 4;
+                      return (0, _cloud.callCloudFunctionWithFallback)([_cloud.CLOUD_FUNCTIONS.GET_ARTICLE_DETAIL].concat((0, _toConsumableArray2.default)(_cloud.CLOUD_FUNCTION_FALLBACKS.GET_ARTICLE_DETAIL)), {
+                        id: articleId
+                      }, {
+                        fallbackWhenEmpty: true
+                      });
+                    case 4:
+                      response = _context9.sent;
+                      normalizedArticle = normalizeArticleDetail((0, _cloud.extractResultData)(response) || {});
+                      console.log('文章服务模块：云函数文章详情加载完成', normalizedArticle._id);
+                      return _context9.abrupt("return", normalizedArticle);
+                    case 10:
+                      _context9.prev = 10;
+                      _context9.t0 = _context9["catch"](0);
+                      console.warn('文章服务模块：云函数文章详情加载失败，当前回退数据库直连方案', _context9.t0);
+                      return _context9.abrupt("return", loadArticleDetailFromDatabase(articleId));
+                    case 14:
+                    case "end":
+                      return _context9.stop();
+                  }
+                }
+              }, _callee9, null, [[0, 10]]);
+            })), forceRefresh));
+          case 9:
+          case "end":
+            return _context10.stop();
+        }
+      }
+    }, _callee10);
+  }));
+  return _fetchArticleDetail.apply(this, arguments);
+}
+function updateArticleDetailCache(articleId, updater) {
+  var normalizedArticleId = typeof articleId === 'string' ? articleId.trim() : '';
+  var cacheKey = buildCacheKey('article-detail', {
+    articleId: normalizedArticleId
+  });
+  var currentCacheItem = articleMemoryCacheMap[cacheKey];
+  console.log('文章服务模块：开始尝试更新文章详情缓存', {
+    articleId: normalizedArticleId,
+    cacheKey: cacheKey
+  });
+  if (!normalizedArticleId || !currentCacheItem || currentCacheItem.expiresAt <= Date.now()) {
+    console.log('文章服务模块：当前没有可更新的文章详情缓存，结束缓存更新流程', normalizedArticleId);
+    return;
+  }
+  var currentArticle = cloneCacheValue(currentCacheItem.data) || {};
+  var nextArticle = typeof updater === 'function' ? updater(currentArticle) : _objectSpread(_objectSpread({}, currentArticle), updater || {});
+  articleMemoryCacheMap[cacheKey] = {
+    expiresAt: currentCacheItem.expiresAt,
+    data: cloneCacheValue(nextArticle)
+  };
+  console.log('文章服务模块：文章详情缓存更新完成', normalizedArticleId);
+}
+
+// 中文注释：统一提供文章搜索能力，并给相同关键字搜索结果做短时缓存。
+function searchArticleSummaries() {
+  return _searchArticleSummaries.apply(this, arguments);
+} // 中文注释：统一合并分页文章列表，避免翻页后因为重复请求或缓存命中产生重复文章。
+function _searchArticleSummaries() {
+  _searchArticleSummaries = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee12() {
+    var options,
+      keyword,
+      limit,
+      forceRefresh,
+      escapedKeyword,
+      cacheKey,
+      _args12 = arguments;
+    return _regenerator.default.wrap(function _callee12$(_context12) {
+      while (1) {
+        switch (_context12.prev = _context12.next) {
+          case 0:
+            options = _args12.length > 0 && _args12[0] !== undefined ? _args12[0] : {};
+            keyword = typeof options.keyword === 'string' ? options.keyword.trim() : '';
+            limit = Math.max(1, Number(options.limit) || 20);
+            forceRefresh = Boolean(options.forceRefresh);
+            escapedKeyword = escapeSearchKeyword(keyword);
+            cacheKey = buildCacheKey('article-search', {
+              keyword: escapedKeyword,
+              limit: limit
+            });
+            console.log('文章服务模块：开始搜索文章摘要数据', {
+              keyword: keyword,
+              limit: limit,
+              forceRefresh: forceRefresh
+            });
+            if (keyword) {
+              _context12.next = 10;
+              break;
+            }
+            console.log('文章服务模块：当前搜索关键字为空，直接返回空结果');
+            return _context12.abrupt("return", []);
+          case 10:
+            return _context12.abrupt("return", useCachedRequest(cacheKey, ARTICLE_SEARCH_CACHE_TTL, /*#__PURE__*/(0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee11() {
+              var db, response, searchResultList;
+              return _regenerator.default.wrap(function _callee11$(_context11) {
+                while (1) {
+                  switch (_context11.prev = _context11.next) {
+                    case 0:
+                      db = wx.cloud.database();
+                      _context11.next = 3;
+                      return (0, _cloud.runCollectionWithFallback)([_cloud.COLLECTIONS.ARTICLES].concat((0, _toConsumableArray2.default)(_cloud.COLLECTION_FALLBACKS.ARTICLES)), function (collectionName) {
+                        return db.collection(collectionName).where({
+                          title: db.RegExp({
+                            regexp: escapedKeyword,
+                            options: 'i'
+                          })
+                        }).field({
+                          _id: true,
+                          title: true
+                        }).limit(limit).get();
+                      }, {
+                        fallbackWhenEmpty: true
+                      });
+                    case 3:
+                      response = _context11.sent;
+                      searchResultList = Array.isArray(response.data) ? response.data.map(function (item) {
+                        return {
+                          _id: item._id || '',
+                          title: item.title || ''
+                        };
+                      }).filter(function (item) {
+                        return Boolean(item._id);
+                      }) : [];
+                      console.log('文章服务模块：文章搜索结果加载完成', searchResultList.length);
+                      return _context11.abrupt("return", searchResultList);
+                    case 7:
+                    case "end":
+                      return _context11.stop();
+                  }
+                }
+              }, _callee11);
+            })), forceRefresh));
+          case 11:
+          case "end":
+            return _context12.stop();
+        }
+      }
+    }, _callee12);
+  }));
+  return _searchArticleSummaries.apply(this, arguments);
+}
+function mergeArticleList() {
+  var currentList = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var nextList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  console.log('文章服务模块：开始合并文章列表数据', {
+    currentLength: Array.isArray(currentList) ? currentList.length : 0,
+    nextLength: Array.isArray(nextList) ? nextList.length : 0
+  });
+  var mergedList = [];
+  var articleIdSet = new Set();
+  var sourceList = [].concat((0, _toConsumableArray2.default)(Array.isArray(currentList) ? currentList : []), (0, _toConsumableArray2.default)(Array.isArray(nextList) ? nextList : []));
+  sourceList.forEach(function (article) {
+    if (!article || !article._id || articleIdSet.has(article._id)) {
+      return;
+    }
+    articleIdSet.add(article._id);
+    mergedList.push(article);
+  });
+  console.log('文章服务模块：文章列表数据合并完成', mergedList.length);
+  return mergedList;
+}
+
+// 中文注释：统一获取文章封面，保证所有列表页都使用同一套兜底逻辑。
+function getArticleCoverImage(article) {
+  var fallbackImage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  if (Array.isArray(article && article.imagesrc) && article.imagesrc.length > 0) {
+    return article.imagesrc[0];
+  }
+  if (article && typeof article.imagesrc === 'string' && article.imagesrc) {
+    return article.imagesrc;
+  }
+  return fallbackImage;
+}
+
+// 中文注释：统一生成文章详情页跳转地址，减少各页面重复拼接路由。
+function getArticleDetailUrl(article) {
+  var articleId = article && (article._id || article.id) ? article._id || article.id : '';
+  return articleId ? "/subcontentpkg/hottopic/article0/article0?id=".concat(articleId) : '/pages/index/index';
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
+
+/***/ }),
+/* 52 */
 /*!***************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/utils/cloud.js ***!
   \***************************************************/
@@ -13844,6 +14625,8 @@ exports.extractResultData = extractResultData;
 exports.getErrorMessage = getErrorMessage;
 exports.hasUsableData = hasUsableData;
 exports.isFunctionNotFoundError = isFunctionNotFoundError;
+exports.resolveCloudFileSource = resolveCloudFileSource;
+exports.resolveCloudFileSourceList = resolveCloudFileSourceList;
 exports.runCollectionWithFallback = runCollectionWithFallback;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 48));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 50));
@@ -13852,7 +14635,9 @@ var COLLECTIONS = Object.freeze({
   SWIPER: 'swiper',
   USERS: 'user',
   ARTICLES: 'articles',
-  ARTIFACT_MODELS: 'artifact_models'
+  ARTIFACT_MODELS: 'artifact_models',
+  ARTICLE_COMMENTS: 'article_comments',
+  ARTICLE_COMMENT_LIKES: 'article_comment_likes'
 });
 exports.COLLECTIONS = COLLECTIONS;
 var COLLECTION_FALLBACKS = Object.freeze({
@@ -13865,6 +14650,10 @@ var CLOUD_FUNCTIONS = Object.freeze({
   GET_ARTICLE_LIST: 'getArticleList',
   GET_ARTICLE_DETAIL: 'getArticleDetail',
   UPDATE_ARTICLE_LIKES: 'updateArticleLikes',
+  GET_ARTICLE_COMMENTS: 'getArticleComments',
+  CREATE_ARTICLE_COMMENT: 'createArticleComment',
+  TOGGLE_ARTICLE_COMMENT_LIKE: 'toggleArticleCommentLike',
+  DELETE_ARTICLE_COMMENT: 'deleteArticleComment',
   GET_ARTIFACT_MODELS: 'getArtifactModels',
   GET_USER_PROFILE: 'getUserProfile',
   CREATE_USER_PROFILE: 'createUserProfile',
@@ -13879,6 +14668,8 @@ var CLOUD_FUNCTION_FALLBACKS = Object.freeze({
   GET_ARTIFACT_MODELS: ['get3d']
 });
 exports.CLOUD_FUNCTION_FALLBACKS = CLOUD_FUNCTION_FALLBACKS;
+var missingCloudFunctionNameSet = new Set();
+var cloudFileTempUrlCache = Object.create(null);
 function normalizeCandidates(candidates) {
   var candidateList = Array.isArray(candidates) ? candidates : [candidates];
   return Array.from(new Set(candidateList.filter(function (item) {
@@ -13922,11 +14713,142 @@ function isFunctionNotFoundError(error) {
   var message = getErrorMessage(error);
   return message.indexOf('FUNCTION_NOT_FOUND') !== -1 || message.indexOf('FunctionName parameter could not be found') !== -1;
 }
-function runCollectionWithFallback(_x, _x2) {
+function isCloudFileId(value) {
+  return typeof value === 'string' && value.indexOf('cloud://') === 0;
+}
+function isLegacyTcbHttpUrl(value) {
+  return typeof value === 'string' && /^https?:\/\/[^/]+\.tcb\.qcloud\.la\//i.test(value);
+}
+function convertLegacyTcbHttpUrlToFileId(value) {
+  if (!isLegacyTcbHttpUrl(value)) {
+    return '';
+  }
+  var matchedResult = value.match(/^https?:\/\/([^/]+)\.tcb\.qcloud\.la\/(.+)$/i);
+  if (!matchedResult) {
+    return '';
+  }
+  var hostPrefix = matchedResult[1];
+  var filePath = matchedResult[2];
+  var envMatchedResult = hostPrefix.match(/^[^-]+-(cloud\d-[a-z0-9]+)-\d+$/i);
+  if (!envMatchedResult || !envMatchedResult[1] || !filePath) {
+    return '';
+  }
+  var envId = envMatchedResult[1];
+  return "cloud://".concat(envId, ".").concat(hostPrefix, "/").concat(filePath);
+}
+function getCloudFileIdFromSource(source) {
+  if (isCloudFileId(source)) {
+    return source;
+  }
+  return convertLegacyTcbHttpUrlToFileId(source);
+}
+
+// 中文注释：统一把云存储 fileID 或旧版 tcb 公网链接转换成当前可用的临时地址，避免老公网域名失效后图片全部无法显示。
+function resolveCloudFileSource(_x) {
+  return _resolveCloudFileSource.apply(this, arguments);
+} // 中文注释：统一批量解析图片地址，减少页面层重复编写 Promise.all 逻辑。
+function _resolveCloudFileSource() {
+  _resolveCloudFileSource = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(source) {
+    var fileId, response, fileItem, resolvedSource;
+    return _regenerator.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            console.log('云工具模块：开始解析单个云文件地址', source);
+            if (!(!source || typeof source !== 'string')) {
+              _context.next = 4;
+              break;
+            }
+            console.log('云工具模块：当前云文件地址为空或不是字符串，直接返回原值');
+            return _context.abrupt("return", source || '');
+          case 4:
+            if (!cloudFileTempUrlCache[source]) {
+              _context.next = 7;
+              break;
+            }
+            console.log('云工具模块：命中云文件地址内存缓存，直接返回缓存结果', source);
+            return _context.abrupt("return", cloudFileTempUrlCache[source]);
+          case 7:
+            fileId = getCloudFileIdFromSource(source);
+            if (fileId) {
+              _context.next = 12;
+              break;
+            }
+            console.log('云工具模块：当前地址不是云文件地址，直接返回原始地址', source);
+            cloudFileTempUrlCache[source] = source;
+            return _context.abrupt("return", source);
+          case 12:
+            _context.prev = 12;
+            console.log('云工具模块：开始调用云开发接口换取云文件临时地址', fileId);
+            _context.next = 16;
+            return wx.cloud.getTempFileURL({
+              fileList: [fileId]
+            });
+          case 16:
+            response = _context.sent;
+            fileItem = response && response.fileList && Array.isArray(response.fileList) && response.fileList.length ? response.fileList[0] : null;
+            resolvedSource = fileItem && fileItem.tempFileURL ? fileItem.tempFileURL : source;
+            cloudFileTempUrlCache[source] = resolvedSource;
+            cloudFileTempUrlCache[fileId] = resolvedSource;
+            console.log('云工具模块：云文件临时地址解析完成', {
+              source: source,
+              fileId: fileId,
+              resolvedSource: resolvedSource
+            });
+            return _context.abrupt("return", resolvedSource);
+          case 25:
+            _context.prev = 25;
+            _context.t0 = _context["catch"](12);
+            console.error('云工具模块：云文件临时地址解析失败，准备回退原始地址', _context.t0);
+            cloudFileTempUrlCache[source] = source;
+            return _context.abrupt("return", source);
+          case 30:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[12, 25]]);
+  }));
+  return _resolveCloudFileSource.apply(this, arguments);
+}
+function resolveCloudFileSourceList() {
+  return _resolveCloudFileSourceList.apply(this, arguments);
+}
+function _resolveCloudFileSourceList() {
+  _resolveCloudFileSourceList = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+    var sourceList,
+      normalizedSourceList,
+      resolvedSourceList,
+      _args2 = arguments;
+    return _regenerator.default.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            sourceList = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : [];
+            console.log('云工具模块：开始批量解析云文件地址列表', sourceList);
+            normalizedSourceList = Array.isArray(sourceList) ? sourceList : [];
+            _context2.next = 5;
+            return Promise.all(normalizedSourceList.map(function (source) {
+              return resolveCloudFileSource(source);
+            }));
+          case 5:
+            resolvedSourceList = _context2.sent;
+            console.log('云工具模块：云文件地址列表批量解析完成', resolvedSourceList);
+            return _context2.abrupt("return", resolvedSourceList);
+          case 8:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _resolveCloudFileSourceList.apply(this, arguments);
+}
+function runCollectionWithFallback(_x2, _x3) {
   return _runCollectionWithFallback.apply(this, arguments);
 }
 function _runCollectionWithFallback() {
-  _runCollectionWithFallback = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee(collectionNames, executor) {
+  _runCollectionWithFallback = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(collectionNames, executor) {
     var options,
       names,
       fallbackWhenEmpty,
@@ -13937,12 +14859,12 @@ function _runCollectionWithFallback() {
       result,
       data,
       isLastCandidate,
-      _args = arguments;
-    return _regenerator.default.wrap(function _callee$(_context) {
+      _args3 = arguments;
+    return _regenerator.default.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            options = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            options = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : {};
             names = normalizeCandidates(collectionNames);
             fallbackWhenEmpty = Boolean(options.fallbackWhenEmpty);
             getData = typeof options.getData === 'function' ? options.getData : extractResultData;
@@ -13950,55 +14872,55 @@ function _runCollectionWithFallback() {
             index = 0;
           case 6:
             if (!(index < names.length)) {
-              _context.next = 27;
+              _context3.next = 27;
               break;
             }
             collectionName = names[index];
-            _context.prev = 8;
-            _context.next = 11;
+            _context3.prev = 8;
+            _context3.next = 11;
             return executor(collectionName);
           case 11:
-            result = _context.sent;
+            result = _context3.sent;
             data = getData(result);
             isLastCandidate = index === names.length - 1;
             if (!(!fallbackWhenEmpty || hasUsableData(data) || isLastCandidate)) {
-              _context.next = 16;
+              _context3.next = 16;
               break;
             }
-            return _context.abrupt("return", result);
+            return _context3.abrupt("return", result);
           case 16:
             lastError = new Error("Collection ".concat(collectionName, " returned empty data"));
-            _context.next = 24;
+            _context3.next = 24;
             break;
           case 19:
-            _context.prev = 19;
-            _context.t0 = _context["catch"](8);
-            lastError = _context.t0;
+            _context3.prev = 19;
+            _context3.t0 = _context3["catch"](8);
+            lastError = _context3.t0;
             if (!(index === names.length - 1)) {
-              _context.next = 24;
+              _context3.next = 24;
               break;
             }
-            throw _context.t0;
+            throw _context3.t0;
           case 24:
             index += 1;
-            _context.next = 6;
+            _context3.next = 6;
             break;
           case 27:
             throw lastError || new Error('No collection candidates available');
           case 28:
           case "end":
-            return _context.stop();
+            return _context3.stop();
         }
       }
-    }, _callee, null, [[8, 19]]);
+    }, _callee3, null, [[8, 19]]);
   }));
   return _runCollectionWithFallback.apply(this, arguments);
 }
-function callCloudFunctionWithFallback(_x3) {
+function callCloudFunctionWithFallback(_x4) {
   return _callCloudFunctionWithFallback.apply(this, arguments);
 }
 function _callCloudFunctionWithFallback() {
-  _callCloudFunctionWithFallback = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2(functionNames) {
+  _callCloudFunctionWithFallback = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(functionNames) {
     var data,
       options,
       names,
@@ -14007,16 +14929,16 @@ function _callCloudFunctionWithFallback() {
       lastError,
       index,
       functionName,
+      isLastCandidate,
       result,
       resultData,
-      isLastCandidate,
-      _args2 = arguments;
-    return _regenerator.default.wrap(function _callee2$(_context2) {
+      _args4 = arguments;
+    return _regenerator.default.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            data = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
-            options = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
+            data = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : {};
+            options = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
             names = normalizeCandidates(functionNames);
             fallbackWhenEmpty = Boolean(options.fallbackWhenEmpty);
             getData = typeof options.getData === 'function' ? options.getData : extractResultData;
@@ -14024,57 +14946,72 @@ function _callCloudFunctionWithFallback() {
             index = 0;
           case 7:
             if (!(index < names.length)) {
-              _context2.next = 28;
+              _context4.next = 34;
               break;
             }
             functionName = names[index];
-            _context2.prev = 9;
-            _context2.next = 12;
+            isLastCandidate = index === names.length - 1;
+            if (!(missingCloudFunctionNameSet.has(functionName) && !isLastCandidate)) {
+              _context4.next = 13;
+              break;
+            }
+            console.log('云工具模块：当前云函数已被标记为不存在，跳过本次调用', functionName);
+            return _context4.abrupt("continue", 31);
+          case 13:
+            _context4.prev = 13;
+            console.log('云工具模块：开始调用候选云函数', {
+              functionName: functionName,
+              data: data
+            });
+            _context4.next = 17;
             return wx.cloud.callFunction({
               name: functionName,
               data: data
             });
-          case 12:
-            result = _context2.sent;
-            resultData = getData(result);
-            isLastCandidate = index === names.length - 1;
-            if (!(!fallbackWhenEmpty || hasUsableData(resultData) || isLastCandidate)) {
-              _context2.next = 17;
-              break;
-            }
-            return _context2.abrupt("return", result);
           case 17:
-            lastError = new Error("Cloud function ".concat(functionName, " returned empty data"));
-            _context2.next = 25;
-            break;
-          case 20:
-            _context2.prev = 20;
-            _context2.t0 = _context2["catch"](9);
-            lastError = _context2.t0;
-            if (!(!isFunctionNotFoundError(_context2.t0) || index === names.length - 1)) {
-              _context2.next = 25;
+            result = _context4.sent;
+            resultData = getData(result);
+            if (!(!fallbackWhenEmpty || hasUsableData(resultData) || isLastCandidate)) {
+              _context4.next = 22;
               break;
             }
-            throw _context2.t0;
-          case 25:
-            index += 1;
-            _context2.next = 7;
+            console.log('云工具模块：候选云函数调用成功并返回可用数据', functionName);
+            return _context4.abrupt("return", result);
+          case 22:
+            lastError = new Error("Cloud function ".concat(functionName, " returned empty data"));
+            _context4.next = 31;
             break;
-          case 28:
+          case 25:
+            _context4.prev = 25;
+            _context4.t0 = _context4["catch"](13);
+            lastError = _context4.t0;
+            if (isFunctionNotFoundError(_context4.t0)) {
+              console.warn('云工具模块：检测到候选云函数不存在，已写入会话级跳过缓存', functionName);
+              missingCloudFunctionNameSet.add(functionName);
+            }
+            if (!(!isFunctionNotFoundError(_context4.t0) || isLastCandidate)) {
+              _context4.next = 31;
+              break;
+            }
+            throw _context4.t0;
+          case 31:
+            index += 1;
+            _context4.next = 7;
+            break;
+          case 34:
             throw lastError || new Error('No cloud function candidates available');
-          case 29:
+          case 35:
           case "end":
-            return _context2.stop();
+            return _context4.stop();
         }
       }
-    }, _callee2, null, [[9, 20]]);
+    }, _callee4, null, [[13, 25]]);
   }));
   return _callCloudFunctionWithFallback.apply(this, arguments);
 }
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
 
 /***/ }),
-/* 52 */,
 /* 53 */,
 /* 54 */,
 /* 55 */,
@@ -14189,7 +15126,8 @@ function _callCloudFunctionWithFallback() {
 /* 164 */,
 /* 165 */,
 /* 166 */,
-/* 167 */
+/* 167 */,
+/* 168 */
 /*!*****************************************************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/index.js ***!
   \*****************************************************************************************/
@@ -14204,9 +15142,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 168));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 169));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 170));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 169));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 170));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 171));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -14215,7 +15153,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 168 */
+/* 169 */
 /*!****************************************************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/en.json ***!
   \****************************************************************************************/
@@ -14225,7 +15163,7 @@ exports.default = _default;
 module.exports = JSON.parse("{\"uni-fav.collect\":\"collect\",\"uni-fav.collected\":\"collected\"}");
 
 /***/ }),
-/* 169 */
+/* 170 */
 /*!*********************************************************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/zh-Hans.json ***!
   \*********************************************************************************************/
@@ -14235,7 +15173,7 @@ module.exports = JSON.parse("{\"uni-fav.collect\":\"collect\",\"uni-fav.collecte
 module.exports = JSON.parse("{\"uni-fav.collect\":\"收藏\",\"uni-fav.collected\":\"已收藏\"}");
 
 /***/ }),
-/* 170 */
+/* 171 */
 /*!*********************************************************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/uni_modules/uni-fav/components/uni-fav/i18n/zh-Hant.json ***!
   \*********************************************************************************************/
@@ -14245,14 +15183,14 @@ module.exports = JSON.parse("{\"uni-fav.collect\":\"收藏\",\"uni-fav.collected
 module.exports = JSON.parse("{\"uni-fav.collect\":\"收藏\",\"uni-fav.collected\":\"已收藏\"}");
 
 /***/ }),
-/* 171 */,
 /* 172 */,
 /* 173 */,
 /* 174 */,
 /* 175 */,
 /* 176 */,
 /* 177 */,
-/* 178 */
+/* 178 */,
+/* 179 */
 /*!****************************************************************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/uni_modules/uni-icons/components/uni-icons/uniicons_file_vue.js ***!
   \****************************************************************************************************/
@@ -14755,14 +15693,14 @@ var fontData = [{
 exports.fontData = fontData;
 
 /***/ }),
-/* 179 */,
 /* 180 */,
 /* 181 */,
 /* 182 */,
 /* 183 */,
 /* 184 */,
 /* 185 */,
-/* 186 */
+/* 186 */,
+/* 187 */
 /*!*******************************************************************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/index.js ***!
   \*******************************************************************************************************/
@@ -14777,9 +15715,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 187));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 188));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 189));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 188));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 189));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 190));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -14788,7 +15726,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 187 */
+/* 188 */
 /*!******************************************************************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/en.json ***!
   \******************************************************************************************************/
@@ -14798,7 +15736,7 @@ exports.default = _default;
 module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"Search enter content\"}");
 
 /***/ }),
-/* 188 */
+/* 189 */
 /*!***********************************************************************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/zh-Hans.json ***!
   \***********************************************************************************************************/
@@ -14808,7 +15746,7 @@ module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-
 module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"取消\",\"uni-search-bar.placeholder\":\"请输入搜索内容\"}");
 
 /***/ }),
-/* 189 */
+/* 190 */
 /*!***********************************************************************************************************!*\
   !*** D:/project/Zhiyun-Yi-Lacquer/uni_modules/uni-search-bar/components/uni-search-bar/i18n/zh-Hant.json ***!
   \***********************************************************************************************************/

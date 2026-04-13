@@ -39,6 +39,11 @@
   gap: 10rpx;
   margin-top: 10rpx;
 }
+.state-box {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #888;
+}
 .uni-tag {
   margin-top: 5px;
   margin-right: 5px;

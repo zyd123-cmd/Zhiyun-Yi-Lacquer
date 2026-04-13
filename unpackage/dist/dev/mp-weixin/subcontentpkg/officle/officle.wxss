@@ -28,4 +28,9 @@
   font-weight: 500;
   flex: 1;
 }
+.empty-state {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #888;
+}
 

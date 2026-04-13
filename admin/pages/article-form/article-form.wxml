@@ -1,0 +1,74 @@
+<view class="page-shell">
+  <view class="card-panel">
+    <view class="section-title">{{ pageTitle }}</view>
+
+    <van-cell-group inset>
+      <van-field
+        value="{{ form.title }}"
+        label="标题"
+        placeholder="请输入文章标题"
+        data-field="title"
+        bind:change="handleFieldChange"
+      />
+      <van-field
+        value="{{ form.author }}"
+        label="作者"
+        placeholder="请输入文章作者"
+        data-field="author"
+        bind:change="handleFieldChange"
+      />
+      <van-field
+        value="{{ form.type }}"
+        label="分类"
+        placeholder="请输入文章分类"
+        data-field="type"
+        bind:change="handleFieldChange"
+      />
+    </van-cell-group>
+
+    <view class="upload-panel">
+      <view class="upload-panel__header">
+        <view class="upload-panel__title">文章图片</view>
+        <van-button size="small" plain type="primary" bind:click="chooseImages">上传图片</van-button>
+      </view>
+      <view class="upload-panel__tip">默认第一张图片会作为文章封面</view>
+
+      <view wx:if="{{ form.imagesrc.length }}" class="image-list">
+        <view wx:for="{{ form.imagesrc }}" wx:key="*this" class="image-item">
+          <image src="{{ item }}" class="image-item__img" mode="aspectFill" />
+          <van-button
+            custom-class="image-item__delete"
+            size="mini"
+            type="danger"
+            plain
+            data-index="{{ index }}"
+            bind:click="removeImage"
+          >
+            删除
+          </van-button>
+        </view>
+      </view>
+    </view>
+
+    <view class="textarea-panel">
+      <view class="textarea-panel__title">文章正文</view>
+      <textarea
+        class="textarea-panel__textarea"
+        value="{{ form.contentText }}"
+        maxlength="-1"
+        placeholder="请输入文章正文，按回车分段"
+        bindinput="handleContentInput"
+      />
+    </view>
+
+    <van-button
+      custom-class="submit-button"
+      type="danger"
+      block
+      loading="{{ isSubmitting }}"
+      bind:click="submitArticle"
+    >
+      {{ articleId ? '保存文章' : '发布文章' }}
+    </van-button>
+  </view>
+</view>

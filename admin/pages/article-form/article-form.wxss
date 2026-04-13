@@ -1,0 +1,64 @@
+.upload-panel {
+  margin-top: 24rpx;
+}
+
+.upload-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.upload-panel__title,
+.textarea-panel__title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2f2723;
+}
+
+.upload-panel__tip {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #8b7f76;
+}
+
+.image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+
+.image-item {
+  width: calc(33.33% - 14rpx);
+}
+
+.image-item__img {
+  width: 100%;
+  height: 180rpx;
+  border-radius: 16rpx;
+  background: #f5f5f5;
+}
+
+.image-item__delete {
+  margin-top: 12rpx;
+}
+
+.textarea-panel {
+  margin-top: 28rpx;
+}
+
+.textarea-panel__textarea {
+  width: 100%;
+  min-height: 420rpx;
+  margin-top: 20rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
+  border-radius: 20rpx;
+  background: #f9f7f5;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.submit-button {
+  margin-top: 28rpx;
+}

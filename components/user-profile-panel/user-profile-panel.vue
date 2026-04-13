@@ -89,14 +89,59 @@ import { CLOUD_FUNCTIONS } from '@/utils/cloud'
 
 export default {
   name: 'UserProfilePanel',
+  props: {
+    initialProfile: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  watch: {
+    // 中文注释：监听父页面传入的资料变化，确保静默刷新后当前面板也能同步到最新资料。
+    initialProfile: {
+      handler(newProfile) {
+        console.log('个人资料面板：监听到父页面传入的资料发生变化，准备判断是否需要同步', newProfile)
+
+        if (!this.hasUsableProfile(newProfile)) {
+          console.log('个人资料面板：父页面传入的资料暂不可用，本次不做同步')
+          return
+        }
+
+        this.applyProfile(newProfile, '父页面资料变更监听', {
+          shouldNotifyParent: false,
+        })
+      },
+      deep: true,
+    },
+    // 中文注释：监听本地缓存资料变化，保证其它入口更新资料后当前面板也能及时刷新。
+    userProfile: {
+      handler(newProfile) {
+        console.log('个人资料面板：监听到本地缓存资料发生变化，准备判断是否需要同步', newProfile)
+
+        if (!this.hasUsableProfile(newProfile)) {
+          console.log('个人资料面板：本地缓存资料暂不可用，本次不做同步')
+          return
+        }
+
+        if (JSON.stringify(this.normalizeProfile(newProfile)) === JSON.stringify(this.normalizeProfile(this.profile))) {
+          console.log('个人资料面板：本地缓存资料与当前展示一致，无需重复同步')
+          return
+        }
+
+        this.applyProfile(newProfile, '本地缓存资料变更监听', {
+          shouldNotifyParent: false,
+        })
+      },
+      deep: true,
+    },
+  },
   computed: {
-    ...mapState('m_user', ['userId']),
-    // 中文注释：优先展示云端头像，没有时回退到默认头像。
+    ...mapState('m_user', ['userId', 'userProfile']),
+    // 中文注释：优先展示已经准备好的头像，避免页面先空白再补图。
     displayAvatarUrl() {
       console.log('个人资料面板：开始计算展示头像', this.profile.avatarUrl)
       return this.profile.avatarUrl || '/static/myicon/user.png'
     },
-    // 中文注释：优先展示云端昵称，没有时回退到默认文案。
+    // 中文注释：优先展示已经准备好的昵称，避免页面先空白再补文案。
     displayNickName() {
       console.log('个人资料面板：开始计算展示昵称', this.profile.nickName)
       return this.profile.nickName || '微信用户'
@@ -104,20 +149,70 @@ export default {
   },
   data() {
     return {
-      profile: {
-        id: '',
-        avatarUrl: '',
-        nickName: '',
-      },
+      profile: this.createEmptyProfile(),
       showNicknameDialog: false,
     }
   },
   mounted() {
-    console.log('个人资料面板：组件挂载完成，准备加载用户资料')
-    this.loadUserProfile()
+    console.log('个人资料面板：组件挂载完成，准备初始化资料显示')
+    this.initializeProfile()
   },
   methods: {
-    ...mapMutations('m_user', ['clearUserSession']),
+    ...mapMutations('m_user', ['clearUserSession', 'setUserProfile']),
+    // 中文注释：统一空资料结构，避免不同流程出现 undefined。
+    createEmptyProfile() {
+      console.log('个人资料面板：开始创建空资料对象')
+      return {
+        id: '',
+        avatarUrl: '',
+        nickName: '',
+      }
+    },
+    // 中文注释：统一标准化用户资料结构，兼容 id 与 _id。
+    normalizeProfile(profile) {
+      console.log('个人资料面板：开始标准化用户资料', profile)
+
+      if (!profile || typeof profile !== 'object') {
+        console.log('个人资料面板：资料为空，返回空资料对象')
+        return this.createEmptyProfile()
+      }
+
+      const normalizedProfile = {
+        id: profile.id || profile._id || '',
+        avatarUrl: profile.avatarUrl || '',
+        nickName: profile.nickName || '',
+      }
+
+      console.log('个人资料面板：用户资料标准化完成', normalizedProfile)
+      return normalizedProfile
+    },
+    // 中文注释：判断资料是否完整可用，只有完整时才直接渲染。
+    hasUsableProfile(profile) {
+      const normalizedProfile = this.normalizeProfile(profile)
+      const isUsable = Boolean(normalizedProfile.id)
+      console.log('个人资料面板：完成资料可用性判断', normalizedProfile, isUsable)
+      return isUsable
+    },
+    // 中文注释：把资料写入组件、缓存和父页面，保证多处状态同步。
+    applyProfile(profile, source, options = {}) {
+      const normalizedProfile = this.normalizeProfile(profile)
+      const shouldNotifyParent = options.shouldNotifyParent !== false
+      console.log('个人资料面板：开始应用用户资料', source, normalizedProfile, {
+        shouldNotifyParent,
+      })
+      this.profile = normalizedProfile
+      this.setUserProfile(normalizedProfile)
+      console.log('个人资料面板：用户资料已同步到当前面板和本地缓存')
+
+      if (shouldNotifyParent) {
+        console.log('个人资料面板：准备通知父页面同步最新资料')
+        this.$emit('profile-updated', normalizedProfile)
+      } else {
+        console.log('个人资料面板：当前为被动同步场景，本次不通知父页面')
+      }
+
+      console.log('个人资料面板：用户资料应用完成', source)
+    },
     // 中文注释：兼容新版 success/data 结构和旧版 document.get 原始返回结构。
     extractProfileData(result) {
       console.log('个人资料面板：开始兼容解析用户资料结果', result)
@@ -161,6 +256,29 @@ export default {
 
       console.log('个人资料面板：未识别到成功的资料更新结果')
       return false
+    },
+    // 中文注释：优先使用父页面传入的新鲜资料，其次使用缓存，最后才发请求。
+    initializeProfile() {
+      console.log('个人资料面板：开始初始化资料展示流程')
+
+      if (this.hasUsableProfile(this.initialProfile)) {
+        console.log('个人资料面板：检测到父页面已传入完整资料，直接渲染')
+        this.applyProfile(this.initialProfile, '父页面传入资料', {
+          shouldNotifyParent: false,
+        })
+        return
+      }
+
+      if (this.hasUsableProfile(this.userProfile)) {
+        console.log('个人资料面板：检测到本地缓存资料可用，直接渲染')
+        this.applyProfile(this.userProfile, '本地缓存资料', {
+          shouldNotifyParent: false,
+        })
+        return
+      }
+
+      console.log('个人资料面板：未命中可用资料，准备向云端拉取')
+      this.loadUserProfile()
     },
     // 中文注释：跳回首页，方便用户继续浏览内容。
     goHome() {
@@ -217,7 +335,7 @@ export default {
         }
 
         this.showNicknameDialog = false
-        console.log('个人资料面板：昵称更新成功，准备重新加载用户资料')
+        console.log('个人资料面板：昵称更新成功，准备重新拉取最新资料')
         await this.loadUserProfile()
       } catch (error) {
         console.error('个人资料面板：昵称更新失败', error)
@@ -230,7 +348,7 @@ export default {
         uni.hideLoading()
       }
     },
-    // 中文注释：退出时只清空应用内会话，并标记为手动退出，避免立刻被静默登录拉起。
+    // 中文注释：退出时只清空应用内会话，并通知父页面切换到登录态。
     async logout() {
       console.log('个人资料面板：开始执行退出登录流程')
 
@@ -247,10 +365,9 @@ export default {
         }
 
         this.clearUserSession()
-        console.log('个人资料面板：本地会话已清空，准备返回我的页面')
-        uni.reLaunch({
-          url: '/pages/my/my',
-        })
+        this.profile = this.createEmptyProfile()
+        console.log('个人资料面板：本地会话已清空，准备通知父页面切换到登录态')
+        this.$emit('logout-success')
       } catch (error) {
         console.error('个人资料面板：退出登录失败', error)
       }
@@ -362,10 +479,7 @@ export default {
           throw new Error(result.message || '未获取到用户资料')
         }
 
-        this.profile.avatarUrl = profileData.avatarUrl || ''
-        this.profile.nickName = profileData.nickName || ''
-        this.profile.id = profileData._id || ''
-        console.log('个人资料面板：页面资料同步完成', this.profile)
+        this.applyProfile(profileData, '云端拉取资料')
       } catch (error) {
         console.error('个人资料面板：获取用户资料失败', error)
         uni.showToast({

@@ -55,28 +55,142 @@ export default {
     ...mapState('m_user', ['userId']),
     // 中文注释：优先展示用户刚选择的新头像，没有时展示默认头像。
     displayAvatarUrl() {
-      console.log('登录面板：开始计算当前展示的头像地址', this.avatarUrl)
-      return this.avatarUrl || '/static/myicon/user.png'
+      console.log('登录面板：开始计算当前展示的头像地址', {
+        avatarPreviewUrl: this.avatarPreviewUrl,
+        avatarUrl: this.avatarUrl,
+      })
+      return this.avatarPreviewUrl || '/static/myicon/user.png'
     },
   },
   data() {
     return {
       showDialog: false,
       avatarUrl: '',
+      avatarPreviewUrl: '',
       nickName: '',
       isSubmitting: false,
+      isAvatarUploading: false,
+      loadingVisibleCount: 0,
     }
   },
   methods: {
-    ...mapMutations('m_user', ['setLoginStatus', 'setManualLogout', 'setOpenId', 'setUserId']),
-    // 中文注释：统一同步本地会话，避免快捷登录和首次建档各写一遍。
+    ...mapMutations('m_user', [
+      'setLoginStatus',
+      'setManualLogout',
+      'setOpenId',
+      'setUserId',
+      'setUserProfile',
+    ]),
+    // 中文注释：统一标准化用户资料，保证父页面和缓存拿到同样结构。
+    normalizeUserProfile(profile) {
+      console.log('登录面板：开始标准化登录返回的用户资料', profile)
+      const normalizedProfile = {
+        id: (profile && (profile.id || profile._id)) || '',
+        avatarUrl: (profile && profile.avatarUrl) || '',
+        nickName: (profile && profile.nickName) || '',
+      }
+      console.log('登录面板：用户资料标准化完成', normalizedProfile)
+      return normalizedProfile
+    },
+    // 中文注释：统一判断当前返回结果是否已经带有可用的项目用户资料。
+    hasBoundUserProfile(result) {
+      const hasProfile = Boolean(
+        result &&
+        result.data &&
+        (result.data._id || result.data.id)
+      )
+      console.log('登录面板：完成登录结果用户资料判断', result, hasProfile)
+      return hasProfile
+    },
+    // 中文注释：识别开发者工具仍在运行旧版本地云函数时返回的原始 event 结构，避免误判为未建档。
+    isRawWechatLoginEvent(result) {
+      const isRawEvent = Boolean(
+        result &&
+        !Object.prototype.hasOwnProperty.call(result, 'success') &&
+        (result.tcbContext || result.userInfo || Object.prototype.hasOwnProperty.call(result, 'code'))
+      )
+      console.log('登录面板：完成原始云函数事件结构判断', result, isRawEvent)
+      return isRawEvent
+    },
+    // 中文注释：统一规范化微信登录云函数返回结构，并在结构异常时抛出明确错误。
+    normalizeWechatLoginResult(response) {
+      console.log('登录面板：开始规范化微信登录云函数返回结构', response)
+      const result = response && response.result ? response.result : (response || {})
+
+      if (result && typeof result.success === 'boolean') {
+        console.log('登录面板：识别到标准微信登录云函数返回结构', result)
+        return result
+      }
+
+      if (this.isRawWechatLoginEvent(result)) {
+        console.error('登录面板：识别到原始云函数事件结构，说明 wechatLogin 云函数未正确更新', result)
+        throw new Error('wechatLogin 云函数未更新，请重新上传并部署 wechatLogin 云函数')
+      }
+
+      if (result && result.data && (result.data._id || result.data.id)) {
+        console.log('登录面板：识别到兼容用户资料结构，补齐 success 字段后继续使用', result)
+        return {
+          success: true,
+          ...result,
+        }
+      }
+
+      console.error('登录面板：未识别到可用的微信登录云函数返回结构', result)
+      throw new Error('wechatLogin 云函数返回结构异常，请重新上传并部署云函数')
+    },
+    // 中文注释：统一显示加载框，并通过计数器保证多次调用时不会出现状态错乱。
+    showPageLoading(title) {
+      console.log('登录面板：准备显示页面加载框', {
+        title,
+        currentLoadingVisibleCount: this.loadingVisibleCount,
+      })
+      this.loadingVisibleCount += 1
+      console.log('登录面板：页面加载框计数已增加', this.loadingVisibleCount)
+
+      if (this.loadingVisibleCount === 1) {
+        uni.showLoading({
+          title,
+          mask: true,
+        })
+        console.log('登录面板：页面加载框已显示')
+        return
+      }
+
+      console.log('登录面板：当前已有加载框显示，本次仅更新引用计数')
+    },
+    // 中文注释：统一关闭加载框，只有计数归零时才真正调用 hideLoading，避免配对警告。
+    hidePageLoading() {
+      console.log('登录面板：准备关闭页面加载框', {
+        currentLoadingVisibleCount: this.loadingVisibleCount,
+      })
+
+      if (this.loadingVisibleCount <= 0) {
+        console.log('登录面板：当前没有处于显示状态的加载框，本次跳过 hideLoading')
+        return
+      }
+
+      this.loadingVisibleCount -= 1
+      console.log('登录面板：页面加载框计数已减少', this.loadingVisibleCount)
+
+      if (this.loadingVisibleCount > 0) {
+        console.log('登录面板：仍存在其它加载流程，本次不关闭全局加载框')
+        return
+      }
+
+      uni.hideLoading()
+      console.log('登录面板：页面加载框已关闭')
+    },
+    // 中文注释：统一同步本地会话和资料缓存，避免不同登录分支重复写状态。
     syncLocalSession(result) {
       console.log('登录面板：开始同步本地用户会话', result)
-      this.setUserId(result.data._id)
+      const normalizedProfile = this.normalizeUserProfile(result.data)
+      this.setUserId(normalizedProfile.id)
       this.setOpenId(result.openid || result.data.openid || '')
       this.setLoginStatus(true)
       this.setManualLogout(false)
-      console.log('登录面板：本地用户会话同步完成')
+      this.setUserProfile(normalizedProfile)
+      console.log('登录面板：本地用户会话同步完成', normalizedProfile)
+      return normalizedProfile
     },
     // 中文注释：统一控制登录弹窗开关，并在取消时提示用户。
     toggleDialog(forceOpen = false, shouldToast = true) {
@@ -108,6 +222,13 @@ export default {
         return
       }
 
+      this.avatarPreviewUrl = tempPath
+      this.isAvatarUploading = true
+      console.log('登录面板：已先使用本地临时头像做预览，并标记头像上传中', {
+        avatarPreviewUrl: this.avatarPreviewUrl,
+        isAvatarUploading: this.isAvatarUploading,
+      })
+
       const suffixMatch = /\.[^\\.]+$/.exec(tempPath)
       const suffix = suffixMatch ? suffixMatch[0] : '.png'
       console.log('登录面板：已解析头像文件后缀', suffix)
@@ -118,10 +239,13 @@ export default {
         success: (res) => {
           console.log('登录面板：头像上传成功，开始保存 fileID', res)
           this.avatarUrl = res.fileID || ''
+          this.isAvatarUploading = false
           console.log('登录面板：头像 fileID 保存完成', this.avatarUrl)
         },
         fail: (error) => {
           console.error('登录面板：头像上传失败', error)
+          this.isAvatarUploading = false
+          this.avatarPreviewUrl = ''
           uni.showToast({
             title: '头像上传失败',
             icon: 'none',
@@ -169,10 +293,7 @@ export default {
 
       this.isSubmitting = true
       console.log('登录面板：已加锁快捷登录流程，准备展示加载状态')
-      uni.showLoading({
-        title: '校验微信身份中',
-        mask: true,
-      })
+      this.showPageLoading('校验微信身份中')
 
       try {
         const code = await this.runWeChatLogin()
@@ -186,16 +307,23 @@ export default {
           },
         })
 
-        const result = response && response.result ? response.result : {}
+        const result = this.normalizeWechatLoginResult(response)
         console.log('登录面板：快捷登录云函数返回结果', result)
 
-        if (result.success && result.data && result.data._id) {
+        if (!result.success) {
+          throw new Error(result.message || '微信登录失败')
+        }
+
+        if (this.hasBoundUserProfile(result)) {
           console.log('登录面板：当前微信账号已存在资料，准备直接完成登录')
-          this.syncLocalSession(result)
-          uni.reLaunch({
-            url: '/pages/my/my',
-          })
+          const normalizedProfile = this.syncLocalSession(result)
+          this.$emit('login-success', normalizedProfile)
           return
+        }
+
+        if (!result.needsProfile) {
+          console.error('登录面板：快捷登录未拿到资料且未返回 needsProfile 标记，判定为异常结构', result)
+          throw new Error('wechatLogin 云函数返回结果异常，请重新部署后重试')
         }
 
         console.log('登录面板：当前微信账号尚未建档，准备打开资料补充弹窗')
@@ -209,7 +337,7 @@ export default {
       } finally {
         this.isSubmitting = false
         console.log('登录面板：快捷登录流程结束，准备关闭加载状态')
-        uni.hideLoading()
+        this.hidePageLoading()
       }
     },
     // 中文注释：调用云函数完成微信身份登录、老账号绑定和首次建档。
@@ -233,7 +361,7 @@ export default {
         },
       })
 
-      const result = response && response.result ? response.result : {}
+      const result = this.normalizeWechatLoginResult(response)
       console.log('登录面板：微信登录云函数返回结果', result)
 
       if (!result.success || !result.data || !result.data._id) {
@@ -260,6 +388,15 @@ export default {
         return
       }
 
+      if (this.isAvatarUploading) {
+        console.log('登录面板：检测到头像仍在上传中，暂不允许提交')
+        uni.showToast({
+          title: '头像上传中，请稍候',
+          icon: 'none',
+        })
+        return
+      }
+
       if (!this.nickName) {
         console.log('登录面板：缺少昵称，阻止提交')
         uni.showToast({
@@ -271,22 +408,16 @@ export default {
 
       this.isSubmitting = true
       console.log('登录面板：已加锁提交流程，准备展示加载状态')
-      uni.showLoading({
-        title: '微信登录中',
-        mask: true,
-      })
+      this.showPageLoading('微信登录中')
 
       try {
         const code = await this.runWeChatLogin()
         console.log('登录面板：已成功获取微信登录 code，准备请求云函数')
         const result = await this.loginByWeChat(code)
-
-        this.syncLocalSession(result)
+        const normalizedProfile = this.syncLocalSession(result)
         this.showDialog = false
-        console.log('登录面板：登录弹窗已关闭，准备刷新我的页面')
-        uni.reLaunch({
-          url: '/pages/my/my',
-        })
+        console.log('登录面板：首次建档成功，准备通知父页面切换到个人中心')
+        this.$emit('login-success', normalizedProfile)
       } catch (error) {
         console.error('登录面板：微信登录提交流程失败', error)
         uni.showToast({
@@ -296,7 +427,7 @@ export default {
       } finally {
         this.isSubmitting = false
         console.log('登录面板：提交流程结束，准备关闭加载状态')
-        uni.hideLoading()
+        this.hidePageLoading()
       }
     },
   },

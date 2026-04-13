@@ -1,0 +1,71 @@
+<view class="page-shell">
+  <view class="card-panel">
+    <view class="section-title">{{ pageTitle }}</view>
+
+    <van-cell-group inset>
+      <van-field
+        value="{{ form.name }}"
+        label="模型名称"
+        placeholder="请输入模型名称"
+        data-field="name"
+        bind:change="handleFieldChange"
+      />
+      <van-field
+        value="{{ form.order }}"
+        label="排序值"
+        type="number"
+        placeholder="请输入排序值"
+        data-field="order"
+        bind:change="handleFieldChange"
+      />
+      <van-field
+        value="{{ form.scale3d }}"
+        label="缩放"
+        placeholder="例如 1 1 1"
+        data-field="scale3d"
+        bind:change="handleFieldChange"
+      />
+      <van-field
+        value="{{ form.position3d }}"
+        label="位置"
+        placeholder="例如 0 0 0"
+        data-field="position3d"
+        bind:change="handleFieldChange"
+      />
+      <van-field
+        value="{{ form.description }}"
+        label="说明"
+        placeholder="请输入模型说明"
+        data-field="description"
+        bind:change="handleFieldChange"
+      />
+    </van-cell-group>
+
+    <view class="upload-panel">
+      <view class="upload-panel__header">
+        <view class="upload-panel__title">模型封面</view>
+        <van-button size="small" plain type="primary" bind:click="chooseCoverImage">上传封面</van-button>
+      </view>
+      <image wx:if="{{ form.image }}" src="{{ form.image }}" class="cover-preview" mode="aspectFill" />
+    </view>
+
+    <view class="upload-panel">
+      <view class="upload-panel__header">
+        <view class="upload-panel__title">GLB 模型文件</view>
+        <van-button size="small" plain type="primary" bind:click="chooseModelFile">上传 GLB</van-button>
+      </view>
+      <view class="upload-panel__tip">当前模型文件：{{ modelFileName || '尚未上传' }}</view>
+      <view wx:if="{{ form.modelUrl }}" class="file-id-box">{{ form.modelUrl }}</view>
+    </view>
+
+    <van-button
+      custom-class="submit-button"
+      type="danger"
+      block
+      loading="{{ isSubmitting }}"
+      bind:click="submitModel"
+    >
+      {{ modelId ? '保存模型' : '上传模型' }}
+    </van-button>
+  </view>
+</view>

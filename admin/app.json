@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/dashboard/dashboard",
+    "pages/article-list/article-list",
+    "pages/article-form/article-form",
+    "pages/model-list/model-list",
+    "pages/model-form/model-form",
+    "pages/comment-list/comment-list"
+  ],
+  "window": {
+    "navigationBarTitleText": "管理员后台",
+    "navigationBarBackgroundColor": "#8f1d22",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f7f7f7",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {
+    "van-button": "/wxcomponents/vant/button/index",
+    "van-cell": "/wxcomponents/vant/cell/index",
+    "van-cell-group": "/wxcomponents/vant/cell-group/index",
+    "van-empty": "/wxcomponents/vant/empty/index",
+    "van-field": "/wxcomponents/vant/field/index",
+    "van-grid": "/wxcomponents/vant/grid/index",
+    "van-grid-item": "/wxcomponents/vant/grid-item/index",
+    "van-icon": "/wxcomponents/vant/icon/index",
+    "van-loading": "/wxcomponents/vant/loading/index",
+    "van-search": "/wxcomponents/vant/search/index",
+    "van-tab": "/wxcomponents/vant/tab/index",
+    "van-tabs": "/wxcomponents/vant/tabs/index",
+    "van-tag": "/wxcomponents/vant/tag/index"
+  }
+}

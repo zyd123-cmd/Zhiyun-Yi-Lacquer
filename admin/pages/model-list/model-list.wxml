@@ -1,0 +1,29 @@
+<view class="page-shell">
+  <view class="card-panel action-row-spread">
+    <view class="section-title model-list-title">模型列表</view>
+    <van-button type="danger" size="small" bind:click="goToCreateModel">上传模型</van-button>
+  </view>
+
+  <view wx:if="{{ isLoading }}" class="card-panel loading-panel">
+    <van-loading size="24px" color="#8f1d22" />
+    <view class="loading-text">模型列表加载中...</view>
+  </view>
+
+  <van-empty wx:elif="{{ !modelList.length }}" description="暂无模型数据" />
+
+  <view wx:else class="model-list">
+    <view wx:for="{{ modelList }}" wx:key="_id" class="card-panel model-card">
+      <image wx:if="{{ item.image }}" src="{{ item.image }}" class="model-card__cover" mode="aspectFill" />
+      <view class="model-card__body">
+        <view class="model-card__title">{{ item.name }}</view>
+        <view class="model-card__meta">排序：{{ item.order }}</view>
+        <view class="model-card__meta">GLB：{{ item.modelUrl }}</view>
+        <view class="model-card__meta">更新时间：{{ item.updatedAtText }}</view>
+        <view class="action-row model-card__actions">
+          <van-button size="small" plain type="primary" data-id="{{ item._id }}" bind:click="editModel">编辑</van-button>
+          <van-button size="small" plain type="danger" data-id="{{ item._id }}" bind:click="deleteModel">删除</van-button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

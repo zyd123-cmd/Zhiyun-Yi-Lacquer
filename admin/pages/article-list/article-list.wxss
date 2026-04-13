@@ -1,0 +1,49 @@
+.article-list-title {
+  margin-bottom: 0;
+}
+
+.loading-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18rpx;
+}
+
+.loading-text {
+  font-size: 24rpx;
+  color: #8b7f76;
+}
+
+.article-card {
+  display: flex;
+  align-items: flex-start;
+}
+
+.article-card__cover {
+  width: 180rpx;
+  height: 180rpx;
+  flex-shrink: 0;
+  border-radius: 18rpx;
+  background: #f5f5f5;
+}
+
+.article-card__body {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.article-card__title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2f2723;
+}
+
+.article-card__meta {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #7b6f67;
+}
+
+.article-card__actions {
+  margin-top: 20rpx;
+}

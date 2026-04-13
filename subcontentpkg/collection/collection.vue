@@ -9,7 +9,7 @@
       class="content-item"
       :url="getArticleUrl(article)"
     >
-      <image class="content-image" :src="getCoverImage(article)" mode="aspectFill" />
+      <image class="content-image" :src="getCoverImage(article)" mode="aspectFill" lazy-load />
       <text class="content-text">{{ article.title }}</text>
     </navigator>
 
@@ -21,6 +21,9 @@
 import { mapState } from 'vuex'
 import AiAssistant from '@/components/ai-assistant/ai-assistant.vue'
 import AppSearchBar from '@/components/app-search-bar/app-search-bar.vue'
+import { getArticleCoverImage, getArticleDetailUrl } from '@/utils/article-service'
+
+const FAVORITE_ARTICLE_FALLBACK_IMAGE = '/static/logo.png'
 
 export default {
   components: {
@@ -31,20 +34,20 @@ export default {
     ...mapState('m_article', ['favoriteArticles']),
   },
   methods: {
+    // 中文注释：统一跳转到搜索页，避免收藏页维护独立的搜索入口逻辑。
     goToSearch() {
+      console.log('收藏页：准备跳转到搜索页面')
       uni.navigateTo({
         url: '/subcontentpkg/search/search',
       })
     },
+    // 中文注释：统一生成收藏文章的详情页地址，直接复用文章服务层逻辑。
     getArticleUrl(article) {
-      return `/subcontentpkg/hottopic/article0/article0?id=${article.id}`
+      return getArticleDetailUrl(article)
     },
+    // 中文注释：统一解析收藏文章封面图，并在缺图时回退到默认图。
     getCoverImage(article) {
-      if (Array.isArray(article.imagesrc) && article.imagesrc.length > 0) {
-        return article.imagesrc[0]
-      }
-
-      return article.imagesrc || '/static/导航图/图像.png'
+      return getArticleCoverImage(article, FAVORITE_ARTICLE_FALLBACK_IMAGE)
     },
   },
 }

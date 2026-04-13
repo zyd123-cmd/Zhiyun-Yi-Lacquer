@@ -1,0 +1,90 @@
+<view class="page-shell login-page">
+  <view class="card-panel login-hero">
+    <view class="login-hero__title">智韵髹漆后台</view>
+    <view class="login-hero__desc">用于发布文章、上传 GLB 模型和管理评论内容</view>
+  </view>
+
+  <view class="card-panel">
+    <van-tabs active="{{ activeTab }}" bind:change="handleTabChange" color="#8f1d22">
+      <van-tab title="管理员登录">
+        <view class="form-panel">
+          <van-cell-group inset>
+            <van-field
+              value="{{ loginForm.account }}"
+              label="账号"
+              placeholder="请输入管理员账号"
+              data-form="loginForm"
+              data-field="account"
+              bind:change="handleFieldChange"
+            />
+            <van-field
+              value="{{ loginForm.password }}"
+              label="密码"
+              type="password"
+              placeholder="请输入管理员密码"
+              data-form="loginForm"
+              data-field="password"
+              bind:change="handleFieldChange"
+            />
+          </van-cell-group>
+
+          <van-button
+            custom-class="submit-button"
+            type="danger"
+            block
+            loading="{{ isSubmitting }}"
+            bind:click="submitLogin"
+          >
+            登录后台
+          </van-button>
+        </view>
+      </van-tab>
+
+      <van-tab title="初始化管理员">
+        <view class="form-panel">
+          <van-cell-group inset>
+            <van-field
+              value="{{ bootstrapForm.nickName }}"
+              label="昵称"
+              placeholder="请输入管理员昵称"
+              data-form="bootstrapForm"
+              data-field="nickName"
+              bind:change="handleFieldChange"
+            />
+            <van-field
+              value="{{ bootstrapForm.account }}"
+              label="账号"
+              placeholder="请输入首个管理员账号"
+              data-form="bootstrapForm"
+              data-field="account"
+              bind:change="handleFieldChange"
+            />
+            <van-field
+              value="{{ bootstrapForm.password }}"
+              label="密码"
+              type="password"
+              placeholder="请输入首个管理员密码"
+              data-form="bootstrapForm"
+              data-field="password"
+              bind:change="handleFieldChange"
+            />
+          </van-cell-group>
+
+          <view class="bootstrap-tip">
+            仅在后台第一次部署时使用。初始化成功后，请直接使用上方登录入口。
+          </view>
+
+          <van-button
+            custom-class="submit-button"
+            type="warning"
+            block
+            loading="{{ isSubmitting }}"
+            bind:click="submitBootstrap"
+          >
+            初始化首个管理员
+          </van-button>
+        </view>
+      </van-tab>
+    </van-tabs>
+  </view>
+</view>

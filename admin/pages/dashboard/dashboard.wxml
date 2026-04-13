@@ -1,0 +1,28 @@
+<view class="page-shell">
+  <view class="card-panel dashboard-hero">
+    <view class="dashboard-hero__top">
+      <view>
+        <view class="dashboard-hero__title">欢迎回来，{{ adminProfile.nickName || '管理员' }}</view>
+        <view class="dashboard-hero__desc">今天也把内容管理得井井有条</view>
+      </view>
+      <van-tag type="danger">{{ adminProfile.role || 'admin' }}</van-tag>
+    </view>
+
+    <view class="dashboard-hero__meta">
+      <view class="dashboard-hero__meta-item">账号：{{ adminProfile.account || '--' }}</view>
+      <view class="dashboard-hero__meta-item">最近登录：{{ lastLoginTimeText }}</view>
+    </view>
+  </view>
+
+  <view class="card-panel">
+    <view class="section-title">快捷入口</view>
+    <van-grid column-num="2" gutter="16" border="{{ false }}">
+      <van-grid-item icon="edit" text="发布文章" bind:click="goToArticleForm" />
+      <van-grid-item icon="notes-o" text="文章管理" bind:click="goToArticleList" />
+      <van-grid-item icon="photo-o" text="上传模型" bind:click="goToModelForm" />
+      <van-grid-item icon="apps-o" text="模型管理" bind:click="goToModelList" />
+      <van-grid-item icon="chat-o" text="评论管理" bind:click="goToCommentList" />
+      <van-grid-item icon="close" text="退出登录" bind:click="logout" />
+    </van-grid>
+  </view>
+</view>
