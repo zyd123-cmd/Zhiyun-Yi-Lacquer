@@ -30,6 +30,7 @@ export const CLOUD_FUNCTIONS = Object.freeze({
   UPDATE_USER_NICKNAME: 'updateUserNickname',
   GET_YIQUAN_POSTS: 'getYiquanPosts',
   CREATE_YIQUAN_POST: 'createYiquanPost',
+  UPDATE_YIQUAN_POST: 'updateYiquanPost',
   DELETE_YIQUAN_POST: 'deleteYiquanPost',
   GET_YIQUAN_COMMENTS: 'getYiquanComments',
   CREATE_YIQUAN_COMMENT: 'createYiquanComment',

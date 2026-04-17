@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "模型管理"
+  "navigationBarTitleText": "模型管理",
+  "usingComponents": {
+    "action-chip": "../../components/action-chip/index"
+  }
 }

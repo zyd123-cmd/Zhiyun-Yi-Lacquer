@@ -1,8 +1,10 @@
 export const YIQUAN_FEED_CACHE_KEY = 'yiquanFeedCacheV1'
-// 中文注释：记录刚提交成功的动态，返回彝圈列表页时可立即展示待审核状态。
+// 中文注释：记录刚提交成功的动态，返回彝圈列表页时可以立即展示待审核状态。
 export const YIQUAN_LATEST_SUBMITTED_POST_KEY = 'yiquanLatestSubmittedPostV1'
+// 中文注释：记录正在重新编辑的驳回动态草稿，便于发布页恢复原始内容。
+export const YIQUAN_EDITING_POST_KEY = 'yiquanEditingPostV1'
 export const YIQUAN_DEFAULT_AVATAR = '/static/myicon/user.png'
-export const YIQUAN_DEFAULT_BACKGROUND = '/static/logo.png'
+export const YIQUAN_DEFAULT_BACKGROUND = '/static/yiquan.png'
 
 // 中文注释：统一规整文本内容，避免页面层和云函数层出现空字符串判断不一致。
 export function normalizeYiquanText(value) {
@@ -55,7 +57,7 @@ export function formatYiquanTime(timestamp) {
   return formattedText
 }
 
-// 中文注释：统一创建彝圈评论面板的空状态，避免页面在首次渲染时出现缺字段问题。
+// 中文注释：统一创建彝圈评论面板的空状态，避免页面在首屏渲染时出现缺字段问题。
 export function createEmptyYiquanCommentPanelState() {
   console.log('彝圈工具模块：开始创建空评论面板状态')
   const emptyState = {
@@ -89,6 +91,7 @@ export function normalizeYiquanPost(post, currentUserId = '') {
     commentCount: Math.max(0, Number(post && post.commentCount) || 0),
     createdAt: Number((post && post.createdAt) || 0),
     updatedAt: Number((post && post.updatedAt) || 0),
+    reviewedAt: Number((post && post.reviewedAt) || 0),
     createdAtText: formatYiquanTime(post && post.createdAt),
     isOwner: Boolean(currentUserId && post && post.userId === currentUserId),
     canDelete:

@@ -49,7 +49,11 @@ Page({
   },
   // 中文注释：管理员删除评论前先确认，确认后调用后台删除接口并刷新评论列表。
   async deleteComment(event) {
-    const commentId = event.currentTarget.dataset.id || ''
+    const commentId = (event && event.detail && event.detail.actionId) || event.currentTarget.dataset.id || ''
+    console.log('管理员评论列表页：删除动作参数解析完成', {
+      detail: event && event.detail ? event.detail : {},
+      commentId,
+    })
     console.log('管理员评论列表页：开始删除评论流程', commentId)
 
     if (!commentId) {

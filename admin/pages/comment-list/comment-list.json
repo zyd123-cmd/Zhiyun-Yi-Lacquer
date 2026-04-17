@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "评论管理"
+  "navigationBarTitleText": "评论管理",
+  "usingComponents": {
+    "action-chip": "../../components/action-chip/index"
+  }
 }

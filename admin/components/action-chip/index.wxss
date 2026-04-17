@@ -1,0 +1,74 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* 中文注释：统一操作胶囊使用更小的高度和字号，满足后台页面“按钮缩小一点”的要求。 */
+.action-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 52rpx;
+  padding: 0 14rpx;
+  box-sizing: border-box;
+  border-radius: 999rpx;
+  border: 1rpx solid transparent;
+  transition: transform 0.16s ease, opacity 0.16s ease;
+}
+
+.action-chip__text {
+  font-size: 22rpx;
+  line-height: 1;
+  font-weight: 600;
+}
+
+/* 中文注释：主色操作用于编辑等轻操作场景。 */
+.action-chip--primary {
+  background: #eef7ff;
+  border-color: #9bcfff;
+}
+
+.action-chip--primary .action-chip__text {
+  color: #1677d2;
+}
+
+/* 中文注释：成功色操作用于审核通过等正向动作。 */
+.action-chip--success {
+  background: #edf9f2;
+  border-color: #9ad7af;
+}
+
+.action-chip--success .action-chip__text {
+  color: #1a8f4d;
+}
+
+/* 中文注释：警告色操作用于驳回等需要提醒风险的动作。 */
+.action-chip--warning {
+  background: #fff6e9;
+  border-color: #f1c67a;
+}
+
+.action-chip--warning .action-chip__text {
+  color: #b56a00;
+}
+
+/* 中文注释：危险色操作用于删除等不可逆动作。 */
+.action-chip--danger {
+  background: #fff0f0;
+  border-color: #f1a7a7;
+}
+
+.action-chip--danger .action-chip__text {
+  color: #b73324;
+}
+
+/* 中文注释：禁用态统一降低透明度，避免误触时用户误解为可点击操作。 */
+.action-chip--disabled {
+  opacity: 0.45;
+}
+
+/* 中文注释：按压态提供轻微缩放反馈，让替换后的组件仍保留明确点击感。 */
+.action-chip--active {
+  transform: scale(0.98);
+}

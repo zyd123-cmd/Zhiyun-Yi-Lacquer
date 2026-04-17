@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "文章管理"
+  "navigationBarTitleText": "文章管理",
+  "usingComponents": {
+    "action-chip": "../../components/action-chip/index"
+  }
 }

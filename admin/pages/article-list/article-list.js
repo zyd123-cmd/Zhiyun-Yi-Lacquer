@@ -57,7 +57,11 @@ Page({
   },
   // 中文注释：跳转到文章编辑页，供管理员编辑当前文章。
   editArticle(event) {
-    const articleId = event.currentTarget.dataset.id || ''
+    const articleId = (event && event.detail && event.detail.actionId) || event.currentTarget.dataset.id || ''
+    console.log('管理员文章列表页：编辑动作参数解析完成', {
+      detail: event && event.detail ? event.detail : {},
+      articleId,
+    })
     console.log('管理员文章列表页：准备跳转到文章编辑页', articleId)
     wx.navigateTo({
       url: `/pages/article-form/article-form?articleId=${articleId}`,
@@ -65,7 +69,11 @@ Page({
   },
   // 中文注释：删除文章前先确认，确认后调用后台删除接口并刷新列表。
   async deleteArticle(event) {
-    const articleId = event.currentTarget.dataset.id || ''
+    const articleId = (event && event.detail && event.detail.actionId) || event.currentTarget.dataset.id || ''
+    console.log('管理员文章列表页：删除动作参数解析完成', {
+      detail: event && event.detail ? event.detail : {},
+      articleId,
+    })
     console.log('管理员文章列表页：开始删除文章流程', articleId)
 
     if (!articleId) {

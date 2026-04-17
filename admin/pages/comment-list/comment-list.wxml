@@ -25,8 +25,8 @@
       <view class="comment-card__meta">点赞：{{ item.likeCount }}，回复：{{ item.replyCount }}</view>
       <view class="comment-card__content">{{ item.content }}</view>
 
-      <view class="action-row comment-card__actions">
-        <van-button size="small" plain type="danger" data-id="{{ item._id }}" bind:click="deleteComment">删除评论</van-button>
+      <view class="comment-card__actions">
+        <action-chip text="删除评论" tone="danger" action-id="{{ item._id }}" bind:action="deleteComment" />
       </view>
     </view>
   </view>

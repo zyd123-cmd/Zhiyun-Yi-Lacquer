@@ -56,7 +56,11 @@ Page({
   },
   // 中文注释：跳转到模型编辑页，供管理员编辑当前模型。
   editModel(event) {
-    const modelId = event.currentTarget.dataset.id || ''
+    const modelId = (event && event.detail && event.detail.actionId) || event.currentTarget.dataset.id || ''
+    console.log('管理员模型列表页：编辑动作参数解析完成', {
+      detail: event && event.detail ? event.detail : {},
+      modelId,
+    })
     console.log('管理员模型列表页：准备跳转到模型编辑页', modelId)
     wx.navigateTo({
       url: `/pages/model-form/model-form?modelId=${modelId}`,
@@ -64,7 +68,11 @@ Page({
   },
   // 中文注释：删除模型前先确认，确认后调用后台删除接口并刷新列表。
   async deleteModel(event) {
-    const modelId = event.currentTarget.dataset.id || ''
+    const modelId = (event && event.detail && event.detail.actionId) || event.currentTarget.dataset.id || ''
+    console.log('管理员模型列表页：删除动作参数解析完成', {
+      detail: event && event.detail ? event.detail : {},
+      modelId,
+    })
     console.log('管理员模型列表页：开始删除模型流程', modelId)
 
     if (!modelId) {

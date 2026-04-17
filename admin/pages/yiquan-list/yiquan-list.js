@@ -188,10 +188,82 @@ Page({
     })
     console.log('管理员彝圈审核页：动态图片预览指令已发出', post.imageList)
   },
+  // 中文注释：统一收集审核动作需要的备注信息，驳回时必须填写明确理由，便于用户端展示驳回原因。
+  async collectReviewRemark(reviewStatus) {
+    console.log('管理员彝圈审核页：开始收集审核备注信息', reviewStatus)
+
+    if (reviewStatus === 'approved') {
+      const approvedModalResult = await wx.showModal({
+        title: '提示',
+        content: '确认通过这条彝圈动态吗？',
+      })
+      console.log('管理员彝圈审核页：通过审核确认框返回结果', approvedModalResult)
+
+      if (!approvedModalResult.confirm) {
+        console.log('管理员彝圈审核页：管理员取消了通过审核动作')
+        return {
+          confirmed: false,
+          reviewRemark: '',
+        }
+      }
+
+      console.log('管理员彝圈审核页：通过审核备注信息收集完成')
+      return {
+        confirmed: true,
+        reviewRemark: '管理员审核通过',
+      }
+    }
+
+    const rejectedModalResult = await wx.showModal({
+      title: '填写驳回理由',
+      content: '请输入驳回理由，用户端会看到这条驳回说明。',
+      editable: true,
+      placeholderText: '例如：图片不清晰、内容与主题无关',
+      confirmText: '确认驳回',
+      cancelText: '取消',
+    })
+    console.log('管理员彝圈审核页：驳回理由输入框返回结果', rejectedModalResult)
+
+    if (!rejectedModalResult.confirm) {
+      console.log('管理员彝圈审核页：管理员取消了驳回审核动作')
+      return {
+        confirmed: false,
+        reviewRemark: '',
+      }
+    }
+
+    const reviewRemark = typeof rejectedModalResult.content === 'string'
+      ? rejectedModalResult.content.trim()
+      : ''
+    console.log('管理员彝圈审核页：驳回理由规整完成', reviewRemark)
+
+    if (!reviewRemark) {
+      console.log('管理员彝圈审核页：当前未填写驳回理由，阻止提交驳回审核')
+      wx.showToast({
+        title: '请先填写驳回理由',
+        icon: 'none',
+      })
+      return {
+        confirmed: false,
+        reviewRemark: '',
+      }
+    }
+
+    console.log('管理员彝圈审核页：驳回审核备注信息收集完成', reviewRemark)
+    return {
+      confirmed: true,
+      reviewRemark,
+    }
+  },
   // 中文注释：统一执行通过或驳回审核动作，成功后刷新列表。
   async reviewPost(event) {
-    const postId = event.currentTarget.dataset.id || ''
-    const reviewStatus = event.currentTarget.dataset.status || ''
+    const postId = (event && event.detail && event.detail.actionId) || event.currentTarget.dataset.id || ''
+    const reviewStatus = (event && event.detail && event.detail.actionStatus) || event.currentTarget.dataset.status || ''
+    console.log('管理员彝圈审核页：审核动作参数解析完成', {
+      detail: event && event.detail ? event.detail : {},
+      postId,
+      reviewStatus,
+    })
     console.log('管理员彝圈审核页：开始执行动态审核动作', { postId, reviewStatus })
 
     if (!postId || (reviewStatus !== 'approved' && reviewStatus !== 'rejected')) {
@@ -199,14 +271,11 @@ Page({
       return
     }
 
-    const modalResult = await wx.showModal({
-      title: '提示',
-      content: reviewStatus === 'approved' ? '确认通过这条彝圈动态吗？' : '确认驳回这条彝圈动态吗？',
-    })
-    console.log('管理员彝圈审核页：动态审核确认框返回结果', modalResult)
+    const reviewPayload = await this.collectReviewRemark(reviewStatus)
+    console.log('管理员彝圈审核页：审核备注收集结果', reviewPayload)
 
-    if (!modalResult.confirm) {
-      console.log('管理员彝圈审核页：管理员取消了动态审核动作')
+    if (!reviewPayload.confirmed) {
+      console.log('管理员彝圈审核页：审核备注收集未通过，结束本次审核动作')
       return
     }
 
@@ -214,7 +283,7 @@ Page({
       const result = await callAdminAction('reviewYiquanPost', {
         postId,
         reviewStatus,
-        reviewRemark: reviewStatus === 'approved' ? '管理员审核通过' : '管理员审核驳回',
+        reviewRemark: reviewPayload.reviewRemark,
       })
       console.log('管理员彝圈审核页：动态审核动作执行成功', result)
       wx.showToast({
@@ -232,7 +301,11 @@ Page({
   },
   // 中文注释：统一执行管理员删除动态动作，删除后同时清理评论并刷新列表。
   async deletePost(event) {
-    const postId = event.currentTarget.dataset.id || ''
+    const postId = (event && event.detail && event.detail.actionId) || event.currentTarget.dataset.id || ''
+    console.log('管理员彝圈审核页：删除动作参数解析完成', {
+      detail: event && event.detail ? event.detail : {},
+      postId,
+    })
     console.log('管理员彝圈审核页：开始执行动态删除动作', postId)
 
     if (!postId) {

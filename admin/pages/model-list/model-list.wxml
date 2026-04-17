@@ -22,10 +22,10 @@
         <view class="model-card__meta">更新时间：{{ item.updatedAtText }}</view>
         <view class="model-card__actions">
           <view class="model-card__action-button">
-            <van-button custom-class="compact-action-button" size="mini" block plain type="primary" data-id="{{ item._id }}" bind:click="editModel">编辑</van-button>
+            <action-chip text="编辑" tone="primary" action-id="{{ item._id }}" bind:action="editModel" />
           </view>
           <view class="model-card__action-button">
-            <van-button custom-class="compact-action-button" size="mini" block plain type="danger" data-id="{{ item._id }}" bind:click="deleteModel">删除</van-button>
+            <action-chip text="删除" tone="danger" action-id="{{ item._id }}" bind:action="deleteModel" />
           </view>
         </view>
       </view>

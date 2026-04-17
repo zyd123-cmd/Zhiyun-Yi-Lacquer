@@ -41,6 +41,7 @@
           </view>
           <view class="post-card__header-actions">
             <text v-if="post.status !== 'approved'" class="post-card__status">{{ getPostStatusText(post.status) }}</text>
+            <text v-if="post.status === 'rejected' && post.canDelete" class="post-card__edit" @click="editRejectedPost(post)">重新编辑</text>
             <text v-if="post.canDelete" class="post-card__delete" @click="deletePost(post)">删除</text>
           </view>
         </view>
@@ -146,7 +147,7 @@
 <script>
 import { mapState } from 'vuex'
 import { CLOUD_FUNCTIONS, resolveCloudFileSource, resolveCloudFileSourceList } from '@/utils/cloud'
-import { YIQUAN_DEFAULT_AVATAR, YIQUAN_DEFAULT_BACKGROUND, YIQUAN_FEED_CACHE_KEY, YIQUAN_LATEST_SUBMITTED_POST_KEY, buildYiquanCommentTree, createEmptyYiquanCommentPanelState, normalizeYiquanComment, normalizeYiquanPost } from '@/utils/yiquan'
+import { YIQUAN_DEFAULT_AVATAR, YIQUAN_DEFAULT_BACKGROUND, YIQUAN_EDITING_POST_KEY, YIQUAN_FEED_CACHE_KEY, YIQUAN_LATEST_SUBMITTED_POST_KEY, buildYiquanCommentTree, createEmptyYiquanCommentPanelState, normalizeYiquanComment, normalizeYiquanPost } from '@/utils/yiquan'
 
 const YIQUAN_FEED_CACHE_EXPIRE_MS = 5 * 60 * 1000
 
@@ -169,6 +170,8 @@ export default {
     }
   },
   onLoad() {
+    this.pendingRefreshOptions = null
+    console.log('彝圈页面：列表排队刷新状态初始化完成')
     console.log('彝圈页面：页面加载完成，准备恢复缓存并拉取最新动态')
     this.restoreFeedCache()
     this.loadHeroProfile()
@@ -180,13 +183,13 @@ export default {
     await this.consumeLatestSubmittedPost()
     console.log('彝圈页面：刚提交动态桥接缓存处理完成，准备按需静默刷新列表')
     if (this.hasLoadedOnce) {
-      this.loadPostList({ silent: true })
+      this.loadPostList({ silent: true, queueWhenBusy: true })
     }
   },
   onPullDownRefresh() {
     console.log('彝圈页面：收到下拉刷新指令')
     this.loadHeroProfile()
-    this.loadPostList({ silent: true, stopPullDownRefresh: true })
+    this.loadPostList({ silent: true, stopPullDownRefresh: true, queueWhenBusy: true })
   },
   methods: {
     // 中文注释：统一生成头部资料展示数据。
@@ -384,8 +387,8 @@ export default {
 
       if (post.status === 'rejected') {
         const rejectedText = post.reviewRemark
-          ? `这条动态未通过审核：${post.reviewRemark}`
-          : '这条动态未通过审核，只有你自己可见。'
+          ? `这条动态未通过审核：${post.reviewRemark}，你可以重新编辑后再次提交审核。`
+          : '这条动态未通过审核，当前只有你自己可见，你可以重新编辑后再次提交审核。'
         console.log('彝圈页面：已生成驳回提示文案', rejectedText)
         return rejectedText
       }
@@ -397,13 +400,32 @@ export default {
     async loadPostList(options = {}) {
       const silent = Boolean(options.silent)
       const stopPullDownRefresh = Boolean(options.stopPullDownRefresh)
+      const queueWhenBusy = Boolean(options.queueWhenBusy)
       console.log('彝圈页面：开始加载动态列表', options)
-      if (this.isLoading) return
+      if (this.isLoading) {
+        console.log('彝圈页面：当前已有动态列表加载任务在执行', {
+          queueWhenBusy,
+          stopPullDownRefresh,
+        })
+        if (queueWhenBusy) {
+          this.pendingRefreshOptions = {
+            ...options,
+            queueWhenBusy: false,
+          }
+          console.log('彝圈页面：已记录一条排队中的动态刷新任务', this.pendingRefreshOptions)
+        }
+        if (stopPullDownRefresh) {
+          uni.stopPullDownRefresh()
+          console.log('彝圈页面：由于当前正在加载，已先停止下拉刷新动画')
+        }
+        return
+      }
       this.isLoading = true
       let hasShownLoading = false
       if (!silent) {
         uni.showLoading({ title: '加载彝圈中', mask: true })
         hasShownLoading = true
+        console.log('彝圈页面：页面加载提示已展示')
       }
       try {
         const response = await wx.cloud.callFunction({ name: CLOUD_FUNCTIONS.GET_YIQUAN_POSTS, data: { pageSize: 30 } })
@@ -423,8 +445,20 @@ export default {
       } finally {
         this.isLoading = false
         if (hasShownLoading) uni.hideLoading()
-        if (stopPullDownRefresh) uni.stopPullDownRefresh()
-        console.log('彝圈页面：动态列表加载流程结束')
+        if (hasShownLoading) {
+          console.log('彝圈页面：页面加载提示已关闭')
+        }
+        if (stopPullDownRefresh) {
+          uni.stopPullDownRefresh()
+          console.log('彝圈页面：下拉刷新动画已停止')
+        }
+        const queuedRefreshOptions = this.pendingRefreshOptions
+        this.pendingRefreshOptions = null
+        console.log('彝圈页面：动态列表加载流程结束', { queuedRefreshOptions })
+        if (queuedRefreshOptions) {
+          console.log('彝圈页面：开始执行排队中的动态刷新任务', queuedRefreshOptions)
+          this.loadPostList(queuedRefreshOptions)
+        }
       }
     },
     // 中文注释：统一控制评论面板展开和按需拉取评论。
@@ -604,14 +638,47 @@ export default {
       if (!post || !Array.isArray(post.imageList) || !post.imageList.length) return
       uni.previewImage({ current: post.imageList[imageIndex] || post.imageList[0], urls: post.imageList })
     },
+    // 中文注释：统一把驳回动态写入本地编辑草稿，并跳转到发布页重新编辑。
+    async editRejectedPost(post) {
+      console.log('彝圈页面：开始进入驳回动态重新编辑流程', post)
+      if (!(await this.ensureLoggedIn('重新编辑动态'))) return
+      if (!post || !post._id || post.status !== 'rejected' || !post.canDelete) {
+        console.log('彝圈页面：当前动态不满足重新编辑条件，终止重新编辑流程')
+        uni.showToast({ title: '当前动态暂时无法重新编辑', icon: 'none' })
+        return
+      }
+      const rawPost = post.rawData || {}
+      const editingDraft = {
+        _id: post._id,
+        content: typeof rawPost.content === 'string' ? rawPost.content : post.content || '',
+        imageList: Array.isArray(rawPost.imageList) ? rawPost.imageList : [],
+        reviewRemark: post.reviewRemark || rawPost.reviewRemark || '',
+      }
+      console.log('彝圈页面：重新编辑草稿组装完成，准备写入本地缓存', editingDraft)
+      uni.setStorageSync(YIQUAN_EDITING_POST_KEY, JSON.stringify(editingDraft))
+      console.log('彝圈页面：重新编辑草稿写入完成，准备跳转到发布页', editingDraft._id)
+      this.goToPublish({
+        mode: 'edit',
+        postId: editingDraft._id,
+      })
+    },
     // 中文注释：统一执行页面跳转，避免模板层分散导航逻辑。
     goToLogin() {
       console.log('彝圈页面：准备切换到我的页面')
       uni.switchTab({ url: '/pages/my/my' })
     },
-    goToPublish() {
-      console.log('彝圈页面：准备跳转到彝圈发布页')
-      uni.navigateTo({ url: '/pages/yiquan/publish' })
+    // 中文注释：统一处理发布页跳转，兼容普通发布和驳回动态重新编辑两种参数。
+    goToPublish(options = {}) {
+      console.log('彝圈页面：准备跳转到彝圈发布页', options)
+      const queryList = []
+      if (options.mode) {
+        queryList.push(`mode=${encodeURIComponent(options.mode)}`)
+      }
+      if (options.postId) {
+        queryList.push(`postId=${encodeURIComponent(options.postId)}`)
+      }
+      const queryText = queryList.length ? `?${queryList.join('&')}` : ''
+      uni.navigateTo({ url: `/pages/yiquan/publish${queryText}` })
     },
   },
 }
@@ -638,7 +705,8 @@ export default {
 .post-card__meta { display: flex; flex-direction: column; margin-left: 18rpx; }
 .post-card__name { font-size: 30rpx; font-weight: 700; color: #2f2723; }
 .post-card__time { margin-top: 8rpx; font-size: 22rpx; color: #998a80; }
-.post-card__delete, .comment-item__action--danger, .comment-editor__reply-cancel { color: #b73324; }
+.post-card__delete, .post-card__edit, .comment-item__action--danger, .comment-editor__reply-cancel { color: #b73324; }
+.post-card__edit { font-weight: 600; }
 .post-card__header-actions { display: flex; align-items: center; gap: 18rpx; }
 .post-card__status { padding: 6rpx 14rpx; border-radius: 999rpx; background: #f5e6d8; font-size: 22rpx; color: #8f1d22; }
 .post-card__review-tip { margin-top: 18rpx; padding: 16rpx 20rpx; border-radius: 18rpx; background: #fff4df; font-size: 24rpx; line-height: 1.6; color: #8a5a16; }

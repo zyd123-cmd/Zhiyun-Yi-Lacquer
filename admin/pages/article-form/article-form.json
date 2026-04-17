@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "文章发布"
+  "navigationBarTitleText": "文章发布",
+  "usingComponents": {
+    "action-chip": "../../components/action-chip/index"
+  }
 }

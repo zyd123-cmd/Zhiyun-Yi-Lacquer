@@ -1,0 +1,9 @@
+{
+  "name": "updateYiquanPost",
+  "version": "1.0.0",
+  "description": "修改已驳回的彝圈动态并重新提交审核",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.1"
+  }
+}

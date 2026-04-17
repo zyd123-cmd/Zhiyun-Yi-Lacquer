@@ -66,13 +66,13 @@
 
       <view class="post-card__actions">
         <view wx:if="{{ item.status !== 'approved' }}" class="post-card__action-button">
-          <van-button custom-class="compact-action-button" size="mini" block type="primary" plain data-id="{{ item._id }}" data-status="approved" bind:click="reviewPost">通过</van-button>
+          <action-chip text="通过" tone="success" action-id="{{ item._id }}" action-status="approved" bind:action="reviewPost" />
         </view>
         <view wx:if="{{ item.status !== 'rejected' }}" class="post-card__action-button">
-          <van-button custom-class="compact-action-button" size="mini" block type="warning" plain data-id="{{ item._id }}" data-status="rejected" bind:click="reviewPost">驳回</van-button>
+          <action-chip text="驳回" tone="warning" action-id="{{ item._id }}" action-status="rejected" bind:action="reviewPost" />
         </view>
         <view class="post-card__action-button">
-          <van-button custom-class="compact-action-button" size="mini" block type="danger" plain data-id="{{ item._id }}" bind:click="deletePost">删除</van-button>
+          <action-chip text="删除" tone="danger" action-id="{{ item._id }}" bind:action="deletePost" />
         </view>
       </view>
     </view>

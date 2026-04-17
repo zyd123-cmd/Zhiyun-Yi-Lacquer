@@ -79,13 +79,6 @@ Page({
       url: '/pages/model-list/model-list',
     })
   },
-  // 中文注释：跳转到评论管理页，供管理员统一治理评论内容。
-  goToCommentList() {
-    console.log('管理员后台首页：准备跳转到评论管理页')
-    wx.navigateTo({
-      url: '/pages/comment-list/comment-list',
-    })
-  },
   // 中文注释：跳转到彝圈审核页，供管理员审核普通用户提交的动态内容。
   goToYiquanList() {
     console.log('管理员后台首页：准备跳转到彝圈审核页')

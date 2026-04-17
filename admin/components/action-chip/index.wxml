@@ -1,0 +1,8 @@
+<!-- 中文注释：后台统一操作胶囊使用轻量圆角胶囊结构，减少按钮体积并保持各页面视觉一致。 -->
+<view
+  class="action-chip action-chip--{{ tone }} {{ disabled ? 'action-chip--disabled' : '' }}"
+  hover-class="action-chip--active"
+  bindtap="handleTap"
+>
+  <text class="action-chip__text">{{ text }}</text>
+</view>

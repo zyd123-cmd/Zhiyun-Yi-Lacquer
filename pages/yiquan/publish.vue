@@ -2,8 +2,15 @@
   <view class="yiquan-publish-page">
     <view class="publish-card">
       <view class="publish-card__header">
-        <text class="publish-card__title">发布彝圈动态</text>
-        <text class="publish-card__tip">动态提交后需管理员审核通过，审核通过后才会在彝圈公开展示。</text>
+        <text class="publish-card__title">{{ isEditMode ? '修改彝圈动态' : '发布彝圈动态' }}</text>
+        <text class="publish-card__tip">
+          {{ isEditMode ? '修改完成后会重新进入管理员审核流程，审核通过后才会重新公开展示。' : '动态提交后需要管理员审核通过，审核通过后才会在彝圈公开展示。' }}
+        </text>
+      </view>
+
+      <view v-if="isEditMode && editingReviewRemark" class="publish-card__review-tip">
+        <text class="publish-card__review-title">上次驳回原因</text>
+        <text class="publish-card__review-text">{{ editingReviewRemark }}</text>
       </view>
 
       <textarea
@@ -55,7 +62,7 @@
           :loading="isSubmitting"
           @click="submitPost"
         >
-          提交审核
+          {{ isEditMode ? '重新提交审核' : '提交审核' }}
         </button>
       </view>
     </view>
@@ -64,8 +71,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import { CLOUD_FUNCTIONS } from '@/utils/cloud'
-import { YIQUAN_LATEST_SUBMITTED_POST_KEY } from '@/utils/yiquan'
+import { CLOUD_FUNCTIONS, resolveCloudFileSourceList } from '@/utils/cloud'
+import { YIQUAN_EDITING_POST_KEY, YIQUAN_LATEST_SUBMITTED_POST_KEY } from '@/utils/yiquan'
 
 const MAX_IMAGE_COUNT = 9
 
@@ -93,10 +100,13 @@ export default {
       content: '',
       imageList: [],
       isSubmitting: false,
+      isEditMode: false,
+      editingPostId: '',
+      editingReviewRemark: '',
     }
   },
-  onLoad() {
-    console.log('彝圈发布页：页面加载完成，准备校验当前登录状态')
+  onLoad(options) {
+    console.log('彝圈发布页：页面加载完成，准备校验当前登录状态与编辑模式参数', options || {})
 
     if (!this.isLoggedIn) {
       console.log('彝圈发布页：当前用户尚未登录，准备提示并跳转到我的页面')
@@ -109,9 +119,98 @@ export default {
           url: '/pages/my/my',
         })
       }, 300)
+      return
     }
+
+    this.initializePage(options || {})
   },
   methods: {
+    // 中文注释：统一初始化发布页，兼容新建动态与修改驳回动态两种入口。
+    async initializePage(options = {}) {
+      console.log('彝圈发布页：开始初始化页面状态', options)
+
+      if (options.mode !== 'edit') {
+        console.log('彝圈发布页：当前为普通发布模式，无需恢复驳回动态草稿')
+        return
+      }
+
+      this.isEditMode = true
+      this.editingPostId = typeof options.postId === 'string' ? options.postId : ''
+      console.log('彝圈发布页：已切换为驳回动态编辑模式', {
+        isEditMode: this.isEditMode,
+        editingPostId: this.editingPostId,
+      })
+      await this.restoreEditingDraft()
+      console.log('彝圈发布页：驳回动态编辑模式初始化完成')
+    },
+    // 中文注释：统一恢复被驳回动态的本地编辑草稿，方便用户修改后重新提交审核。
+    async restoreEditingDraft() {
+      console.log('彝圈发布页：开始恢复驳回动态编辑草稿')
+      const draftText = uni.getStorageSync(YIQUAN_EDITING_POST_KEY)
+
+      if (!draftText) {
+        console.log('彝圈发布页：未找到驳回动态编辑草稿，准备结束当前编辑流程')
+        uni.showToast({
+          title: '未找到待编辑的驳回动态',
+          icon: 'none',
+        })
+        setTimeout(() => {
+          uni.navigateBack()
+        }, 400)
+        return
+      }
+
+      try {
+        const draftPost = JSON.parse(draftText)
+        console.log('彝圈发布页：驳回动态编辑草稿解析完成', draftPost)
+
+        if (!draftPost || !draftPost._id) {
+          console.log('彝圈发布页：驳回动态编辑草稿缺少动态 id，无法继续恢复')
+          throw new Error('编辑草稿无效')
+        }
+
+        if (this.editingPostId && draftPost._id !== this.editingPostId) {
+          console.log('彝圈发布页：草稿动态 id 与页面参数不一致，准备中止恢复流程', {
+            editingPostId: this.editingPostId,
+            draftPostId: draftPost._id,
+          })
+          throw new Error('编辑草稿与当前动态不匹配')
+        }
+
+        const imageFileIdList = Array.isArray(draftPost.imageList)
+          ? draftPost.imageList.filter((fileId) => typeof fileId === 'string' && fileId)
+          : []
+        console.log('彝圈发布页：开始解析驳回动态原始图片预览地址', imageFileIdList)
+        const previewUrlList = await resolveCloudFileSourceList(imageFileIdList)
+        console.log('彝圈发布页：驳回动态原始图片预览地址解析完成', previewUrlList)
+
+        this.editingPostId = draftPost._id
+        this.editingReviewRemark = typeof draftPost.reviewRemark === 'string' ? draftPost.reviewRemark : ''
+        this.content = typeof draftPost.content === 'string' ? draftPost.content : ''
+        this.imageList = imageFileIdList.map((fileId, imageIndex) => ({
+          localId: this.createLocalImageId(),
+          previewUrl: previewUrlList[imageIndex] || fileId,
+          tempFilePath: '',
+          fileId,
+          isUploading: false,
+        }))
+        console.log('彝圈发布页：驳回动态编辑草稿恢复完成', {
+          editingPostId: this.editingPostId,
+          content: this.content,
+          imageList: this.imageList,
+          editingReviewRemark: this.editingReviewRemark,
+        })
+      } catch (error) {
+        console.error('彝圈发布页：恢复驳回动态编辑草稿失败', error)
+        uni.showToast({
+          title: error.message || '编辑草稿恢复失败',
+          icon: 'none',
+        })
+        setTimeout(() => {
+          uni.navigateBack()
+        }, 400)
+      }
+    },
     // 中文注释：统一处理正文输入，保证日志和页面状态同步。
     handleContentInput(event) {
       const nextValue = event && event.detail ? event.detail.value : ''
@@ -119,10 +218,10 @@ export default {
       this.content = nextValue
       console.log('彝圈发布页：正文内容同步完成', this.content)
     },
-    // 中文注释：统一生成本地图片临时标识，避免多个上传任务的状态串位。
+    // 中文注释：统一生成本地图像临时标识，避免多个上传任务的状态串位。
     createLocalImageId() {
       const localId = `yiquan-image-${Date.now()}-${Math.random().toString(16).slice(2)}`
-      console.log('彝圈发布页：生成本地图片临时标识完成', localId)
+      console.log('彝圈发布页：生成本地图像临时标识完成', localId)
       return localId
     },
     // 中文注释：统一更新指定图片项，便于上传完成、失败和删除时精确同步状态。
@@ -214,7 +313,7 @@ export default {
         })
       }
     },
-    // 中文注释：统一上传单张图片到云存储，上传完成后回填 fileID 供提交动态使用。
+    // 中文注释：统一上传单张图片到云存储，上传完成后回填 fileID 供动态提交使用。
     async uploadSingleImage(imageItem) {
       console.log('彝圈发布页：开始上传单张图片', imageItem)
       const suffixMatch = /\.[^\\.]+$/.exec(imageItem.tempFilePath || '')
@@ -262,12 +361,20 @@ export default {
       })
       console.log('彝圈发布页：图片预览指令已发出', previewUrlList)
     },
-    // 中文注释：统一执行动态提交流程，提交前校验正文和图片状态，避免上传未完成时误提交。
+    // 中文注释：统一清理驳回动态编辑草稿，避免下次新建动态时误恢复旧数据。
+    clearEditingDraftCache() {
+      console.log('彝圈发布页：开始清理驳回动态编辑草稿缓存')
+      uni.removeStorageSync(YIQUAN_EDITING_POST_KEY)
+      console.log('彝圈发布页：驳回动态编辑草稿缓存清理完成')
+    },
+    // 中文注释：统一执行动态提交流程，兼容新建动态与驳回动态重新提审两种场景。
     async submitPost() {
       console.log('彝圈发布页：开始执行动态提交流程', {
         content: this.content,
         imageCount: this.imageList.length,
         uploadingImageCount: this.uploadingImageCount,
+        isEditMode: this.isEditMode,
+        editingPostId: this.editingPostId,
       })
 
       if (!this.isLoggedIn) {
@@ -304,35 +411,59 @@ export default {
         return
       }
 
+      if (this.isEditMode && !this.editingPostId) {
+        console.log('彝圈发布页：当前处于编辑模式但缺少动态 id，阻止提交流程')
+        uni.showToast({
+          title: '未找到需要重新提交的动态',
+          icon: 'none',
+        })
+        return
+      }
+
       this.isSubmitting = true
       console.log('彝圈发布页：动态提交流程已加锁')
 
       try {
+        const functionName = this.isEditMode ? CLOUD_FUNCTIONS.UPDATE_YIQUAN_POST : CLOUD_FUNCTIONS.CREATE_YIQUAN_POST
+        const requestData = {
+          content: trimmedContent,
+          imageList: this.uploadedImageFileIdList,
+        }
+
+        if (this.isEditMode) {
+          requestData.postId = this.editingPostId
+        }
+
+        console.log('彝圈发布页：开始调用动态提交云函数', {
+          functionName,
+          requestData,
+        })
         const response = await wx.cloud.callFunction({
-          name: CLOUD_FUNCTIONS.CREATE_YIQUAN_POST,
-          data: {
-            content: trimmedContent,
-            imageList: this.uploadedImageFileIdList,
-          },
+          name: functionName,
+          data: requestData,
         })
         const result = response && response.result ? response.result : {}
-        console.log('彝圈发布页：创建彝圈动态云函数返回结果', result)
+        console.log('彝圈发布页：动态提交云函数返回结果', result)
 
         if (!result.success) {
           throw new Error(result.message || '动态提交失败')
         }
 
-        // 中文注释：发布成功后先把新动态写入本地桥接缓存，返回列表页时立即展示待审核状态。
         if (result.data && result.data._id) {
-          console.log('彝圈发布页：开始缓存刚提交的待审核动态', result.data)
+          console.log('彝圈发布页：开始缓存刚提交成功的动态数据', result.data)
           uni.setStorageSync(YIQUAN_LATEST_SUBMITTED_POST_KEY, JSON.stringify(result.data))
-          console.log('彝圈发布页：刚提交的待审核动态缓存完成')
+          console.log('彝圈发布页：刚提交成功的动态缓存完成')
         } else {
-          console.log('彝圈发布页：云函数未返回新动态数据，跳过本地桥接缓存')
+          console.log('彝圈发布页：云函数未返回动态主体数据，跳过本地桥接缓存')
+        }
+
+        if (this.isEditMode) {
+          console.log('彝圈发布页：当前为驳回动态重新提审，准备清理编辑草稿缓存')
+          this.clearEditingDraftCache()
         }
 
         uni.showToast({
-          title: result.message || '动态已提交审核',
+          title: result.message || (this.isEditMode ? '动态已重新提交审核' : '动态已提交审核'),
           icon: 'success',
         })
         console.log('彝圈发布页：动态提交流程成功，准备返回彝圈首页')
@@ -390,6 +521,29 @@ export default {
   font-size: 24rpx;
   line-height: 1.6;
   color: #8b7f76;
+}
+
+.publish-card__review-tip {
+  margin-top: 24rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(180deg, #fff5e6 0%, #fffaf4 100%);
+  border: 2rpx solid rgba(197, 105, 42, 0.12);
+}
+
+.publish-card__review-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #8f1d22;
+}
+
+.publish-card__review-text {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: #7b5b41;
 }
 
 .publish-card__textarea {

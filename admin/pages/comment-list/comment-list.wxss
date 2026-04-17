@@ -46,5 +46,6 @@
 }
 
 .comment-card__actions {
+  width: 180rpx;
   margin-top: 20rpx;
 }

@@ -48,9 +48,11 @@ function formatPost(post, currentUserId, currentOpenid) {
     content: post.content || '',
     imageList: Array.isArray(post.imageList) ? post.imageList : [],
     status: post.status || 'approved',
+    reviewRemark: post.reviewRemark || '',
     commentCount: Number(post.commentCount || 0),
     createdAt: Number(post.createdAt || 0),
     updatedAt: Number(post.updatedAt || 0),
+    reviewedAt: Number(post.reviewedAt || 0),
     isOwner,
     canDelete: isOwner,
   }

@@ -6,7 +6,6 @@
     "pages/article-form/article-form",
     "pages/model-list/model-list",
     "pages/model-form/model-form",
-    "pages/comment-list/comment-list",
     "pages/yiquan-list/yiquan-list"
   ],
   "window": {

@@ -129,7 +129,11 @@ Page({
   },
   // 中文注释：删除指定索引的文章图片，方便管理员调整封面和正文配图顺序。
   removeImage(event) {
-    const removeIndex = Number(event.currentTarget.dataset.index)
+    const removeIndex = Number((event && event.detail && event.detail.actionIndex) ?? event.currentTarget.dataset.index)
+    console.log('管理员文章表单页：删除图片动作参数解析完成', {
+      detail: event && event.detail ? event.detail : {},
+      removeIndex,
+    })
     console.log('管理员文章表单页：开始删除文章图片', removeIndex)
     const nextImageList = this.data.form.imagesrc.filter((item, index) => index !== removeIndex)
     this.setData({

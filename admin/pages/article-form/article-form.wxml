@@ -36,16 +36,9 @@
       <view wx:if="{{ form.imagesrc.length }}" class="image-list">
         <view wx:for="{{ form.imagesrc }}" wx:key="*this" class="image-item">
           <image src="{{ item }}" class="image-item__img" mode="aspectFill" />
-          <van-button
-            custom-class="compact-action-button image-item__delete"
-            size="mini"
-            type="danger"
-            plain
-            data-index="{{ index }}"
-            bind:click="removeImage"
-          >
-            删除
-          </van-button>
+          <view class="image-item__delete">
+            <action-chip text="删除" tone="danger" action-index="{{ index }}" bind:action="removeImage" />
+          </view>
         </view>
       </view>
     </view>
